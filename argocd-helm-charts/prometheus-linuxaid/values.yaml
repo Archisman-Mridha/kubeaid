@@ -1,0 +1,107 @@
+prometheus:
+  server: prometheus.obmondo.com
+  ingress:
+    enable: false
+  storage:
+    size: 30Gi
+    className: rook-ceph-block
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      cpu: 600m
+      memory: 2Gi
+grafana:
+  server: graphs.obmondo.com
+prometheusRule:
+  backup: true
+  btrfs: true
+  cert_expiry: true
+  cpu: true
+  dellhw: true
+  disk: true
+  drbd: true
+  elasticsearch: true
+  file_size: true
+  haproxy: true
+  iptables: true
+  load: true
+  lsof: true
+  mdraid: true
+  memory: true
+  monitoring_stack: true
+  node_count: true
+  ntp: true
+  opsmondo: true
+  prometheus: true
+  psi: true
+  puppet: true
+  service_gitlab: true
+  service_sssd: true
+  service_omsagent: true
+  services: true
+  smart: true
+  ssacli: true
+alertmanager:
+  config:
+    global:
+      resolve_timeout: 5m
+
+    inhibit_rules:
+    - "equal":
+      - "namespace"
+      - "alertname"
+      "source_matchers":
+      - "severity = critical"
+      "target_matchers":
+      - "severity =~ warning|info"
+    - "equal":
+      - "namespace"
+      - "alertname"
+      "source_matchers":
+      - "severity = warning"
+      "target_matchers":
+      - "severity = info"
+    - "equal":
+      - "namespace"
+      "source_matchers":
+      - "alertname = InfoInhibitor"
+      "target_matchers":
+      - "severity = info"
+
+    route:
+      group_by:
+        - 'namespace'
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 1h
+      receiver: 'obmondo'
+      routes:
+      - receiver: 'obmondo'
+        matchers:
+        - "alertname = Watchdog"
+      - receiver: 'null'
+        matchers:
+        - "namespace =~ testing|obmondo-ci"
+      - receiver: 'null'
+        matchers:
+        - "alertname = InfoInhibitor"
+      - receiver: obmondo
+        continue: true
+
+    receivers:
+      - name: "null"
+      - name: obmondo
+        webhook_configs:
+          - url: https://alerts.obmondo.com/hooks/alertmanager
+            send_resolved: true
+            max_alerts: 0
+            http_config:
+              tls_config:
+                server_name: alerts.obmondo.com
+                cert_file: /etc/alertmanager/secrets/puppet-agent-tls-auth/tls.crt
+                key_file: /etc/alertmanager/secrets/puppet-agent-tls-auth/tls.key
+                insecure_skip_verify: false
+middleware:
+  jwt:
+    enabled: false

@@ -1,0 +1,17 @@
+kube2iam:
+  host:
+    interface: cali+
+    iptables: true
+  rbac:
+    create: true
+  podAnnotations:
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+  tolerations:
+  - effect: NoSchedule
+    operator: Exists
+  - effect: NoExecute
+    operator: Exists
+  extraArgs:
+    namespace-restrictions: ""
+  image:
+    tag: 0.11.1

@@ -1,0 +1,16 @@
+networkpolicies: false
+filebeat:
+  imageTag: "8.7.1"
+  daemonset:
+    tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      - effect: NoExecute
+        operator: Exists
+    resources:
+      requests:
+        cpu: "200m"
+        memory: "256Mi"
+      limits:
+        cpu: null
+        memory: "512Mi"

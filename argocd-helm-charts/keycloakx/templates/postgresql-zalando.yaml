@@ -1,0 +1,27 @@
+{{- if (.Values.postgresql).enabled }}
+
+apiVersion: acid.zalan.do/v1
+kind: postgresql
+metadata:
+  name: keycloakx-pgsql
+  labels:
+    velero.io/exclude-from-backup: "true"
+spec:
+  databases:
+    keycloak: keycloak
+  enableMasterLoadBalancer: false
+  enableLogicalBackup: {{ .Values.postgresql.enableLogicalBackup }}
+  numberOfInstances: {{ ((.Values.postgresql).instance) | default 1 }}
+  postgresql:
+    version: "12"
+  teamId: keycloakx
+  users:
+    keycloak:
+      - superuser
+  volume:
+    size: {{ .Values.postgresql.size }}
+    {{- if .Values.postgresql.storageClass }}
+    storageClass: {{ .Values.postgresql.storageClass }}
+    {{- end }}
+
+{{ end }}

@@ -1,0 +1,39 @@
+{{ if .Values.networkpolicies }}
+apiVersion: crd.projectcalico.org/v1
+kind: NetworkPolicy
+metadata:
+  name: default.velero
+  namespace: velero
+spec:
+  order: 100
+  selector:
+    app.kubernetes.io/name == 'velero'
+  types:
+  - Egress
+  egress:
+  # Connect to kube2iam
+  - action: Allow
+    protocol: TCP
+    destination:
+      ports:
+      - 8181
+  # S3 endpoint
+  - action: Allow
+    protocol: TCP
+    destination:
+      ports:
+      - 443
+      notNets:
+      - 10.0.0.0/8
+      - 172.16.0.0/12
+      - 192.168.0.0/16
+      - 100.64.0.0/10
+  # Allow access to the apiserver
+  - action: Allow
+    protocol: TCP
+    destination:
+      selector: kubernetes.io/role == 'master'
+      namespaceSelector: global()
+      ports:
+      - 443
+{{ end }}

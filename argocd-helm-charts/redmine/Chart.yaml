@@ -1,0 +1,7 @@
+apiVersion: v2
+name: redmine
+version: 1.0.0
+dependencies:
+  - name: redmine
+    version: 25.0.7
+    repository: https://charts.bitnami.com/bitnami

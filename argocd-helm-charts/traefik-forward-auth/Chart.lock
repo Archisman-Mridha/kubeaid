@@ -1,0 +1,6 @@
+dependencies:
+- name: traefik-forward-auth
+  repository: https://mesosphere.github.io/charts/staging
+  version: 0.3.10
+digest: sha256:20bc4ac7b6f3286b6d554618111233897126cd722e63aa7617427b9098a44c74
+generated: "2023-12-05T14:55:00.715821955+05:30"

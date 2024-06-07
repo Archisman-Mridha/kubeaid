@@ -1,0 +1,23 @@
+---
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: teamname-postgresql
+  namespace: sonarqube
+  labels:
+    velero.io/exclude-from-backup: "true"
+spec:
+  teamId: teamname
+  volume:
+    size: 2Gi
+  numberOfInstances: 1
+  users:
+    sonarqube_admin:             # database owner
+      - superuser
+      - createdb
+    sonarqube_test: []
+  databases:
+    sonarqube: sonarqube_admin
+  postgresql:
+    version: "13"
+  enableMasterLoadBalancer: false

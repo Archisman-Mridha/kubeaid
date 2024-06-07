@@ -1,0 +1,21 @@
+---
+sealed-secrets:
+  namespace: system
+  resources:
+    limits:
+      memory: 32Mi
+    requests:
+      cpu: 1m
+      memory: 8Mi
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+    seccompProfile:
+      type: RuntimeDefault
+networkpolicies: false
+backup:
+  schedule: "5 4 * * *"
+  image: ghcr.io/obmondo/backup-sealed-secrets-keys@sha256:21119359a94efdbf6ce81e8887e0ae35e9988d9e5ce0c485879ffc4f42aaf1ae
+  namespace: system
+  provider: aws

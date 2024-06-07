@@ -1,0 +1,14 @@
+name: markdownlint
+
+"on":
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  markdownlint:
+    uses: Obmondo/gitea-actions/.gitea/workflows/markdownlint.yml@main
+    with:
+      config: .markdownlint-cli2.yaml
+      globs: '**/*.md'

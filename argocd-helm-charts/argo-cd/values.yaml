@@ -1,0 +1,92 @@
+# Examples for adding git repo
+#        - type: git
+#          url: https://github.com/someuser/k8s-repo.git
+#          passwordSecret:
+#            name: argo-cd-someuser-github
+#            key: password
+#          usernameSecret:
+#            name: argo-cd-someuser-github
+#            key: username
+
+argo-cd:
+  global:
+    revisionHistoryLimit: 2
+  # to make this chart work with helm 3 - it does still install CRDs
+  installCRDs: false
+  # find latest tag here: https://github.com/argoproj/argo-helm/blob/master/charts/argo-cd/Chart.yaml (AppVersion)
+  dex:
+    enabled: false
+    resources:
+      limits:
+        memory: 64Mi
+      requests:
+        cpu: 1m
+        memory: 32Mi
+  repoServer:
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        cpu: 10m
+        memory: 128Mi
+    replicas: 1
+    autoscaling:
+      enabled: false
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+  server:
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        cpu: 5m
+        memory: 128Mi
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+    config:
+      resource.exclusions: |
+        - apiGroups:
+          - "velero.io"
+          kinds:
+          - "Backup"
+          clusters:
+          - "*"
+  controller:
+    resources:
+      limits:
+        memory: 1024Mi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+  redis:
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        cpu: 2m
+        memory: 64Mi
+    metrics:
+      enabled: true
+      image:
+        repository: bitnami/redis-exporter
+      serviceMonitor:
+        enabled: true
+  notifications:
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        cpu: 2m
+        memory: 64Mi
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true

@@ -1,0 +1,23 @@
+networkpolicies: false
+postgres-operator:
+  configMajorVersionUpgrade:
+    minimal_major_version: "12"
+  enableJsonLogging: true
+  configKubernetes:
+    enable_pod_antiaffinity: true
+    # ONLY disable when we are doing a node update or kops rolling update
+    # default is set to true
+    # https://github.com/zalando/postgres-operator/pull/583/files
+    enable_pod_disruption_budget: true
+    inherited_labels:
+    - "velero.io/exclude-from-backup"
+  securityContext:
+    runAsUser: 1000
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault

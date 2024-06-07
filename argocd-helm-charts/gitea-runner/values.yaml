@@ -1,0 +1,21 @@
+act-runner:
+  replicaCount: 1
+  podSecurityContext:
+    fsGroup: 1000
+  securityContext:
+    privileged: true
+    runAsUser: 1000
+    runAsGroup: 1000
+  image:
+    repository: vegardit/gitea-act-runner
+    tag: dind-0.2.6
+    pullPolicy: Always
+  act_runner:
+    parallel_jobs: 2
+    storage:
+      size: 20Gi
+runner:
+  nameSpace:
+    create: false
+  serviceAccount:
+    create: false

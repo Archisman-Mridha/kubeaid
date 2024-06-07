@@ -1,0 +1,22 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: obmondo-postgresql
+  namespace: relate
+  labels:
+    velero.io/exclude-from-backup: "true"
+spec:
+  enableLogicalBackup: {{ .Values.postgresql.logicalBackup | default "true" }}
+  teamId: obmondo
+  volume:
+    size: {{ .Values.postgresql.size }}
+  numberOfInstances: 1
+  users:
+    relate_admin: # database owner
+      - superuser
+      - createdb
+  databases:
+    relate: relate_admin
+  postgresql:
+    version: "14"
+  enableMasterLoadBalancer: false

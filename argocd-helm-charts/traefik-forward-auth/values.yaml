@@ -1,0 +1,8 @@
+traefik-forward-auth:
+  traefikForwardAuth:
+    enabled: true
+    clientId: traefik-forward-auth
+    enableRBAC: false
+  replicaCount: 1
+middleware:
+  enabled: true

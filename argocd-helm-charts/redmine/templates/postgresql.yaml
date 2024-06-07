@@ -1,0 +1,20 @@
+apiVersion: acid.zalan.do/v1
+kind: postgresql
+metadata:
+  name: redmine-pgsql
+  labels:
+    velero.io/exclude-from-backup: "true"
+spec:
+  enableLogicalBackup: {{ .Values.postgresql.logicalBackup | default "true" }}
+  databases:
+    redmine: redmine
+  enableMasterLoadBalancer: false
+  numberOfInstances: {{ ((.Values.postgresql).instance) | default 1 }}
+  postgresql:
+    version: "12"
+  teamId: redmine
+  users:
+    redmine:
+      - superuser
+  volume:
+    size: 8Gi

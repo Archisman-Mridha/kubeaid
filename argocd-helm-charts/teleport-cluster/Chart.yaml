@@ -1,0 +1,12 @@
+name: teleport-cluster
+apiVersion: v2
+version: 1.0.0
+description: Teleport is a unified access plane for your infrastructure
+icon: https://goteleport.com/images/logos/logo-teleport-square.svg
+keywords:
+  - Teleport
+dependencies:
+  - name: teleport-cluster
+    version: 14.3.3
+    repository: https://charts.releases.teleport.dev
+    #repository: "oci://ghcr.io/Obmondo"

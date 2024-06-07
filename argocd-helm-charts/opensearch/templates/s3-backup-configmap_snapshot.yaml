@@ -1,0 +1,51 @@
+{{- if .Values.backup.enable -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: curator-actions-create-snapshot
+data:
+  actions.yaml: |-
+    actions:
+      1:
+        action: snapshot
+        description: >-
+          Snapshot all indices for {{ .Values.backup.name | default "opensearch-backup" }}. Wait for the snapshot to complete. Skip the repository filesystem access check. Use the other options to create the snapshot.
+        options:
+          repository: {{ .Values.backup.repository | default "opensearch-s3-bucket" | quote }}
+          name: {{ .Values.backup.name | default "opensearch-backup" }}-%Y%m%d%H%M
+          ignore_unavailable: False
+          include_global_state: False
+          partial: False
+          wait_for_completion: True
+          skip_repo_fs_check: True
+          disable_action: False
+        filters:
+          - filtertype: none
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: curator-actions-delete-snapshot
+data:
+  actions.yaml: |-
+    actions:
+      1:
+        action: delete_snapshots
+        description: >-
+          Delete snapshots from the selected repository older than {{ .Values.backup.retention }} days (based on creation_date), for all snapshots.
+        options:
+          repository: {{ .Values.backup.repository | default "opensearch-s3-bucket" | quote }}
+          disable_action: False
+          ignore_empty_list: True
+          retry_interval: 600
+          retry_count: 6
+          timeout_override: 3600
+        filters:
+          - filtertype: age
+            source: creation_date
+            direction: older
+            unit: days
+            unit_count: {{ .Values.backup.retention }}
+---
+{{- end -}}

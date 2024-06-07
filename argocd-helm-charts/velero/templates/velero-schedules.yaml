@@ -1,0 +1,61 @@
+{{ if .Values.schedule.daily }}
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: daily-backup
+  namespace: velero
+spec:
+  # Sunday backup are done via weekly scheduled
+  schedule: '0 {{ randInt 0 12 }} * * 1-6'
+  template:
+    hooks: {}
+    csiSnapshotTimeout: 40m
+    itemOperationTimeout: 300m
+    includedNamespaces:
+    - '*'
+    ttl: 720h0m0s
+    metadata:
+      labels:
+        argocd.argoproj.io/instance: velero
+{{ end }}
+{{ if .Values.schedule.weekly }}
+---
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: weekly-backup
+  namespace: velero
+spec:
+  schedule: '0 0 * * 0'
+  template:
+    hooks: {}
+    csiSnapshotTimeout: 40m
+    itemOperationTimeout: 300m
+    includedNamespaces:
+    - '*'
+    ttl: 2160h0m0s
+    metadata:
+      labels:
+        argocd.argoproj.io/instance: velero
+{{ end }}
+{{ if .Values.schedule.sixhourly }}
+---
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: 6hrly-backup
+  namespace: velero
+spec:
+  # backup at 00 hrs are done via daily backup
+  schedule: '0 6,12,18 * * *'
+  template:
+    hooks: {}
+    csiSnapshotTimeout: 40m
+    itemOperationTimeout: 300m
+    includedNamespaces:
+    - '*'
+    ttl: 336h0m0s
+    metadata:
+      labels:
+        argocd.argoproj.io/instance: velero
+{{ end }}

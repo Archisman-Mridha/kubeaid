@@ -1,0 +1,38 @@
+gitlab-runner:
+  rbac:
+    create: true
+
+  metrics:
+    enabled: true
+
+  runners:
+    locked: false
+    secret: gitlab-runner
+    privileged: true
+    runUntagged: true
+    config: |
+      [[runners]]
+        [runners.kubernetes]
+          namespace = "{{.Release.Namespace}}"
+          image = "ubuntu:20.04"
+          executor = 'docker'
+          docker-image = 'ubuntu/focal'
+          docker-tlsverify = false
+          docker-privileged = false
+          docker-disable-cache = false
+          docker-volumes = ['/var/tmp/:/cache:rw']
+          docker-extra-hosts = ['gitlab.enableit.dk:109.238.49.205']
+
+  resources:
+    limits:
+      memory: 256Mi
+      cpu: 2
+    requests:
+      memory: 128Mi
+      cpu: 1
+
+runner:
+  nameSpace:
+    create: false
+  serviceAccount:
+    create: false

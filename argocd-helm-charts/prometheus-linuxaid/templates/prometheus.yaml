@@ -1,0 +1,51 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: {{ .Values.customerid }}
+  namespace: monitoring-{{ .Values.customerid }}
+spec:
+  alerting:
+    alertmanagers:
+    - namespace: monitoring-{{ .Values.customerid }}
+      name: alertmanager-main
+      port: web
+  podMetadata:
+    labels:
+      app.kubernetes.io/instance: {{ .Values.customerid }}
+      app.kubernetes.io/name: prometheus
+  podMonitorNamespaceSelector: null
+  podMonitorSelector: {}
+  probeNamespaceSelector: null
+  probeSelector: {}
+  ruleNamespaceSelector: null
+  ruleSelector: {}
+  scrapeConfigNamespaceSelector: null
+  scrapeConfigSelector: {}
+  serviceMonitorNamespaceSelector: null
+  serviceMonitorSelector: {}
+  replicas: 1
+  retention: {{ .Values.prometheus.retention | default "15d" | }}
+  externalUrl: /{{ .Values.customerid }}
+  routePrefix: /{{ .Values.customerid }}
+  evaluationInterval: 30s
+  portName: web
+  resources: {{ toYaml .Values.prometheus.resources | nindent 4 }}
+  scrapeInterval: 30s
+  securityContext:
+    fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1000
+  serviceAccountName: prometheus-k8s
+  storage:
+    volumeClaimTemplate:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.prometheus.storage.size }}
+        storageClassName: {{ .Values.prometheus.storage.className }}
+  version: v2.48.1
+  enableRemoteWriteReceiver: true

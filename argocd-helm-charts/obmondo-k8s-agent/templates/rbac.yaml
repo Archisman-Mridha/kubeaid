@@ -1,0 +1,44 @@
+# ClusterRole for obmondo-k8s-agent Security-check at cluster scope
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: network-policy-viewer
+  labels:
+    app: obmondo-k8s-agent
+rules:
+  - apiGroups:
+      - networking.k8s.io
+      - argoproj.io
+    resources:
+      - networkpolicies
+      - applications
+    verbs:
+      - get
+      - list
+      - watch
+---
+# ClusterRoleBinding for obmondo-k8s-agent Security-check at cluster scope
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: network-policy-viewer-binding
+  labels:
+    app: obmondo-k8s-agent
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "obmondo-k8s-agent.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: network-policy-viewer
+  apiGroup: rbac.authorization.k8s.io
+---
+{{- if .Values.serviceAccount.create }}
+# ServiceAccount for obmondo-k8s-agent
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "obmondo-k8s-agent.serviceAccountName" . }}
+  labels:
+    app: obmondo-k8s-agent
+{{- end }}

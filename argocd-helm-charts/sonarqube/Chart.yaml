@@ -1,0 +1,13 @@
+apiVersion: v2
+icon: https://www.sonarqube.org/assets/logo-31ad3115b1b4b120f3d1efd63e6b13ac9f1f89437f0cf6881cc4d8b5603a52b4.svg
+keywords:
+  - coverage
+  - security
+  - code
+  - quality
+name: sonarqube
+version: 4.0.2+325
+dependencies:
+  - name: sonarqube
+    version: 10.3.0+2009
+    repository: https://SonarSource.github.io/helm-chart-sonarqube

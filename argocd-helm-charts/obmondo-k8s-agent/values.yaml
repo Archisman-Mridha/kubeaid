@@ -1,0 +1,134 @@
+# Default values for obmondo-k8s-agent.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/obmondo/obmondo-k8s-agent
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "1.0.8"
+  volumeMounts:
+  - mountPath: /opt/obmondo-k8s-agent/tls.crt
+    name: k8s-agent-tls
+    subPath: tls.crt
+  - mountPath: /opt/obmondo-k8s-agent/tls.key
+    name: k8s-agent-tls
+    subPath: tls.key
+  - mountPath: /opt/obmondo-k8s-agent/k8s-agent-config.yaml
+    name: k8s-agent-config
+    subPath: k8s-agent-config.yaml
+  - mountPath: /opt/obmondo-k8s-agent/white_listed_apps.yaml
+    name: white-listed-apps-config
+    subPath: white_listed_apps.yaml
+
+
+imagePullSecrets:
+    - name: accesstoken-4obmondoagentregistry-customer-enableit
+
+envVars:
+  GIN_MODE: release
+  PROMETHEUS_URL: http://prometheus-k8s.monitoring:9090
+  API_URL: https://api.obmondo.com
+
+# Add Values like this:
+#envVars:
+#  key1: value1
+#  Key2: value2
+
+ArgoSecret:
+  name: "argo-credentials"
+  keys:
+    - name: "ARGO_USER"
+      key: "ARGO_USER"
+    - name: "ARGO_PASSWORD"
+      key: "ARGO_PASSWORD"
+
+# Add Values like this for token:
+# - name: "ARGO_TOKEN"
+#   key: "token"
+
+nameOverride: ""
+fullnameOverride: ""
+
+volumes:
+  - name: k8s-agent-tls
+    secret:
+      secretName: k8s-agent-tls
+  - name: k8s-agent-config
+    configMap:
+      name: k8s-agent-config
+  - name: white-listed-apps-config
+    configMap:
+      name: white-listed-apps-config
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+# fsGroup: 2000
+
+securityContext: {}
+# capabilities:
+#   drop:
+#   - ALL
+# readOnlyRootFilesystem: true
+# runAsNonRoot: true
+# runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+metrics:
+  serviceMonitor:
+    interval: 30s
+    relabelings: []
+    metricRelabelings: []
+
+networkPolicy: false
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    memory: 50Mi
+  requests:
+    cpu: 1m
+    memory: 50Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

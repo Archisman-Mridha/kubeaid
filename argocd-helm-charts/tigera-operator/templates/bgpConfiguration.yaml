@@ -1,0 +1,13 @@
+{{ if eq .Values.netbird.enabled "true" }}
+apiVersion: crd.projectcalico.org/v1
+kind: BGPConfiguration
+metadata:
+  name: default
+spec:
+  logSeverityScreen: Error
+  nodeToNodeMeshEnabled: true
+  # Ignore netbird interfaces, which conflict with calico
+  ignoredInterfaces:
+    - wt0
+  asNumber: 64512
+{{- end }}
