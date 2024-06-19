@@ -10,34 +10,10 @@ spec:
   chartName: cilium
   namespace: cilium
   releaseName: cilium
-  version: 1.15.3
+  version: 1.15.6
   options:
     waitForJobs: true
     wait: true
     timeout: 5m0s
     install:
       createNamespace: true
-  valuesTemplate: |
-    rollOutCiliumPods: true
-    priorityClassName: "system-node-critical"
-    hubble:
-      metrics:
-        enabled:
-          - dns:query;ignoreAAAA
-          - drop
-          - tcp
-          - flow
-          - icmp
-          - http
-      relay:
-        enabled: true
-        rollOutPods: true
-      ui:
-        enabled: true
-        rollOutPods: true
-    ipam:
-      mode: "kubernetes"
-    kubeProxyReplacement: "partial"
-    operator:
-      rollOutPods: true
-      priorityClassName: "system-node-critical"
