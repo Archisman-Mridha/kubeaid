@@ -7,7 +7,7 @@ spec:
     spec:
       iamInstanceProfile: control-plane.cluster-api-provider-aws.sigs.k8s.io
       instanceType: {{ .Values.controlPlane.instanceType }}
-      sshKeyName: {{ .Values.controlPlane.sshKeyName }}
+      sshKeyName: {{ .Values.sshKeyName }}
       imageLookupBaseOS: ubuntu-20.04
       publicIP: {{ .Values.controlPlane.publicIP }}
       ami: {{ toYaml .Values.controlPlane.ami | nindent 8 }}

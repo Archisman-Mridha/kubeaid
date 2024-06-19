@@ -10,6 +10,6 @@ spec:
     ami: {{ toYaml .Values.workerNodes.ami | nindent 6 }}
     iamInstanceProfile: nodes.cluster-api-provider-aws.sigs.k8s.io
     instanceType: {{ .Values.workerNodes.instanceType }}
-    sshKeyName: {{ .Values.workerNodes.sshKeyName }}
+    sshKeyName: {{ .Values.sshKeyName }}
     imageLookupBaseOS: ubuntu-20.04
 {{- end }}
