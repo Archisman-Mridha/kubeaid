@@ -23,6 +23,5 @@ spec:
     args:
       - --v=2
       - --cloud-provider=aws
-      - --use-service-account-credentials=true
       - --configure-cloud-routes=false
 {{- end }}
