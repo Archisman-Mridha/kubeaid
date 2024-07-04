@@ -18,10 +18,7 @@ spec:
     install:
       createNamespace: true
     valuesTemplate: |
-      kubeProxyReplacement: "false"
-      # kubeProxyReplacement: "true"
-      # k8sServiceHost:
-      # k8sServicePort:
+      kubeProxyReplacement: "true"
       ipam:
         mode: "kubernetes"
       hubble:
