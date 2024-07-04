@@ -17,12 +17,12 @@ spec:
     timeout: 5m0s
     install:
       createNamespace: true
-    valuesTemplate: |
-      kubeProxyReplacement: "true"
-      ipam:
-        mode: "kubernetes"
-      hubble:
-        relay:
-          enabled: true
-        ui:
-          enabled: true
+  valuesTemplate: |
+    kubeProxyReplacement: "true"
+    ipam:
+      mode: "kubernetes"
+    hubble:
+      relay:
+        enabled: true
+      ui:
+        enabled: true
