@@ -19,6 +19,8 @@ spec:
       createNamespace: true
   valuesTemplate: |
     kubeProxyReplacement: "true"
+    k8sServiceHost: {{`{{ .Cluster.spec.controlPlaneEndpoint.host }}`}}
+    k8sServicePort: {{`{{ .Cluster.spec.controlPlaneEndpoint.port }}`}}
     ipam:
       mode: "kubernetes"
     hubble:
