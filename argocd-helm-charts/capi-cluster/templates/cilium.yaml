@@ -10,7 +10,7 @@ spec:
   chartName: cilium
   namespace: cilium
   releaseName: cilium
-  version: 1.15.6
+  version: 1.16.0
   options:
     waitForJobs: true
     wait: true
