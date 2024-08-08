@@ -18,7 +18,7 @@ spec:
     install:
       createNamespace: true
   valuesTemplate: |
-    kubeProxyReplacement: "true"
+    # kubeProxyReplacement: "true"
     k8sServiceHost: {{`{{ .Cluster.spec.controlPlaneEndpoint.host }}`}}
     k8sServicePort: {{`{{ .Cluster.spec.controlPlaneEndpoint.port }}`}}
     ipam:
