@@ -22,7 +22,14 @@ spec:
     k8sServiceHost: {{`{{ .Cluster.spec.controlPlaneEndpoint.host }}`}}
     k8sServicePort: {{`{{ .Cluster.spec.controlPlaneEndpoint.port }}`}}
     ipam:
-      mode: "kubernetes"
+      mode: kubernetes
+    routingMode: native
+    bpf:
+      masquerade: true
+      datapathMode: netkit
+    autoDirectNodeRoutes: true
+    ipv4NativeRoutingCIDR: {{`{{ .AWSCluster.spec.network.vpc.cidrBlock }}`}}
+    directRoutingSkipUnreachable: true
     hubble:
       relay:
         enabled: true
