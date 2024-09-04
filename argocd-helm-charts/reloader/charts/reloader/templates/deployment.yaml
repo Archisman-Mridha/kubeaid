@@ -57,8 +57,9 @@ spec:
       affinity:
       {{- if .Values.reloader.deployment.affinity }}
 {{ toYaml .Values.reloader.deployment.affinity | indent 8 }}
-      {{- end}}
+      {{- else }}
 {{ include "reloader-podAntiAffinity" . | indent 8 }}
+      {{- end }}
       {{- end }}
       {{- if .Values.reloader.deployment.tolerations }}
       tolerations:
@@ -75,8 +76,23 @@ spec:
       - image: "{{ .Values.reloader.deployment.image.name }}:{{ .Values.reloader.deployment.image.tag }}"
         imagePullPolicy: {{ .Values.reloader.deployment.image.pullPolicy }}
         name: {{ template "reloader-fullname" . }}
-      {{- if or (.Values.reloader.deployment.env.open) (.Values.reloader.deployment.env.secret) (.Values.reloader.deployment.env.field) (.Values.reloader.deployment.env.existing) (eq .Values.reloader.watchGlobally false) (.Values.reloader.enableHA)}}
         env:
+        - name: GOMAXPROCS
+        {{- if .Values.reloader.deployment.gomaxprocsOverride }}
+          value: {{ .Values.reloader.deployment.gomaxprocsOverride | quote }}
+        {{- else }}
+          valueFrom:
+            resourceFieldRef:
+              resource: limits.cpu
+        {{- end }}
+        - name: GOMEMLIMIT
+        {{- if .Values.reloader.deployment.gomemlimitOverride }}
+          value: {{ .Values.reloader.deployment.gomemlimitOverride | quote }}
+        {{- else }}
+          valueFrom:
+            resourceFieldRef:
+              resource: limits.memory
+        {{- end }}
       {{- range $name, $value := .Values.reloader.deployment.env.open }}
       {{- if not (empty $value) }}
         - name: {{ $name | quote }}
@@ -128,8 +144,10 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
       {{- end }}
+      {{- if .Values.reloader.enableMetricsByNamespace }}
+        - name: METRICS_COUNT_BY_NAMESPACE
+          value: enabled
       {{- end }}
-
         ports:
         - name: http
           containerPort: 9090
@@ -160,12 +178,17 @@ spec:
         securityContext:
           {{- toYaml $containerSecurityContext | nindent 10 }}
 
-      {{- if eq .Values.reloader.readOnlyRootFileSystem true }}
+      {{- if (or (.Values.reloader.deployment.volumeMounts) (eq .Values.reloader.readOnlyRootFileSystem true)) }}
         volumeMounts:
+          {{- if eq .Values.reloader.readOnlyRootFileSystem true }}
           - mountPath: /tmp/
             name: tmp-volume
+          {{- end }}
+          {{- with .Values.reloader.deployment.volumeMounts }}
+          {{- . | toYaml | nindent 10 }}
+          {{- end }}
       {{- end }}
-      {{- if or (.Values.reloader.logFormat) (.Values.reloader.ignoreSecrets) (.Values.reloader.ignoreNamespaces) (.Values.reloader.namespaceSelector) (.Values.reloader.resourceLabelSelector) (.Values.reloader.ignoreConfigMaps) (.Values.reloader.custom_annotations) (eq .Values.reloader.isArgoRollouts true) (eq .Values.reloader.reloadOnCreate true) (ne .Values.reloader.reloadStrategy "default") (.Values.reloader.enableHA) (.Values.reloader.autoReloadAll)}}
+      {{- if or (.Values.reloader.logFormat) (.Values.reloader.ignoreSecrets) (.Values.reloader.ignoreNamespaces) (.Values.reloader.namespaceSelector) (.Values.reloader.resourceLabelSelector) (.Values.reloader.ignoreConfigMaps) (.Values.reloader.custom_annotations) (eq .Values.reloader.isArgoRollouts true) (eq .Values.reloader.reloadOnCreate true) (eq .Values.reloader.reloadOnDelete true) (ne .Values.reloader.reloadStrategy "default") (.Values.reloader.enableHA) (.Values.reloader.autoReloadAll)}}
         args:
           {{- if .Values.reloader.logFormat }}
           - "--log-format={{ .Values.reloader.logFormat }}"
@@ -198,6 +221,14 @@ spec:
           - "--auto-annotation"
           - "{{ .Values.reloader.custom_annotations.auto }}"
             {{- end }}
+            {{- if .Values.reloader.custom_annotations.secret_auto }}
+          - "--secret-auto-annotation"
+          - "{{ .Values.reloader.custom_annotations.secret_auto }}"
+            {{- end }}
+            {{- if .Values.reloader.custom_annotations.configmap_auto }}
+          - "--configmap-auto-annotation"
+          - "{{ .Values.reloader.custom_annotations.configmap_auto }}"
+            {{- end }}                        
             {{- if .Values.reloader.custom_annotations.search }}
           - "--auto-search-annotation"
           - "{{ .Values.reloader.custom_annotations.search }}"
@@ -216,6 +247,9 @@ spec:
           {{- end }}
           {{- if eq .Values.reloader.reloadOnCreate true }}
           - "--reload-on-create={{ .Values.reloader.reloadOnCreate }}"
+          {{- end }}
+          {{- if eq .Values.reloader.reloadOnDelete true }}
+          - "--reload-on-delete={{ .Values.reloader.reloadOnDelete }}"
           {{- end }}
           {{- if eq .Values.reloader.syncAfterRestart true }}
           - "--sync-after-restart={{ .Values.reloader.syncAfterRestart }}"
@@ -241,8 +275,13 @@ spec:
 {{- if hasKey .Values.reloader.deployment "automountServiceAccountToken" }}
       automountServiceAccountToken: {{ .Values.reloader.deployment.automountServiceAccountToken }}
 {{- end }}
-    {{- if eq .Values.reloader.readOnlyRootFileSystem true }}
+    {{- if (or (.Values.reloader.deployment.volumes) (eq .Values.reloader.readOnlyRootFileSystem true)) }}
       volumes:
+        {{- if eq .Values.reloader.readOnlyRootFileSystem true }}
         - emptyDir: {}
           name: tmp-volume
+        {{- end }}
+        {{- with .Values.reloader.deployment.volumes }}
+          {{- . | toYaml | nindent 8 }}
+        {{- end }}
     {{- end }}

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "argocd-image-updater.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ include "argocd-image-updater.namespace" . | quote }}
   labels:
     {{- include "argocd-image-updater.labels" . | nindent 4 }}
 spec:
@@ -34,8 +34,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          command:
-            - /usr/local/bin/argocd-image-updater
+          args:
             - run
             {{- with .Values.extraArgs }}
               {{- toYaml . | nindent 12 }}
@@ -101,8 +100,30 @@ spec:
                 key: kube.events
                 name: argocd-image-updater-config
                 optional: true
+          - name: GIT_COMMIT_SIGNING_KEY
+            valueFrom:
+              configMapKeyRef:
+                key: git.commit-signing-key
+                name: argocd-image-updater-config
+                optional: true
+          - name: GIT_COMMIT_SIGNING_METHOD
+            valueFrom:
+              configMapKeyRef:
+                key: git.commit-signing-method
+                name: argocd-image-updater-config
+                optional: true
+          - name: GIT_COMMIT_SIGN_OFF
+            valueFrom:
+              configMapKeyRef:
+                key: git.commit-sign-off
+                name: argocd-image-updater-config
+                optional: true
           {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- with .Values.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -132,12 +153,16 @@ spec:
           volumeMounts:
           - mountPath: /app/config
             name: image-updater-conf
-          - mountPath: /tmp
-            name: tmp-dir
           - mountPath: /app/config/ssh
             name: ssh-known-hosts
           - mountPath: /app/.ssh
             name: ssh-config
+          - mountPath: /tmp
+            name: tmp
+          - name: ssh-signing-key
+            mountPath: /app/ssh-keys/id_rsa
+            readOnly: true
+            subPath: sshPrivateKey
           {{- if .Values.authScripts.enabled }}
           - mountPath: /scripts
             name: authscripts
@@ -161,8 +186,6 @@ spec:
           name: argocd-image-updater-authscripts
         name: authscripts
       {{- end }}
-      - emptyDir: {}
-        name: tmp-dir
       - configMap:
           name: argocd-ssh-known-hosts-cm
           optional: true
@@ -171,6 +194,12 @@ spec:
           name: argocd-image-updater-ssh-config
           optional: true
         name: ssh-config
+      - name: ssh-signing-key
+        secret:
+          secretName: ssh-git-creds
+          optional: true
+      - emptyDir: {}
+        name: tmp
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 6}}
       {{- end }}

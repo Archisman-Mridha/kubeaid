@@ -1,3 +1,219 @@
+## v0.68.1 (2024-08-21)
+
+### New features
+
+- Update GitLab Runner version to v17.3.1
+
+### Bug fixes
+
+- Add env vars if secret is provided [!489](https://gitlab.com/gitlab-org/charts/gitlab-runner/-/merge_requests/489)
+- Revert the system_id generation [!488](https://gitlab.com/gitlab-org/charts/gitlab-runner/-/merge_requests/488)
+
+## v0.68.0 (2024-08-09)
+
+### New features
+
+- Update GitLab Runner version to v17.3.0
+- Add support for probe-level termination grace period [!484](https://gitlab.com/gitlab-org/charts/gitlab-runner/-/merge_requests/484) (panos @panos--)
+- Generate system id when installing GitLab Runner through the Helm Chart [!417](https://gitlab.com/gitlab-org/charts/gitlab-runner/-/merge_requests/417)
+
+### Bug fixes
+
+- Sanitize server session IP Address [!481](https://gitlab.com/gitlab-org/charts/gitlab-runner/-/merge_requests/481)
+
+### Maintenance
+
+- Merge back 0.64, 0.65, 0.66 and 0.67 patches in main branch [!486](https://gitlab.com/gitlab-org/charts/gitlab-runner/-/merge_requests/486)
+- Remove env vars if secret is provided [!482](https://gitlab.com/gitlab-org/charts/gitlab-runner/-/merge_requests/482) (Juan José Ruiz Romero @jjotah)
+
+## v0.67.1 (2024-07-26)
+
+### New features
+
+- Update GitLab Runner version to v17.2.1
+
+## v0.66.1 (2024-07-26)
+
+### New features
+
+- Update GitLab Runner version to v17.1.1
+
+## v0.65.2 (2024-07-26)
+
+### New features
+
+- Update GitLab Runner version to v17.0.2
+
+## v0.64.3 (2024-07-26)
+
+### New features
+
+- Update GitLab Runner version to v16.11.3
+
+## v0.67.0 (2024-07-18)
+
+### New features
+
+- Update GitLab Runner version to v17.2.0
+- Make livenessProbe and readinessProbe configurable !483
+- Add support for different service types for session-server !476 (Ummet Civi @ummetcivi)
+- Ignore timeout on verify command for the livenessProbe !457 (Thomas de Grenier de Latour @thomasgl-orange)
+
+### Bug fixes
+
+- Fix the register-the-runner script !479 (Jeremy Huntwork @jhuntwork)
+
+### Maintenance
+
+- Remove registration token integration test !477
+
+## v0.64.2 (2024-07-07)
+
+### New features
+
+- Update GitLab Runner version to v16.11.2
+
+### Maintenance
+
+- Remove registration token integration test !477
+
+## v0.65.1 (2024-07-06)
+
+### New features
+
+- Update GitLab Runner version to v17.0.1
+
+## v0.66.0 (2024-06-20)
+
+### New features
+
+- Update GitLab Runner version to v17.1.0
+- Make lifecycle options configurable in the deployment !473 (Marcel Eichler @marcel1802)
+- Add dedicated ServiceAccount configuration !415 (Fabian Schneider @fabsrc)
+
+### Bug fixes
+
+- Fix replicas value check for nil to work also with Terraform !478 (Sabyrzhan Tynybayev @sabyrzhan)
+- Update list of rules to be added to the rbac role permissions as per documentation !471 (Ismael Posada Trobo @iposadat)
+
+### Maintenance
+
+- Remove registration token integration test !477
+
+## v0.65.0 (2024-05-23)
+
+### New features
+
+- Update GitLab Runner version to v17.0.0
+
+### Maintenance
+
+- Default to https in values.yaml !470
+
+### Other changes
+
+- chore: set the checkInterval value the same as in the main documents. !472 (Michel Santello @michel.santello)
+
+## v0.64.1 (2024-05-03)
+
+### New features
+
+- Update GitLab Runner version to v16.11.1
+
+## v0.64.0 (2024-04-18)
+
+### New features
+
+- Update GitLab Runner version to v16.11.0
+- Add support for connection_max_age parameter !468
+- Propagate Service Account Name from values !367 (Martin Odstrčilík @martin.odstrcilik)
+
+### Bug fixes
+
+- Fix liveness probe for Runner Pod !466
+
+## v0.63.0 (2024-03-22)
+
+### New features
+
+- Update GitLab Runner version to v16.10.0
+
+### Bug fixes
+
+- Remove the 'replicas' field from the helm template if not used by user !467 (Alexis Boissiere @alexis974)
+
+## v0.62.1 (2024-03-01)
+
+### New features
+
+- Update GitLab Runner version to v16.9.1
+
+## v0.62.0 (2024-02-15)
+
+### New features
+
+- Update GitLab Runner version to v16.9.0
+- Template the image string to allow using `{{.Chart.AppVersion}}` reference !464 (Marc Bollhalder @NoRelect)
+- Add hostname option !463
+- Fix liveness check for runners with multiple tags !462 (Arran Walker @ajwalker)
+- Add support for extra objects and env vars !451 (Caleb Hansard @caleb.hansard)
+
+### Bug fixes
+
+- Convert Values.replicas from float64 to int64 !465
+- Remove function keyword in register script !461
+- Add and use isSessionServerAllowed helper !459 (Florian Berchtold @florian.berchtold)
+- Remove function keyword in register script !461
+- feat: add tpl in secret helper template !455 (Frederic Mereu @frederic.mereu)
+- Fix non terminating runner in register loop !450
+- fix: immediately use replica value to allow 0 !460 (d3adb5 @d3adb5)
+- Fix non terminating runner in register loop !450
+
+### Maintenance
+
+- Improve wording of comments !439 (Kolja Lucht @k0jak)
+
+## v0.61.2 (2024-02-09)
+
+### New features
+
+- Update GitLab Runner version to v16.8.0
+
+### Bug fixes
+
+- Remove function keyword in register script !461
+
+## v0.61.1 (2024-02-05)
+
+### New features
+
+- Update GitLab Runner version to v16.8.0
+
+### Bug fixes
+
+- Fix non terminating runner in register loop !450
+
+## v0.61.0 (2024-01-19)
+
+### New features
+
+- Update GitLab Runner version to v16.8.0
+
+## v0.60.0 (2023-12-21)
+
+### New features
+
+- Update GitLab Runner version to v16.7.0
+
+### Bug fixes
+
+- Keep tag list for registration token !452
+- Keep tag list for registration token !452
+
+### Other changes
+
+- Allow user-defined deployment strategies for multi-replica deployments !427 (Thomas Spear @tspearconquest)
+
 ## v0.59.2 (2023-11-25)
 
 ### New features

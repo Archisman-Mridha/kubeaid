@@ -25,6 +25,20 @@ spec:
         kubeletExtraArgs:
           cloud-provider: external
         name: '{{"{{"}} ds.meta_data.local_hostname {{"}}"}}'
+    postKubeadmCommands:
+      - set -x
+      # Install Helm.
+      - curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+      - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+      - apt-get -y update
+      - apt-get -y install git helm
+      # Clone KubeAid.
+      - git clone https://github.com/Obmondo/kubeaid.git
+      # Install Cilium.
+      - kubectl create ns cilium
+      - helm template kubeaid/argocd-helm-charts/cilium --values kubeaid/argocd-helm-charts/cilium/values.yaml -n cilium | kubectl apply -f -n cilium
+      # Install AWS Cloud Controller Manager.
+      - helm template kubeaid/argocd-helm-charts/ccm-aws --values kubeaid/argocd-helm-charts/ccm-aws/values.yaml -n kube-system | kubectl apply -f -n kube-system
   machineTemplate:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1beta2

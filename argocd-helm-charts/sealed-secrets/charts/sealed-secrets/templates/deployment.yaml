@@ -5,9 +5,13 @@ metadata:
   name: {{ include "sealed-secrets.fullname" . }}
   namespace: {{ include "sealed-secrets.namespace" . }}
   labels: {{- include "sealed-secrets.labels" . | nindent 4 }}
-  {{- if .Values.commonAnnotations }}
-  annotations: {{- toYaml .Values.commonAnnotations | nindent 4 }}
-  {{- end }}
+    {{- if .Values.commonLabels }}
+    {{- include "sealed-secrets.render" (dict "value" .Values.commonLabels "context" $) | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- if .Values.commonAnnotations }}
+    {{- include "sealed-secrets.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
 spec:
   replicas: 1
   {{- if .Values.revisionHistoryLimit }}
@@ -102,7 +106,7 @@ spec:
             {{- end }}
             - --privatekey-annotations
             - {{ trimSuffix "," $privatekeyAnnotations | quote }}
-            {{- end }}            
+            {{- end }}
             {{- if $.Values.privateKeyLabels }}
             {{- $privateKeyLabels := ""}}
             {{- range $k, $v := $.Values.privateKeyLabels }}
@@ -117,12 +121,35 @@ spec:
             {{- if .Values.logInfoStdout }}
             - --log-info-stdout
             {{- end }}
+            {{- if .Values.logLevel }}
+            - --log-level
+            - {{ .Values.logLevel }}
+            {{- end }}
+            {{- if .Values.logFormat }}
+            - --log-format
+            - {{ .Values.logFormat }}
+            {{- end }}
           {{- end }}
           image: {{ printf "%s/%s:%s" .Values.image.registry .Values.image.repository .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{- if (.Values.resources.limits).cpu }}
+            - name: GOMAXPROCS
+              valueFrom:
+                resourceFieldRef:
+                  resource: limits.cpu
+            {{- end }}
+            {{- if (.Values.resources.limits).memory }}
+            - name: GOMEMLIMIT
+              valueFrom:
+                resourceFieldRef:
+                  resource: limits.memory
+            {{- end }}
           ports:
             - containerPort: 8080
               name: http
+            - containerPort: 8081
+              name: metrics
           {{- if .Values.startupProbe.enabled }}
           startupProbe: {{- include "sealed-secrets.render" (dict "value" (omit .Values.startupProbe "enabled") "context" $) | nindent 12 }}
             tcpSocket:
@@ -154,13 +181,13 @@ spec:
           {{- end }}
           volumeMounts:
             {{- if .Values.additionalVolumeMounts }}
-              {{- toYaml .Values.additionalVolumeMounts | nindent 12 }} 
+              {{- toYaml .Values.additionalVolumeMounts | nindent 12 }}
             {{- end }}
             - mountPath: /tmp
               name: tmp
-      volumes: 
+      volumes:
       {{- if .Values.additionalVolumes }}
-        {{- toYaml .Values.additionalVolumes | nindent 8 }} 
+        {{- toYaml .Values.additionalVolumes | nindent 8 }}
       {{- end }}
         - name: tmp
           emptyDir: {}

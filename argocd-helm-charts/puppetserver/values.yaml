@@ -1,13 +1,17 @@
 puppetserver:
-  fullnameOverride: puppetstack
-  nameOverride: puppetstack
-
   puppetserver:
     name: puppetserver
-    image: ghcr.io/voxpupuli/container-puppetserver
-    tag: 7.13.0
-    ingress:
-      enabled: false
+    puppeturl: "https://github.com/Obmondo/LinuxAid.git"
+    masters:
+      ingress:
+        enabled: false
+
+  r10k:
+    asSidecar: false
+
+  hiera:
+    name: hiera
+    hieradataurl: "https://github.com/Obmondo/linuxaid-config-template.git"
 
   postgresql:
     enabled: false
@@ -15,21 +19,25 @@ puppetserver:
   puppetdb:
     enabled: true
     name: puppetdb
-    image: ghcr.io/voxpupuli/container-puppetdb
-    tag: 7.14.0
     extraEnv:
-      PUPPETDB_POSTGRES_HOSTNAME: puppet-pgsql-rw
+      PUPPETDB_POSTGRES_HOSTNAME: puppetserver-pgsql-rw
 
   puppetboard:
-    enabled: false
+    enabled: true
     name: puppetboard
-    image: ghcr.io/voxpupuli/puppetboard
-    tag: 4.2.5
+
+  metrics:
+    prometheus:
+      disableAPICheck: true
+      puppetdb:
+        enabled: true
+      jmx:
+        enabled: false
 
   global:
     postgresql:
       auth:
-        existingSecret: puppet-pgsql-app
+        existingSecret: puppetserver-pgsql-app
         secretKeys:
           usernameKey: username
           userPasswordKey: password

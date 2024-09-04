@@ -1,4 +1,5 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -7,6 +8,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 ## [Unreleased]
 ### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+---
+## [2.23.1]
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+- Fixed `ServiceMonitor` bug for `port` value
+### Security
+---
+## [2.23.0]
+### Added
+- Added `ServiceMonitor` support for Prometheus monitoring
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+---
+## [2.22.1]
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+- Fixed opensearchJavaOpts defaults in README 
+### Security
+---
+## [2.22.0]
+### Added
+- Updated OpenSearch appVersion to 2.16.0
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+---
+
+## [2.21.0]
+### Added
+- Updated OpenSearch appVersion to 2.15.0
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+---
+## [2.20.0]
+### Added
+- Updated OpenSearch appVersion to 2.14.0
 ### Changed
 ### Deprecated
 ### Removed
@@ -403,7 +459,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 
-[Unreleased]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.19.0...HEAD
+[Unreleased]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.23.1...HEAD
+[2.23.1]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.23.0...opensearch-2.23.1
+[2.23.0]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.22.1...opensearch-2.23.0
+[2.22.1]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.22.0...opensearch-2.22.1
+[2.22.0]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.21.0...opensearch-2.22.0
+[2.21.0]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.20.0...opensearch-2.21.0
+[2.20.0]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.19.0...opensearch-2.20.0
 [2.19.0]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.18.0...opensearch-2.19.0
 [2.18.0]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.17.3...opensearch-2.18.0
 [2.17.3]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.17.2...opensearch-2.17.3

@@ -6,6 +6,7 @@ cert-manager:
   global:
     leaderElection:
       namespace: cert-manager
+    revisionHistoryLimit: 0
   prometheus:
     enabled: true
     servicemonitor:
@@ -31,8 +32,12 @@ cert-manager:
         cpu: 1m
         memory: 16Mi
 issuer:
+  name: letsencrypt
   enabled: false
   production: false
   preferredChain: null
 networkpolicies: false
 enableCertificateOwnerRef: true
+
+wildcardCertificates:
+  enabled: false

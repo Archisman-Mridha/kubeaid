@@ -111,7 +111,7 @@ spec:
             - name: PUPPETSERVER_PORT
               value: "{{ template "puppetserver.puppetserver-masters.port" . }}"
             - name: DNS_ALT_NAMES
-              value: {{ template "puppetdb.fullname" . }}
+              value: {{ template "puppetdb.san" . }}
             {{- if not (hasKey .Values.puppetdb.extraEnv "PUPPETDB_POSTGRES_HOSTNAME") }}
             - name: PUPPETDB_POSTGRES_HOSTNAME
               value: "{{ include "postgresql.hostname" . }}"
@@ -351,11 +351,6 @@ spec:
         - name: puppetdb-custom-configs
           configMap:
             name: {{ include "puppetdb.fullname" . }}-custom-configs
-        {{- end }}
-        {{- if .Values.puppetdb.customconfigs.enabled }}
-        - name: puppetdb-custom-configs
-          configMap:
-            name: puppetdb-custom-configs
         {{- end }}
       {{- if .Values.nodeSelector }}
       nodeSelector:

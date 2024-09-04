@@ -15,7 +15,7 @@ operator:
   deploymentName: mongodb-kubernetes-operator
 
   # Version of mongodb-kubernetes-operator
-  version: 0.8.3
+  version: 0.11.0
 
   # Uncomment this line to watch all namespaces
   # watchNamespace: "*"
@@ -28,6 +28,10 @@ operator:
     requests:
       cpu: 500m
       memory: 200Mi
+
+  # PriorityClass configuration for operator
+  # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/#priorityclass
+  priorityClassName: ''
 
   # replicas deployed for the operator pod. Running 1 is optimal and suggested.
   replicas: 1
@@ -57,17 +61,18 @@ database:
   # namespace: mongodb-database
 
 agent:
-  name: mongodb-agent
-  version: 12.0.25.7724-1
+  name: mongodb-agent-ubi
+  version: 107.0.7.8596-1
 versionUpgradeHook:
   name: mongodb-kubernetes-operator-version-upgrade-post-start-hook
-  version: 1.0.8
+  version: 1.0.9
 readinessProbe:
   name: mongodb-kubernetes-readinessprobe
-  version: 1.0.17
+  version: 1.0.20
 mongodb:
-  name: mongo
-  repo: docker.io
+  name: mongodb-community-server
+  repo: docker.io/mongodb
+  imageType: ubi8
 
 registry:
   agent: quay.io/mongodb

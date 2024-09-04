@@ -123,6 +123,9 @@ spec:
             {{- with .disableControllers }}
             - --disable-controllers={{ . }}
             {{- end }}
+            {{- with .disableInformerCache }}
+            - --disable-informer-cache={{ . }}
+            {{- end }}
             {{- with .garbageCollectionFrequency }}
             - --garbage-collection-frequency={{ . }}
             {{- end }}
@@ -162,6 +165,31 @@ spec:
             {{- end }}
             {{- with .namespace }}
             - --namespace={{ . }}
+            {{- end }}
+            {{- with .repositoryMaintenanceJob }}
+            {{- with .requests }}
+            {{- with .cpu }}
+            - --maintenance-job-cpu-request={{ . }}
+            {{- end }}
+            {{- with .memory }}
+            - --maintenance-job-mem-request={{ . }}
+            {{- end }}
+            {{- end }}
+            {{- with .limits }}
+            {{- with .cpu }}
+            - --maintenance-job-cpu-limit={{ . }}
+            {{- end }}
+            {{- with .memory }}
+            - --maintenance-job-mem-limit={{ . }}
+            {{- end }}
+            {{- end }}
+            {{- with .latestJobsCount }}
+            - --keep-latest-maintenance-jobs={{ . }}
+            {{- end }}
+            {{- end }}
+            {{- with .extraArgs }}
+            ### User-supplied overwrite flags
+            {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- end }}
           {{- with .Values.resources }}

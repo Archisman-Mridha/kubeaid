@@ -12,11 +12,11 @@
 image:
   registry: registry.gitlab.com
   image: gitlab-org/gitlab-runner
-  # tag: alpine-v11.6.0
+  # tag: alpine-v{{.Chart.AppVersion}}
 
 ## When using GitLab Runner Helm Chart with gitlab-runner-ubi-images (https://gitlab.com/gitlab-org/ci-cd/gitlab-runner-ubi-images/container_registry)
-## the installation fails because dumb-init is not packaged in the image. However, the tini is present.
-## This configuration will allow gitlab-runner-ubi-images users to explicitly enabled the use of `tini` instead of `dumb-init`
+## the installation fails because `dumb-init` is not packaged in the image. However, `tini` is present.
+## This configuration will allow gitlab-runner-ubi-images users to explicitly enable the use of `tini` instead of `dumb-init`
 useTini: false
 
 ## Specify a imagePullPolicy for the main runner deployment
@@ -37,7 +37,22 @@ imagePullPolicy: IfNotPresent
 #   - name: "image-pull-secret"
 
 ## Timeout, in seconds, for liveness and readiness probes of a runner pod.
-# probeTimeoutSeconds: 3
+# probeTimeoutSeconds: 4
+
+## Configure the livenessProbe
+livenessProbe: {}
+#   initialDelaySeconds: 60
+#   periodSeconds: 10
+#   successThreshold: 1
+#   failureThreshold: 3
+#   terminationGracePeriodSeconds: 30
+
+## Configure the readinessProbe
+readinessProbe: {}
+#   initialDelaySeconds: 60
+#   periodSeconds: 10
+#   successThreshold: 1
+#   failureThreshold: 3
 
 ## How many runner pods to launch.
 ##
@@ -49,7 +64,7 @@ imagePullPolicy: IfNotPresent
 ## The GitLab Server URL (with protocol) that want to register the runner against
 ## ref: https://docs.gitlab.com/runner/commands/index.html#gitlab-runner-register
 ##
-# gitlabUrl: http://gitlab.your-domain.com/
+# gitlabUrl: https://gitlab.your-domain.com/
 
 ## DEPRECATED: The Registration Token for adding new Runners to the GitLab Server.
 ##
@@ -58,8 +73,8 @@ imagePullPolicy: IfNotPresent
 # runnerRegistrationToken: ""
 
 ## The Runner Token for adding new Runners to the GitLab Server. This must
-## be retrieved from your GitLab Instance. It is token of already registered runner.
-## ref: (we don't yet have docs for that, but we want to use existing token)
+## be retrieved from your GitLab instance. It is the token of an already registered runner.
+## ref: (we don't have docs for that yet, but we want to use an existing token)
 ##
 # runnerToken: ""
 #
@@ -81,7 +96,7 @@ imagePullPolicy: IfNotPresent
 ## ref: https://docs.gitlab.com/runner/commands/#signals
 terminationGracePeriodSeconds: 3600
 
-## Set the certsSecretName in order to pass custom certficates for GitLab Runner to use
+## Set the certsSecretName in order to pass custom certficates for GitLab Runner to use.
 ## Provide resource name for a Kubernetes Secret Object in the same namespace,
 ## this is used to populate the /home/gitlab-runner/.gitlab-runner/certs/ directory
 ## ref: https://docs.gitlab.com/runner/configuration/tls-self-signed.html#supported-options-for-self-signed-certificates-targeting-the-gitlab-server
@@ -98,10 +113,10 @@ concurrent: 10
 ##
 shutdown_timeout: 0
 
-## Defines in seconds how often to check GitLab for a new builds
+## Defines in seconds how often to check GitLab for new builds
 ## ref: https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-global-section
 ##
-checkInterval: 30
+checkInterval: 3
 
 ## Configure GitLab Runner's logging level. Available values are: debug, info, warn, error, fatal, panic
 ## ref: https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-global-section
@@ -118,7 +133,12 @@ checkInterval: 30
 ##
 # sentryDsn:
 
-## A custom bash script that will be executed prior to the invocation
+## Configure GitLab Runner's maximum connection age for TLS keepalive connections.
+## ref https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-global-section
+##
+# connectionMaxAge: "15m"
+
+## A custom bash script that will be executed prior to the invocation of the
 ## gitlab-runner process
 #
 #preEntrypointScript: |
@@ -129,8 +149,8 @@ checkInterval: 30
 ## ref:
 ##
 ## When sessionServer is enabled, the user can either provide a public publicIP
-## or rely on the external IP auto discovery
-## When a serviceAccountName is used with the automounting to the pod disable,
+## or rely on the external IP auto discovery.
+## When a serviceAccountName is used with the automounting to the pod disabled,
 ## we recommend the usage of the publicIP
 sessionServer:
   enabled: false
@@ -138,13 +158,27 @@ sessionServer:
   # timeout: 1800
   # internalPort: 8093
   # externalPort: 9000
+
+  #In case sessionServer.serviceType is NodePort. If not defined, auto NodePort will be assigned.
+  # nodePort: 30093
+
   # publicIP: ""
   # loadBalancerSourceRanges:
   #   - 1.2.3.4/32
 
+  #Valid values: ClusterIP, Headless, NodePort, LoadBalancer
+  serviceType: LoadBalancer
+
 ## For RBAC support:
 rbac:
+  ## Specifies whether a Role and RoleBinding should be created
+  ## If this value is set to `true`, `serviceAccount.create` should also be set to either `true` or `false`
+  ##
   create: false
+  ## Define the generated serviceAccountName when create is set to true
+  ## It defaults to "gitlab-runner.fullname" if not provided
+  ## DEPRECATED: Please use `serviceAccount.name` instead
+  generatedServiceAccountName: ""
 
   ## Define list of rules to be added to the rbac role permissions.
   ## Each rule supports the keys:
@@ -154,34 +188,47 @@ rbac:
   ##
   ## Read more about the recommended rules on the following link
   ##
-  ## ref: https://docs.gitlab.com/runner/executors/kubernetes.html#configure-runner-api-permissions
+  ## ref: https://docs.gitlab.com/runner/executors/kubernetes/index.html#configure-runner-api-permissions
   ##
   rules: []
-  # - resources: ["configmaps", "events", "pods", "pods/attach", "pods/exec", "secrets", "services"]
-  #   verbs: ["get", "list", "watch", "create", "patch", "update", "delete"]
-  # - apiGroups: [""]
-  #   resources: ["pods/exec"]
-  #   verbs: ["create", "patch", "delete"]
-  # - apiGroups: [""]
-  #   resources: ["pods/log"]
-  #   verbs: ["get"]
+    # - resources: ["events"]
+    #   verbs: ["list", "watch"]
+    # - resources: ["namespaces"]
+    #   verbs: ["create", "delete"]
+    # - resources: ["pods"]
+    #   verbs: ["create","delete","get"]
+    # - apiGroups: [""]
+    #   resources: ["pods/attach","pods/exec"]
+    #   verbs: ["get","create","patch","delete"]
+    # - apiGroups: [""]
+    #   resources: ["pods/log"]
+    #   verbs: ["get","list"]
+    # - resources: ["secrets"]
+    #   verbs: ["create","delete","get","update"]
+    # - resources: ["serviceaccounts"]
+    #   verbs: ["get"]
+    # - resources: ["services"]
+    #   verbs: ["create","get"]
 
   ## Run the gitlab-bastion container with the ability to deploy/manage containers of jobs
   ## cluster-wide or only within namespace
   clusterWideAccess: false
 
   ## Use the following Kubernetes Service Account name if RBAC is disabled in this Helm chart (see rbac.create)
+  ## DEPRECATED: Please use `serviceAccount.name` instead
   ##
   # serviceAccountName: default
 
   ## Specify annotations for Service Accounts, useful for annotations such as eks.amazonaws.com/role-arn.
-  ## Values may refer other values as the _tpl_ function is implicitly applied. Mind the quotes when using this, e.g.
+  ## Values may refer to other values as the _tpl_ function is implicitly applied. Mind the quotes when using this, e.g.
   ## serviceAccountAnnotations:
   ##   eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.accountId }}:role/{{ .Values.global.iamRoleName }}"
   ##
   ## ref: https://docs.aws.amazon.com/eks/latest/userguide/associate-service-account-role.html
   ##
-  # serviceAccountAnnotations: {}
+  ## DEPRECATED: Please use `serviceAccount.annotations` instead
+  ##
+  serviceAccountAnnotations: {}
 
   ## Use podSecurity Policy
   ## ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/
@@ -194,7 +241,34 @@ rbac:
   ##
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account
   ##
-  # imagePullSecrets: []
+  ## DEPRECATED: Please use `serviceAccount.imagePullSecrets` instead
+  ##
+  imagePullSecrets: []
+
+## Configure ServiceAccount
+##
+serviceAccount:
+  ## Specifies whether a ServiceAccount should be created
+  ##
+  ## TODO: Set default to `false`
+  # create: false
+  ## The name of the ServiceAccount to use.
+  ## If not set and create is `true`, a name is generated using the `gitlab-runner.fullname`` template
+  ##
+  name: ""
+  ## Additional custom annotations for the ServiceAccount, useful for annotations such as eks.amazonaws.com/role-arn.
+  ## Values may refer other values as the _tpl_ function is implicitly applied. Mind the quotes when using this, e.g.
+  ## serviceAccountAnnotations:
+  ##   eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.accountId }}:role/{{ .Values.global.iamRoleName }}"
+  ##
+  ## ref: https://docs.aws.amazon.com/eks/latest/userguide/specify-service-account-role.html
+  ##
+  annotations: {}
+  ## Specify one or more imagePullSecrets used for pulling the runner image
+  ##
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account
+  ##
+  imagePullSecrets: []
 
 ## Configure integrated Prometheus metrics exporter
 ##
@@ -320,7 +394,7 @@ service:
 ## Configuration for the Pods that the runner launches for each new job
 ##
 runners:
-  # runner configuration, where the multi line strings is evaluated as
+  # runner configuration, where the multi line string is evaluated as a
   # template so you can specify helm values inside of it.
   #
   # tpl: https://helm.sh/docs/howto/charts_tips_and_tricks/#using-the-tpl-function
@@ -356,7 +430,7 @@ runners:
   ##
   # name: ""
 
-  ## DEPRECATED:Specify the maximum timeout (in seconds) that will be set for job when using this Runner
+  ## DEPRECATED: Specify the maximum timeout (in seconds) that will be set for job when using this Runner
   ##
   ## ref: https://docs.gitlab.com/ee/ci/runners/new_creation_workflow.html
   ##
@@ -432,7 +506,7 @@ runners:
     ## Use this line for access using Azure with azure-account-name and azure-account-key
     # secretName: azureaccess
 
-## Specify the name of the scheduler which used to schedule runner pods.
+## Specify the name of the scheduler which is used to schedule runner pods.
 ## Kubernetes supports multiple scheduler configurations.
 ## ref: https://kubernetes.io/docs/reference/scheduling
 # schedulerName: "my-custom-scheduler"
@@ -447,6 +521,16 @@ securityContext:
   privileged: false
   capabilities:
     drop: ["ALL"]
+
+## Configure update strategy for multi-replica deployments
+## Kubernetes supports types Recreate, and RollingUpdate
+## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+##
+strategy: {}
+  # rollingUpdate:
+  #   maxSurge: 1
+  #   maxUnavailable: 0
+  # type: RollingUpdate
 
 ## Configure securitycontext valid for the whole pod
 ## ref: https://kubernetes.io/docs/concepts/security/pod-security-standards/
@@ -475,7 +559,7 @@ resources: {}
   #   ephemeral-storage: 256Mi
 
 ## Affinity for pod assignment
-## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ##
 affinity: {}
 
@@ -500,7 +584,7 @@ nodeSelector: {}
   # node-role.kubernetes.io/worker: "true"
 
 ## List of node taints to tolerate (requires Kubernetes >= 1.6)
-## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 ##
 tolerations: []
   # Example: Regular worker nodes may have a taint, thus you need to tolerate the taint
@@ -516,6 +600,24 @@ tolerations: []
 # envVars:
 #   - name: RUNNER_EXECUTOR
 #     value: kubernetes
+
+## Additional environment variables from key-value pairs.
+extraEnv: {}
+  # CACHE_S3_SERVER_ADDRESS: s3.amazonaws.com
+  # CACHE_S3_BUCKET_NAME: runners-cache
+  # CACHE_S3_BUCKET_LOCATION: us-east-1
+  # CACHE_SHARED: true
+
+## Additional environment variables from other data sources
+extraEnvFrom: {}
+  # CACHE_S3_ACCESS_KEY:
+  #   secretKeyRef:
+  #     name: s3access
+  #     key: accesskey
+  # CACHE_S3_SECRET_KEY:
+  #   secretKeyRef:
+  #     name: s3access
+  #     key: secretkey
 
 ## list of hosts and IPs that will be injected into the pod's hosts file
 hostAliases: []
@@ -541,6 +643,17 @@ deploymentLabels: {}
   # Example:
   # owner.team: <my_cool_team>
 
+## Lifecycle options to be added to deployment
+##
+deploymentLifecycle: {}
+  # Example
+  # preStop:
+  #   exec:
+  #     command: ["/bin/sh", "-c", "echo 'shutting down'"]
+
+## Set hostname for runner pods
+#hostname: my-gitlab-runner
+
 ## Annotations to be added to manager pod
 ##
 podAnnotations: {}
@@ -555,7 +668,7 @@ podLabels: {}
 
 ## HPA support for custom metrics:
 ## This section enables runners to autoscale based on defined custom metrics.
-## In order to use this functionality, Need to enable a custom metrics API server by
+## In order to use this functionality, you need to enable a custom metrics API server by
 ## implementing "custom.metrics.k8s.io" using supported third party adapter
 ## Example: https://github.com/directxman12/k8s-prometheus-adapter
 ##
@@ -611,3 +724,24 @@ volumes: []
   # - name: my-volume
   #   persistentVolumeClaim:
   #     claimName: my-pvc
+
+## Array of extra K8s manifests to deploy
+##
+extraObjects: []
+# - apiVersion: external-secrets.io/v1beta1
+#   kind: ExternalSecret
+#   metadata:
+#     name: '{{ include "gitlab-runner.secret" . }}'
+#   spec:
+#     refreshInterval: 1h
+#     secretStoreRef:
+#       kind: SecretStore
+#       name: my-secret-store
+#     target:
+#       template:
+#         data:
+#           runner-registration-token: "" # need to leave as an empty string for compatibility reasons
+#           runner-token: "{{`{{ .runnerToken }}`}}"
+#     dataFrom:
+#     - extract:
+#         key: my-secret-store-secret

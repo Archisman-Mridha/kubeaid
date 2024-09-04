@@ -1,0 +1,34 @@
+cilium:
+  operator:
+    rollOutPods: true
+    priorityClassName: "system-node-critical"
+  kubeProxyReplacement: "true"
+  ipam:
+    mode: "kubernetes"
+  rollOutCiliumPods: true
+  priorityClassName: "system-node-critical"
+  hubble:
+    metrics:
+      enabled:
+        - dns:query;ignoreAAAA
+        - drop
+        - tcp
+        - flow
+        - icmp
+        - http
+    relay:
+      enabled: true
+      rollOutPods: true
+    ui:
+      enabled: true
+      rollOutPods: true
+
+  # Uncomment to enable Cilium NetKit feature with ClusterAPI.
+  # NOTE : Works for Linux Kernel version 6.7 and above.
+  # routingMode: native
+  # bpf:
+  #   masquerade: true
+  #   datapathMode: netkit
+  # autoDirectNodeRoutes: true
+  # ipv4NativeRoutingCIDR: {{`{{ .AWSCluster.spec.network.vpc.cidrBlock }}`}}
+  # directRoutingSkipUnreachable: true
