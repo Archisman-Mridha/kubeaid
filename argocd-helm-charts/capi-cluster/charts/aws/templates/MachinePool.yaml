@@ -10,11 +10,9 @@ spec:
   replicas: {{ $machinePool.replicas }}
   template:
     metadata:
-      labels:
-        machine-pool: {{ printf "%s-%s" $.Values.global.clusterName $machinePool.name }}
-        {{- if $machinePool.labels }}
-        {{- toYaml $machinePool.labels | nindent 8 }}
-        {{- end }}
+      {{- if $machinePool.labels }}
+      labels: {{- toYaml $machinePool.labels | nindent 8 }}
+      {{- end }}
     spec:
       bootstrap:
         configRef:
