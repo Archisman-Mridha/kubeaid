@@ -5,16 +5,21 @@ apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachinePool
 metadata:
   name: {{ printf "%s-%s" $.Values.global.clusterName $machinePool.name }}
-  annotations:
-    cluster.x-k8s.io/replicas-managed-by: "external-autoscaler"
 spec:
   clusterName: {{ $.Values.global.clusterName }}
   replicas: {{ $machinePool.replicas }}
   template:
+    {{- if $machinePool.labels }}
     metadata:
-      {{- if $machinePool.labels }}
+      # Label should meet one of the following criterias to propagate to Node :
+      #
+      # (1) Has node-role.kubernetes.io as prefix.
+      # (2) Belongs to node-restriction.kubernetes.io domain.
+      # (3) Belongs to node.cluster.x-k8s.io domain.
+      #
+      # REFER : https://cluster-api.sigs.k8s.io/developer/architecture/controllers/metadata-propagation#machine
       labels: {{- toYaml $machinePool.labels | nindent 8 }}
-      {{- end }}
+    {{- end }}
     spec:
       bootstrap:
         configRef:

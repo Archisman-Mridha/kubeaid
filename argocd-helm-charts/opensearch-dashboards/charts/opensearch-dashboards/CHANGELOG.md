@@ -14,6 +14,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 ### Security
 ---
+## [2.23.0]
+### Added
+- Updated OpenSearch Dashboards appVersion to 2.17.0
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+---
+## [2.22.0]
+### Added
+- Ability to add additional `labels` to `serviceMonitor`
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+---
+## [2.21.2]
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+- Bug `protocol` missing for metrics in `Service`
+### Security
+---
 ## [2.21.1]
 ### Added
 ### Changed
@@ -140,7 +167,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 ### Fixed
 ### Security
-
 ---
 ## [2.11.1]
 ### Added
@@ -377,7 +403,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 ### Security
 
-[Unreleased]: https://github.com/opensearch-project/helm-charts/compare/opensearch-dashboards-2.21.1...HEAD
+[Unreleased]: https://github.com/opensearch-project/helm-charts/compare/opensearch-dashboards-2.23.0...HEAD
+[2.23.0]: https://github.com/opensearch-project/helm-charts/compare/opensearch-dashboards-2.22.0...opensearch-dashboards-2.23.0
+[2.22.0]: https://github.com/opensearch-project/helm-charts/compare/opensearch-dashboards-2.21.1...opensearch-dashboards-2.22.0
+[2.21.2]: https://github.com/opensearch-project/helm-charts/compare/opensearch-dashboards-2.21.1...opensearch-dashboards-2.21.2
 [2.21.1]: https://github.com/opensearch-project/helm-charts/compare/opensearch-dashboards-2.21.0...opensearch-dashboards-2.21.1
 [2.21.0]: https://github.com/opensearch-project/helm-charts/compare/opensearch-dashboards-2.20.0...opensearch-dashboards-2.21.0
 [2.20.0]: https://github.com/opensearch-project/helm-charts/compare/opensearch-dashboards-2.19.1...opensearch-dashboards-2.20.0

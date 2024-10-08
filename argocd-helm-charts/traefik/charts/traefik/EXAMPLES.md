@@ -416,6 +416,17 @@ ports:
       enabled: true
 ```
 
+You can also create two `Service`, one for TCP and one for UDP:
+
+```yaml
+ports:
+  websecure:
+    http3:
+      enabled: true
+service:
+  single: false
+```
+
 # Use PROXY protocol on Digital Ocean
 
 PROXY protocol is a protocol for sending client connection information, such as origin IP addresses and port numbers, to the final backend server, rather than discarding it at the load balancer.
@@ -480,7 +491,7 @@ See [#396](https://github.com/traefik/traefik-helm-chart/issues/396) for more de
 Once the provider is ready, it can be used in an `IngressRoute`:
 
 ```yaml
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: [...]
@@ -490,6 +501,8 @@ spec:
   tls:
     certResolver: letsencrypt
 ```
+
+:information_source: Change `apiVersion` to `traefik.containo.us/v1alpha1` for charts prior to v28.0.0
 
 See [the list of supported providers](https://doc.traefik.io/traefik/https/acme/#providers) for others.
 

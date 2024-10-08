@@ -14,6 +14,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 ### Security
 ---
+## [2.25.0]
+### Added
+- Updated OpenSearch Dashboards appVersion to 2.17.0
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+---
+## [2.24.1]
+### Added
+- Allow user-defined labels on persistent volume claim
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+=======
+## [2.24.0]
+### Added
+- Ability to add additional `labels` to `serviceMonitor`
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+---
+## [2.23.2]
+### Added
+- Metrics configuration in both `Service` templates
+### Changed
+### Deprecated
+### Removed
+### Fixed
+- Bug `protocol` missing for metrics in `Service`
+### Security
+---
 ## [2.23.1]
 ### Added
 ### Changed
@@ -38,7 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 ### Removed
 ### Fixed
-- Fixed opensearchJavaOpts defaults in README 
+- Fixed opensearchJavaOpts defaults in README
 ### Security
 ---
 ## [2.22.0]
@@ -50,7 +87,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 ### Security
 ---
-
 ## [2.21.0]
 ### Added
 - Updated OpenSearch appVersion to 2.15.0
@@ -81,8 +117,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.18.0]
 ### Added
 ### Breaking
- - Requires an initial admin password to be setup starting from App Version OpenSearch 2.12.0. Refer this github issue: https://github.com/opensearch-project/security/issues/3622
- - Updated OpenSearch appVersion to 2.12.0
+- Requires an initial admin password to be setup starting from App Version OpenSearch 2.12.0. Refer this github issue: https://github.com/opensearch-project/security/issues/3622
+- Updated OpenSearch appVersion to 2.12.0
 ### Changed
 ### Deprecated
 ### Removed
@@ -458,8 +494,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 ### Security
 
-
-[Unreleased]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.23.1...HEAD
+[Unreleased]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.25.0...HEAD
+[2.25.0]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.24.1...opensearch-2.25.0
+[2.24.1]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.24.0...opensearch-2.24.1
+[2.24.0]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.23.1...opensearch-2.24.0
+[2.23.2]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.23.1...opensearch-2.23.2
 [2.23.1]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.23.0...opensearch-2.23.1
 [2.23.0]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.22.1...opensearch-2.23.0
 [2.22.1]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.22.0...opensearch-2.22.1
@@ -506,4 +545,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.2.0]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.1.0...opensearch-2.2.0
 [2.1.0]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.0.1...opensearch-2.1.0
 [2.0.1]: https://github.com/opensearch-project/helm-charts/compare/opensearch-2.0.0...opensearch-2.0.1
-
