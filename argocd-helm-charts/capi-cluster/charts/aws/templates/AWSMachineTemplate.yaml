@@ -24,7 +24,7 @@ metadata:
 spec:
   template:
     spec:
-      ami: {{ toYaml $nodeGroup.ami | nindent 6 }}
+      ami: {{ toYaml $nodeGroup.ami | nindent 8 }}
       iamInstanceProfile: nodes.cluster-api-provider-aws.sigs.k8s.io
       instanceType: {{ $nodeGroup.instanceType }}
       sshKeyName: {{ $nodeGroup.sshKeyName }}
