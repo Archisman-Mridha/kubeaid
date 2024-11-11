@@ -5,7 +5,8 @@ global:
     version: v1.8.4
   capa:
     version: v2.7.1
-    autoScaler: true
+    enableMachinePools: false
+    enableClusterAutoscaler: true
   caph:
     version: v1.0.0-beta.43
   capz:

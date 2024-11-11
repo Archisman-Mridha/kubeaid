@@ -16,7 +16,7 @@ controlPlane:
   ami:
     id: ami-05145146e3a9db6f3
 
-machinePools:
+nodeGroups:
   - name: primary
     replicas: 1
     region: us-east-2
