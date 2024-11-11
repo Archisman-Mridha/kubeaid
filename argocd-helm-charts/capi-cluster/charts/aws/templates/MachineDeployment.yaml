@@ -23,6 +23,7 @@ spec:
   replicas: {{ $nodeGroup.replicas | default 2 }}
   template:
     spec:
+      clusterName: {{ $.Values.global.clusterName }}
       bootstrap:
         configRef:
           apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
