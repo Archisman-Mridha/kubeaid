@@ -117,7 +117,7 @@ Bitnami charts allow setting resource requests and limits for all containers ins
 
 To make this process easier, the chart contains the `resourcesPreset` values, which automatically sets the `resources` section according to different presets. Check these presets in [the bitnami/common chart](https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15). However, in production workloads using `resourcePreset` is discouraged as it may not fully adapt to your specific needs. Find more information on container resource management in the [official Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 
-### [Rolling VS Immutable tags](https://docs.vmware.com/en/VMware-Tanzu-Application-Catalog/services/tutorials/GUID-understand-rolling-tags-containers-index.html)
+### [Rolling VS Immutable tags](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-understand-rolling-tags-containers-index.html)
 
 It is strongly recommended to use immutable tags in a production environment. This ensures your deployment does not change automatically if the same tag is updated with a different image.
 
@@ -403,7 +403,7 @@ helm install test --set persistence.existingClaim=PVC_REDMINE,mariadb.persistenc
 | `volumePermissions.resourcesPreset`                         | Set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if volumePermissions.resources is set (volumePermissions.resources is recommended for production). | `nano`  |
 | `volumePermissions.resources`                               | Set container requests and limits for different resources like CPU or memory (essential for production workloads)                                                                                                                                     | `{}`    |
 | `volumePermissions.containerSecurityContext.enabled`        | Enable init container's Security Context                                                                                                                                                                                                              | `true`  |
-| `volumePermissions.containerSecurityContext.seLinuxOptions` | Set SELinux options in container                                                                                                                                                                                                                      | `nil`   |
+| `volumePermissions.containerSecurityContext.seLinuxOptions` | Set SELinux options in container                                                                                                                                                                                                                      | `{}`    |
 | `volumePermissions.containerSecurityContext.runAsUser`      | Set init container's Security Context runAsUser                                                                                                                                                                                                       | `0`     |
 
 ### RBAC Parameters
@@ -493,7 +493,7 @@ helm install test --set persistence.existingClaim=PVC_REDMINE,mariadb.persistenc
 | `mailReceiver.podSecurityContext.supplementalGroups`   | Set filesystem extra groups                                                                                                                   | `[]`          |
 | `mailReceiver.podSecurityContext.fsGroup`              | Set Redmine pod's Security Context fsGroup                                                                                                    | `1001`        |
 | `mailReceiver.containerSecurityContext.enabled`        | mailReceiver Container securityContext                                                                                                        | `false`       |
-| `mailReceiver.containerSecurityContext.seLinuxOptions` | Set SELinux options in container                                                                                                              | `nil`         |
+| `mailReceiver.containerSecurityContext.seLinuxOptions` | Set SELinux options in container                                                                                                              | `{}`          |
 | `mailReceiver.containerSecurityContext.runAsUser`      | User ID for the mailReceiver container                                                                                                        | `1001`        |
 | `mailReceiver.containerSecurityContext.runAsNonRoot`   | Whether to run the mailReceiver container as a non-root user                                                                                  | `true`        |
 | `mailReceiver.podAnnotations`                          | Additional pod annotations                                                                                                                    | `{}`          |
@@ -739,7 +739,7 @@ helm upgrade redmine bitnami/redmine \
 
 #### Useful links
 
-- [Bitnami Tutorial](https://docs.vmware.com/en/VMware-Tanzu-Application-Catalog/services/tutorials/GUID-resolve-helm2-helm3-post-migration-issues-index.html)
+- [Bitnami Tutorial](https://techdocs.broadcom.com/us/en/vmware-tanzu/application-catalog/tanzu-application-catalog/services/tac-doc/apps-tutorials-resolve-helm2-helm3-post-migration-issues-index.html)
 - [Helm docs](https://helm.sh/docs/topics/v2_v3_migration)
 - [Helm Blog](https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3)
 

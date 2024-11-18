@@ -24,6 +24,7 @@ grafana:
   server: graphs.obmondo.com
   version: 11.1.4
 prometheusRule:
+  dns: true
   backup: true
   btrfs: true
   cert_expiry: true
@@ -50,9 +51,10 @@ prometheusRule:
   service_sssd: true
   service_omsagent: true
   services: true
-  smart: true
+  smartmon_disk_health: true
   ssacli: true
   zfsExporter: true
+  smartmon_sata: true
 alertmanager:
   version: v0.27.0
   config:

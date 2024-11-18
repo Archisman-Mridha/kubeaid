@@ -2,9 +2,9 @@
 
 OpenCost and OpenCost UI
 
-![Version: 1.42.0](https://img.shields.io/badge/Version-1.42.0-informational?style=flat-square)
+![Version: 1.42.3](https://img.shields.io/badge/Version-1.42.3-informational?style=flat-square)
 ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
-![AppVersion: 1.111.0](https://img.shields.io/badge/AppVersion-1.111.0-informational?style=flat-square)
+![AppVersion: 1.113.0](https://img.shields.io/badge/AppVersion-1.113.0-informational?style=flat-square)
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/opencost)](https://artifacthub.io/packages/search?repo=opencost)
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/opencost-oci)](https://artifacthub.io/packages/search?repo=opencost-oci)
 
@@ -70,7 +70,7 @@ $ helm install opencost opencost/opencost
 | opencost.exporter.image.pullPolicy | string | `"IfNotPresent"` | Exporter container image pull policy |
 | opencost.exporter.image.registry | string | `"ghcr.io"` | Exporter container image registry |
 | opencost.exporter.image.repository | string | `"opencost/opencost"` | Exporter container image name |
-| opencost.exporter.image.tag | string | `"1.111.0@sha256:6aa68e52a24b14ba41f23db08d1b9db1429a1c0300f4c0381ecc2c61fc311a97"` | Exporter container image tag |
+| opencost.exporter.image.tag | string | `"1.113.0@sha256:b313d6d320058bbd3841a948fb636182f49b46df2368d91e2ae046ed03c0f83c"` | Exporter container image tag |
 | opencost.exporter.livenessProbe.enabled | bool | `true` | Whether probe is enabled |
 | opencost.exporter.livenessProbe.failureThreshold | int | `3` | Number of failures for probe to be considered failed |
 | opencost.exporter.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds before probe is initiated |

@@ -1,6 +1,61 @@
 # Changelog
 All releases and the changes included in them (pulled from git commits added since last release) will be detailed in this file.
 
+## 5.1.0
+### Minor Version Upgrades
+- Updated opensearch-dashboards from version 2.24.1 to 2.25.0
+- Updated opensearch from version 2.26.1 to 2.27.0
+- Updated oncall from version 1.11.5 to 1.12.1
+- Updated mariadb-operator from version 0.35.1 to 0.36.0
+- Updated keda from version 2.15.2 to 2.16.0
+- Updated external-dns from version 8.3.12 to 8.5.1
+- Updated crossplane from version 1.17.2 to 1.18.0
+- Updated argo-cd from version 7.6.12 to 7.7.0
+
+### Patch Version Upgrades
+- Updated sealed-secrets from version 2.16.1 to 2.16.2
+- Updated rook-ceph-cluster from version v1.15.4 to v1.15.5
+- Updated rook-ceph from version v1.15.4 to v1.15.5
+- Updated redmine from version 30.0.2 to 30.0.4
+- Updated rabbitmq-cluster-operator from version 4.3.25 to 4.3.27
+- Updated opencost from version 1.42.2 to 1.42.3
+- Updated metallb from version 6.3.13 to 6.3.15
+- Updated cluster-autoscaler from version 9.43.1 to 9.43.2
+
+## 5.0.0
+### Major Version Upgrades
+- Updated traefik from version 32.1.1 to 33.0.0
+
+### Minor Version Upgrades
+- Updated tigera-operator from version v3.28.2 to v3.29.0
+- Updated kubernetes-dashboard from version 7.9.0 to 7.10.0
+
+### Patch Version Upgrades
+- Updated velero from version 7.2.1 to 7.2.2
+- Updated redmine from version 30.0.0 to 30.0.2
+- Updated opencost from version 1.42.0 to 1.42.2
+- Updated gitlab-runner from version 0.70.2 to 0.70.3
+- Updated external-dns from version 8.3.11 to 8.3.12
+- Updated argocd-image-updater from version 0.11.0 to 0.11.1
+
+### Improvements
+- [`81ba9fea`](../../commit/81ba9fea) fix: cert-manager failed to get parsed, due to templating issue feat: added dnszone support
+- [`a40f15a6`](../../commit/a40f15a6) Adding support for specifying root EBS volume size
+- [`c9b77dd0`](../../commit/c9b77dd0) fixed the golang version in the dockerfile, after changing the base image
+- [`ab50d689`](../../commit/ab50d689) updated the dockerfile to use a noble base image
+- [`74a1636e`](../../commit/74a1636e) fix: the context for docker build and removed obsolete options for template workflow
+- [`3c0141b3`](../../commit/3c0141b3) fix: run the ci, when the workflow file is change for container image build
+- [`32ef499c`](../../commit/32ef499c) fix: the image tag for the kubeaid-ci container image
+- [`146230ad`](../../commit/146230ad) removed the bin/tag-update.sh script
+- [`fef4c5cb`](../../commit/fef4c5cb) feat: added a support for updating argocd template file with correct tag and added doc as well
+- [`38ba0c12`](../../commit/38ba0c12) Add config repo tag updater script and install yq
+- [`885d9982`](../../commit/885d9982) update add-commits script to support github commit hash link by adding relative link to commit hash
+- [`86107ac2`](../../commit/86107ac2) remove : and add local commit hash linking in changelog for github
+- [`7b703a29`](../../commit/7b703a29) Add comment for kubeaid managed apps from cluster specific jsonnet
+- [`0405d178`](../../commit/0405d178) Remove redmine app from list of kubeaid apps in Prometheus recording rule
+- [`d9e08469`](../../commit/d9e08469) Fix and rename kubeaid managed apps and recording rules for Prometheus
+- [`d9153b41`](../../commit/d9153b41) Fixing link to the KubeAid Bootstrap Script container image in KubeAid demo blog (Part 1)
+
 ## 4.3.0
 ### Minor Version Upgrades
 - Updated mariadb-operator from version 0.34.0 to 0.35.1

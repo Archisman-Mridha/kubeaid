@@ -1,4 +1,4 @@
-secretName: cloud-credentials 
+secretName: cloud-credentials
 bastion:
   enabled: true
 vpc:

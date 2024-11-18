@@ -1,8 +1,8 @@
 global:
   clusterName: kubeaid-demo
+  enableClusterAutoscaler: false
   capa:
     enableMachinePools: true
-    enableClusterAutoscaler: false
   kubeaidConfig:
     repo: https://github.com/Archisman-Mridha/kubeaid-config
 
