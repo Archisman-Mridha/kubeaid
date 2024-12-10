@@ -17,7 +17,7 @@ metadata:
   namespace: {{ $namespace }}
 spec:
   configSecret:
-    name: {{ .Values.hetzner.secretName }}
+    name: {{ .Values.hetzner.cloudCredentialsSecretName }}
     namespace: {{ $namespace }}
   version: {{ .Values.global.caph.version }}
   fetchConfig:
