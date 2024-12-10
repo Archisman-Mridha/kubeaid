@@ -1,4 +1,4 @@
-{{- if (.Values.blackbox).probe }}
+{{- if and (((.Values).keycloakx).ingress).enabled ((.Values).blackbox).probe }}
 kind: Probe
 apiVersion: monitoring.coreos.com/v1
 metadata:
@@ -11,7 +11,7 @@ spec:
   targets:
     staticConfig:
       static:
-        {{- range (((.Values).keycloakx).ingress).rules }}
-        - {{ tpl .host $ | quote }}
+        {{- range (((.Values).keycloakx).ingress).hosts }}
+        - {{ . }}
         {{- end }}
 {{- end}}

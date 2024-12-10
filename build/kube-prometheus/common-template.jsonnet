@@ -85,6 +85,8 @@ local default_vars = {
     'velero',
     'whoami',
     'zfs-localpv',
+    'smartmon',
+    'mdraid',
   ],
   prometheus_operator_resources: {
     limits: { memory: '80Mi' },
@@ -159,6 +161,7 @@ local default_vars = {
     sealedsecrets: true,
     etcd: true,
     velero: false,
+    zfs: false,
     opensearch: false,
     'cert-manager': true,
     'kubernetes-version-info': true,
@@ -169,6 +172,9 @@ local default_vars = {
     'argo-cd-sync-state': true,
     rabbitmq: false,
     'monitor-prometheus-stack': false,
+    smartmon: false,
+    mdraid: true,
+    opencost: false,
   },
   mixin_configs: {
     // Example:
@@ -243,6 +249,26 @@ local mixins = remove_nulls([
   addMixin(
     'monitoring',
     (import 'mixins/monitoring/mixin.libsonnet'),
+    vars,
+  ),
+  addMixin(
+    'smartmon',
+    (import 'mixins/smartmon/mixin.libsonnet'),
+    vars,
+  ),
+  addMixin(
+    'zfs',
+    (import 'mixins/zfs/mixin.libsonnet'),
+    vars,
+  ),
+  addMixin(
+    'mdraid',
+    (import 'mixins/mdraid/mixin.libsonnet'),
+    vars,
+  ),
+  addMixin(
+    'opencost',
+    (import 'github.com/adinhodovic/opencost-mixin/mixin.libsonnet'),
     vars,
   ),
 ]);
@@ -557,6 +583,11 @@ local kp =
       grafana+: {
         plugins: vars.grafana_plugins,
         resources: vars.grafana_resources,
+        dashboards+: {
+          [mixin.name]: mixin.grafanaDashboards
+          for mixin in mixins
+          if mixin.grafanaDashboards != null
+        },
         folderDashboards+:: vars.grafana_dashboards,
         analytics+: {
           check_for_updates: false,

@@ -1,0 +1,17 @@
+{{- if and (((.Values).sonarqube).ingress).enabled ((.Values).blackbox).probe }}
+kind: Probe
+apiVersion: monitoring.coreos.com/v1
+metadata:
+  name: blackbox-probe-sonarqube
+spec:
+  interval: 6h
+  module: http_2xx
+  prober:
+    url: blackbox-exporter.monitoring.svc.cluster.local:19115
+  targets:
+    staticConfig:
+      static:
+        {{- range (((.Values).sonarqube).ingress).hosts }}
+        - {{ tpl .host $ | quote }}
+        {{- end }}
+{{- end}}

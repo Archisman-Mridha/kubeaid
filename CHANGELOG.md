@@ -1,6 +1,136 @@
 # Changelog
 All releases and the changes included in them (pulled from git commits added since last release) will be detailed in this file.
 
+## 6.3.0
+### Minor Version Upgrades
+- Updated traefik from version 33.0.0 to 33.1.0
+- Updated sonarqube from version 10.7.0+3598 to 10.8.0
+- Updated sealed-secrets from version 2.16.2 to 2.17.0
+- Updated aws-efs-csi-driver from version 3.0.8 to 3.1.2
+
+### Patch Version Upgrades
+- Updated teleport-kube-agent from version 17.0.2 to 17.0.4
+- Updated teleport-cluster from version 17.0.2 to 17.0.4
+- Added strimzi-kafka-operator from version 0.38.0 to 0.38.0
+- Updated rabbitmq-cluster-operator from version 4.3.27 to 4.3.29
+- Updated openobserve-collector from version 0.3.14 to 0.3.15
+- Updated openobserve-standalone from version 0.13.5 to 0.13.6
+- Updated openobserve from version 0.13.5 to 0.13.8
+- Updated oncall from version 1.13.3 to 1.13.9
+- Updated metallb from version 6.3.15 to 6.3.16
+- Updated fluent-bit from version 0.48.1 to 0.48.3
+- Updated external-dns from version 8.6.0 to 8.6.1
+- Updated crossplane from version 1.18.0 to 1.18.1
+- Updated argo-cd from version 7.7.5 to 7.7.7
+
+### Improvements
+- [`27bc985d`](../../commit/27bc985d) fix helm repo update script failing to untar newly downloaded chart tar files when naming is different and HELM_UPSTREAM_CHART_VERSION giving unbound variable error when there is no upstream chart already present
+- [`59cd0be3`](../../commit/59cd0be3) adding blackbox prober for important services
+- [`f906eef5`](../../commit/f906eef5) add steps to add new alerts for servers
+- [`c763329f`](../../commit/c763329f) feat: add dashboard if the upstream mixin support it
+- [`05ed13ba`](../../commit/05ed13ba) Fix netpol for cert-manager to allow prometheus scrapes
+- [`b3e5b381`](../../commit/b3e5b381) add zfs state degrade rule in prometheus linuxaid
+- [`0ef419fe`](../../commit/0ef419fe) add mixtool lint check in ci for jsonnet files
+- [`877edfda`](../../commit/877edfda) fix mixtool lint
+- [`5b1c6824`](../../commit/5b1c6824) Add keycloak Upgrade guide
+- [`01982f7d`](../../commit/01982f7d) Make dnszone and dns hostedzone optional for cloudflare
+- [`ad626322`](../../commit/ad626322) Add recovery doc for cnpg cluster
+
+## 6.2.0
+### Minor Version Upgrades
+- Updated velero from version 8.0.0 to 8.1.0
+
+### Patch Version Upgrades
+- Updated teleport-kube-agent from version 17.0.1 to 17.0.2
+- Updated teleport-cluster from version 17.0.1 to 17.0.2
+
+### Improvements
+- [`fdea4476`](../../commit/fdea4476) add mixtool in kubeai ci docker image
+- [`a6864eea`](../../commit/a6864eea) feat: build dashboard for all the mixins kubeaid supports
+- [`a055b063`](../../commit/a055b063) chore: added mixin-utils needed for grafonnet
+- [`8c2bd877`](../../commit/8c2bd877) doc: fix for adding new mixins
+- [`2ff09013`](../../commit/2ff09013) chore: added opencost-mixin and mixin-utils v0.14.0 for kube-prom
+- [`2d044d25`](../../commit/2d044d25) chore: updated grafananet under v0.13.0 for kube-prom
+- [`472b74b4`](../../commit/472b74b4) chore: updated kube-prom libaries
+- [`bbf03557`](../../commit/bbf03557) fix: changed the promtool check format in gitea workflow
+- [`a8ec4018`](../../commit/a8ec4018) add ci promtool checks for kube-prometheus mixins
+- [`d8d9da91`](../../commit/d8d9da91) add missing prometheus rule in mixins
+- [`20e85887`](../../commit/20e85887) Fix the spelling mistake
+- [`b5b34c84`](../../commit/b5b34c84) deleting main folder from build/kube-prometheus/libraries/main
+- [`95313f89`](../../commit/95313f89) fix: expr for mdraid promql rule
+- [`10ecae3b`](../../commit/10ecae3b) add mdraid mixin in kube prometheus
+- [`3bdc0fc7`](../../commit/3bdc0fc7) add new rule monitor::raid::mdraid::failed, update epr of monitor::raid::mdraid::degraded, and add tests
+- [`4f6bcb14`](../../commit/4f6bcb14) feat: mdraid monitoring
+- [`ef3de665`](../../commit/ef3de665) (add) : postgresql, redis, and gitea configurations https://gitea.obmondo.com/EnableIT/opsmondo/issues/261
+- [`cfa568bd`](../../commit/cfa568bd) (remove) : postgresql and redis dependencies from gitea chart https://gitea.obmondo.com/EnableIT/opsmondo/issues/261
+- [`c561f701`](../../commit/c561f701) (add) : gitea chart https://gitea.obmondo.com/EnableIT/opsmondo/issues/261
+
+## 6.1.0
+### Minor Version Upgrades
+- Updated reloader from version 1.1.0 to 1.2.0
+- Updated oncall from version 1.12.1 to 1.13.3
+- Updated keycloakx from version 2.5.1 to 2.6.0
+- Updated harbor from version 1.15.1 to 1.16.0
+- Updated gitlab-runner from version 0.70.3 to 0.71.0
+- Updated fluent-bit from version 0.47.10 to 0.48.1
+
+### Patch Version Upgrades
+- Updated tigera-operator from version v3.29.0 to v3.29.1
+- Updated rook-ceph-cluster from version v1.15.5 to v1.15.6
+- Updated rook-ceph from version v1.15.5 to v1.15.6
+- Updated opensearch from version 2.27.0 to 2.27.1
+- Updated openobserve-standalone from version 0.13.4 to 0.13.5
+- Updated openobserve from version 0.13.4 to 0.13.5
+- Updated cilium from version 1.16.3 to 1.16.4
+- Updated cert-manager from version v1.16.1 to v1.16.2
+- Updated argo-cd from version 7.7.3 to 7.7.5
+
+### Improvements
+- [`f82edb4b`](../../commit/f82edb4b) fix: added some default resource for puppet-server/db
+- [`518ab125`](../../commit/518ab125) fix: tunned puppetserver and puppetdb, so it does not eat too much of memory
+- [`3f2140b7`](../../commit/3f2140b7) Add openobserve helm chart
+- [`9d52c555`](../../commit/9d52c555) remove zfs exporter
+- [`1316dce1`](../../commit/1316dce1) feat: added zfs pool status monitoring
+- [`53dbbc78`](../../commit/53dbbc78) add smartmon_sata failure as a mixin in kube-prometheus
+- [`5af854dd`](../../commit/5af854dd) add relabeling in prometheus smartctl exporter servicemonitor
+- [`82041ba4`](../../commit/82041ba4) add role and rolebinding for prom to scrape it from a respective prometheus namespace
+- [`d7ee3cab`](../../commit/d7ee3cab) fix: look for servicemonitor under monitoring and puppetserver for customers
+
+## 6.0.0
+### Major Version Upgrades
+- Updated velero from version 7.2.2 to 8.0.0
+- Updated teleport-kube-agent from version 16.4.6 to 17.0.1
+- Updated teleport-cluster from version 16.4.6 to 17.0.1
+- Updated redmine from version 30.0.4 to 32.0.1
+
+### Minor Version Upgrades
+- Updated whoami from version 5.1.2 to 5.2.0
+- Updated external-dns from version 8.5.1 to 8.6.0
+- Updated aws-ebs-csi-driver from version 2.36.0 to 2.37.0
+
+### Patch Version Upgrades
+- Updated mattermost-team-edition from version 6.6.65 to 6.6.66
+- Updated argocd-image-updater from version 0.11.1 to 0.11.2
+- Updated argo-cd from version 7.7.0 to 7.7.3
+
+### Improvements
+- [`ab5f35b2`](../../commit/ab5f35b2) Fixed the alert query for domains status
+- [`6a27021f`](../../commit/6a27021f) bug fix: fixed the env for puppet-agent status monitoring, since default env is master
+- [`f678f88f`](../../commit/f678f88f) Added the template file for domain rule
+- [`ed1216e8`](../../commit/ed1216e8) Enable domain monitoring
+- [`7c06efc9`](../../commit/7c06efc9) Added the alert for domain down
+- [`7812104a`](../../commit/7812104a) Fixing AWS InfrastructureProvider Helm template
+- [`ddeaa441`](../../commit/ddeaa441) Adding blog : Demonstrating KubeAid (part 0)
+- [`4979745e`](../../commit/4979745e) Adding Terraform code for creating a VPC setup for building custom AMIs
+- [`9cd9b8c3`](../../commit/9cd9b8c3) fix smartmon disk rule name
+- [`6d369aff`](../../commit/6d369aff) rename smart rule to smartmon_disk_health, add doc on how to test rule locally
+- [`9288b25c`](../../commit/9288b25c) add smartmon_sata rule to handle sata cable failures
+- [`485280ac`](../../commit/485280ac) Fixing KubeadmConfigTemplate not rendering
+- [`39e5082d`](../../commit/39e5082d) Fixing indentation for taints in KubeadmConfigTemplate in capi-cluster app
+- [`48a75a78`](../../commit/48a75a78) add puppet agent exporter deployment
+- [`8142b396`](../../commit/8142b396) add steps for setting up keycloak and giving super user access in matomo
+- [`726a1c64`](../../commit/726a1c64) Support Cluster API - Cluster AutoScaler integration
+
 ## 5.1.0
 ### Minor Version Upgrades
 - Updated opensearch-dashboards from version 2.24.1 to 2.25.0

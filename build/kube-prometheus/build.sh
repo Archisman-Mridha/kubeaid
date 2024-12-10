@@ -141,6 +141,8 @@ function build_for_tag() {
   jb_install ceph-mixins "github.com/ceph/ceph/monitoring/ceph-mixin@main"
   jb_install cert-manager-mixin "gitlab.com/uneeq-oss/cert-manager-mixin@master"
   jb_install opensearch-mixin "github.com/grafana/jsonnet-libs/opensearch-mixin@master"
+  jb_install opencost-mixin "github.com/adinhodovic/opencost-mixin@main"
+  jb_install mixin-utils "github.com/grafana/jsonnet-libs/mixin-utils@master"
 
   mkdir -p "${basedir}/libraries/${kube_prometheus_release_tag}"
   mv vendor "${basedir}/libraries/${kube_prometheus_release_tag}/"
@@ -151,14 +153,14 @@ function build_for_tag() {
 }
 
 if [ "$build_all" -eq 1 ]; then
-  for file_path in build/kube-prometheus/libraries/*; do
-  file_name=$(basename "$file_path")
-    echo "$file_name"
+  for file_path in "${basedir}"/libraries/*; do
+    file_name=$(basename "$file_path")
+
+    # Clean up and build again
     rm -rf "${basedir}/libraries/${file_name}"
+
     build_for_tag "$file_name"
   done
-
-  exit 0
 else
   if ! [ -e "${jsonnet_lib_path}" ]; then
     build_for_tag "$kube_prometheus_release"
