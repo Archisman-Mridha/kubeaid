@@ -1,14 +1,57 @@
 # Changelog
+
 All releases and the changes included in them (pulled from git commits added since last release) will be detailed in this file.
 
-## 6.3.0
+## 7.0.0
+
+### Major Version Upgrades
+- Updated snapshot-controller from version 3.0.6 to 4.0.0
+- Updated keycloakx from version 2.6.0 to 3.0.0
+
 ### Minor Version Upgrades
+- Updated traefik from version 33.1.0 to 33.2.1
+- Updated redmine from version 32.0.1 to 32.1.1
+- Updated rabbitmq-cluster-operator from version 4.3.29 to 4.4.0
+- Updated metallb from version 6.3.16 to 6.4.1
+- Updated gatekeeper from version 3.17.1 to 3.18.0
+- Updated external-dns from version 8.6.1 to 8.7.0
+- Updated aws-ebs-csi-driver from version 2.37.0 to 2.38.1
+- Updated strimzi-kafka-operator from version 0.38.0 to 0.44.0
+
+### Patch Version Upgrades
+- Updated teleport-kube-agent from version 17.0.4 to 17.0.5
+- Updated teleport-cluster from version 17.0.4 to 17.0.5
+- Updated openobserve-collector from version 0.3.15 to 0.3.18
+- Updated openobserve from version 0.14.1 to 0.14.7
+- Updated oncall from version 1.13.9 to 1.13.11
+- Updated mattermost-team-edition from version 6.6.66 to 6.6.67
+- Updated argocd-image-updater from version 0.11.2 to 0.11.3
+- Updated argo-cd from version 7.7.7 to 7.7.10
+- Added opentelemetry-operator from version 0.75.1 to 0.75.1
+- Added opentelemetry-operator from version 0.75.1 to 0.75.1
+- Updated openobserve-collector from version 0.3.14 to 0.3.15
+- Added opentelemetry-operator from version 0.75.1 to 0.75.1
+- Added opentelemetry-operator from version 0.75.1 to 0.75.1
+- Updated openobserve-collector from version 0.3.14 to 0.3.15
+
+### Improvements
+- [`832a1406`](../../commit/832a1406) add kafka operator chart and templates
+- [`a84f8da7`](../../commit/a84f8da7) Add proxy mode to keycloak chart due to upgrade to v25
+- [`14d71e97`](../../commit/14d71e97) 730 Add openserve-collector & opentelemetry-operator
+- [`78691fcc`](../../commit/78691fcc) removing explicit resource namespaces and templatizing secret names
+- [`2a6f45c5`](../../commit/2a6f45c5) fix: Update tar command to use updated name after renaming
+
+## 6.3.0
+
+### Minor Version Upgrades
+
 - Updated traefik from version 33.0.0 to 33.1.0
 - Updated sonarqube from version 10.7.0+3598 to 10.8.0
 - Updated sealed-secrets from version 2.16.2 to 2.17.0
 - Updated aws-efs-csi-driver from version 3.0.8 to 3.1.2
 
 ### Patch Version Upgrades
+
 - Updated teleport-kube-agent from version 17.0.2 to 17.0.4
 - Updated teleport-cluster from version 17.0.2 to 17.0.4
 - Added strimzi-kafka-operator from version 0.38.0 to 0.38.0
@@ -24,6 +67,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated argo-cd from version 7.7.5 to 7.7.7
 
 ### Improvements
+
 - [`27bc985d`](../../commit/27bc985d) fix helm repo update script failing to untar newly downloaded chart tar files when naming is different and HELM_UPSTREAM_CHART_VERSION giving unbound variable error when there is no upstream chart already present
 - [`59cd0be3`](../../commit/59cd0be3) adding blackbox prober for important services
 - [`f906eef5`](../../commit/f906eef5) add steps to add new alerts for servers
@@ -37,14 +81,18 @@ All releases and the changes included in them (pulled from git commits added sin
 - [`ad626322`](../../commit/ad626322) Add recovery doc for cnpg cluster
 
 ## 6.2.0
+
 ### Minor Version Upgrades
+
 - Updated velero from version 8.0.0 to 8.1.0
 
 ### Patch Version Upgrades
+
 - Updated teleport-kube-agent from version 17.0.1 to 17.0.2
 - Updated teleport-cluster from version 17.0.1 to 17.0.2
 
 ### Improvements
+
 - [`fdea4476`](../../commit/fdea4476) add mixtool in kubeai ci docker image
 - [`a6864eea`](../../commit/a6864eea) feat: build dashboard for all the mixins kubeaid supports
 - [`a055b063`](../../commit/a055b063) chore: added mixin-utils needed for grafonnet
@@ -66,7 +114,9 @@ All releases and the changes included in them (pulled from git commits added sin
 - [`c561f701`](../../commit/c561f701) (add) : gitea chart https://gitea.obmondo.com/EnableIT/opsmondo/issues/261
 
 ## 6.1.0
+
 ### Minor Version Upgrades
+
 - Updated reloader from version 1.1.0 to 1.2.0
 - Updated oncall from version 1.12.1 to 1.13.3
 - Updated keycloakx from version 2.5.1 to 2.6.0
@@ -75,6 +125,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated fluent-bit from version 0.47.10 to 0.48.1
 
 ### Patch Version Upgrades
+
 - Updated tigera-operator from version v3.29.0 to v3.29.1
 - Updated rook-ceph-cluster from version v1.15.5 to v1.15.6
 - Updated rook-ceph from version v1.15.5 to v1.15.6
@@ -86,6 +137,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated argo-cd from version 7.7.3 to 7.7.5
 
 ### Improvements
+
 - [`f82edb4b`](../../commit/f82edb4b) fix: added some default resource for puppet-server/db
 - [`518ab125`](../../commit/518ab125) fix: tunned puppetserver and puppetdb, so it does not eat too much of memory
 - [`3f2140b7`](../../commit/3f2140b7) Add openobserve helm chart
@@ -97,23 +149,28 @@ All releases and the changes included in them (pulled from git commits added sin
 - [`d7ee3cab`](../../commit/d7ee3cab) fix: look for servicemonitor under monitoring and puppetserver for customers
 
 ## 6.0.0
+
 ### Major Version Upgrades
+
 - Updated velero from version 7.2.2 to 8.0.0
 - Updated teleport-kube-agent from version 16.4.6 to 17.0.1
 - Updated teleport-cluster from version 16.4.6 to 17.0.1
 - Updated redmine from version 30.0.4 to 32.0.1
 
 ### Minor Version Upgrades
+
 - Updated whoami from version 5.1.2 to 5.2.0
 - Updated external-dns from version 8.5.1 to 8.6.0
 - Updated aws-ebs-csi-driver from version 2.36.0 to 2.37.0
 
 ### Patch Version Upgrades
+
 - Updated mattermost-team-edition from version 6.6.65 to 6.6.66
 - Updated argocd-image-updater from version 0.11.1 to 0.11.2
 - Updated argo-cd from version 7.7.0 to 7.7.3
 
 ### Improvements
+
 - [`ab5f35b2`](../../commit/ab5f35b2) Fixed the alert query for domains status
 - [`6a27021f`](../../commit/6a27021f) bug fix: fixed the env for puppet-agent status monitoring, since default env is master
 - [`f678f88f`](../../commit/f678f88f) Added the template file for domain rule
@@ -132,7 +189,9 @@ All releases and the changes included in them (pulled from git commits added sin
 - [`726a1c64`](../../commit/726a1c64) Support Cluster API - Cluster AutoScaler integration
 
 ## 5.1.0
+
 ### Minor Version Upgrades
+
 - Updated opensearch-dashboards from version 2.24.1 to 2.25.0
 - Updated opensearch from version 2.26.1 to 2.27.0
 - Updated oncall from version 1.11.5 to 1.12.1
@@ -143,6 +202,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated argo-cd from version 7.6.12 to 7.7.0
 
 ### Patch Version Upgrades
+
 - Updated sealed-secrets from version 2.16.1 to 2.16.2
 - Updated rook-ceph-cluster from version v1.15.4 to v1.15.5
 - Updated rook-ceph from version v1.15.4 to v1.15.5
@@ -153,14 +213,18 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated cluster-autoscaler from version 9.43.1 to 9.43.2
 
 ## 5.0.0
+
 ### Major Version Upgrades
+
 - Updated traefik from version 32.1.1 to 33.0.0
 
 ### Minor Version Upgrades
+
 - Updated tigera-operator from version v3.28.2 to v3.29.0
 - Updated kubernetes-dashboard from version 7.9.0 to 7.10.0
 
 ### Patch Version Upgrades
+
 - Updated velero from version 7.2.1 to 7.2.2
 - Updated redmine from version 30.0.0 to 30.0.2
 - Updated opencost from version 1.42.0 to 1.42.2
@@ -169,6 +233,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated argocd-image-updater from version 0.11.0 to 0.11.1
 
 ### Improvements
+
 - [`81ba9fea`](../../commit/81ba9fea) fix: cert-manager failed to get parsed, due to templating issue feat: added dnszone support
 - [`a40f15a6`](../../commit/a40f15a6) Adding support for specifying root EBS volume size
 - [`c9b77dd0`](../../commit/c9b77dd0) fixed the golang version in the dockerfile, after changing the base image
@@ -187,11 +252,14 @@ All releases and the changes included in them (pulled from git commits added sin
 - [`d9153b41`](../../commit/d9153b41) Fixing link to the KubeAid Bootstrap Script container image in KubeAid demo blog (Part 1)
 
 ## 4.3.0
+
 ### Minor Version Upgrades
+
 - Updated mariadb-operator from version 0.34.0 to 0.35.1
 - Updated kubernetes-dashboard from version 7.8.0 to 7.9.0
 
 ### Patch Version Upgrades
+
 - Updated yetibot from version 1.0.106 to 1.0.107
 - Updated teleport-kube-agent from version 16.4.3 to 16.4.6
 - Updated teleport-cluster from version 16.4.3 to 16.4.6
@@ -204,6 +272,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated crossplane from version 1.17.1 to 1.17.2
 
 ### Improvements
+
 - [`8f8b179f`](../../commit/8f8b179f) Support for changing memory requests and limits for PostgreSQL in KeycloakX Helm Chart
 - [`0acaed4d`](../../commit/0acaed4d) Removed CPU limit for CNPG cluster in KeycloakX helm chart
 - [`733f95dc`](../../commit/733f95dc) fixing hbk prometheus
@@ -211,11 +280,14 @@ All releases and the changes included in them (pulled from git commits added sin
 - [`1fca8b8c`](../../commit/1fca8b8c) Specifying AWS CLI command to create SSH KeyPair
 
 ## 4.2.0
+
 ### Minor Version Upgrades
+
 - Updated gitlab-runner from version 0.69.0 to 0.70.1
 - Updated aws-ebs-csi-driver from version 2.35.1 to 2.36.0
 
 ### Patch Version Upgrades
+
 - Updated teleport-kube-agent from version 16.4.2 to 16.4.3
 - Updated teleport-cluster from version 16.4.2 to 16.4.3
 - Updated rook-ceph-cluster from version v1.15.3 to v1.15.4
@@ -230,22 +302,27 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated argo-cd from version 7.6.8 to 7.6.12
 
 ### Improvements
+
 - [`2c76119b`](../../commit/2c76119b) Adding KubeAid demo blog (Part 1)
 
 ## 4.1.0
+
 ### Minor Version Upgrades
+
 - Updated oncall from version 1.10.2 to 1.11.0
 - Updated mariadb-operator from version 0.33.0 to 0.34.0
 - Updated kubernetes-dashboard from version 7.7.0 to 7.8.0
 - Updated cluster-api-operator from version 0.13.0 to 0.14.0
 
 ### Patch Version Upgrades
+
 - Updated traefik from version 32.1.0 to 32.1.1
 - Updated metrics-server from version 3.12.1 to 3.12.2
 - Updated k8s-event-logger from version 1.1.7 to 1.1.8
 - Updated cert-manager from version v1.16.0 to v1.16.1
 
 ### Improvements
+
 - [`d289c927`](../../commit/d289c927) Making CAPI Cluster App's default values file compatible with the optional customerid feature
 - [`64f72b7b`](../../commit/64f72b7b) Make customerid optional in CAPI Cluster Helm values
 - [`9d18cb83`](../../commit/9d18cb83) add/renamed the references and links to kubeaid
@@ -253,10 +330,13 @@ All releases and the changes included in them (pulled from git commits added sin
 - [`261f66a1`](../../commit/261f66a1) enable azure policy
 
 ## 4.0.0
+
 ### Major Version Upgrades
+
 - Updated redmine from version 29.0.6 to 30.0.0
 
 ### Minor Version Upgrades
+
 - Updated traefik from version 32.0.0 to 32.1.0
 - Updated sonarqube from version 10.6.1+3163 to 10.7.0+3598
 - Updated opensearch-dashboards from version 2.23.0 to 2.24.0
@@ -267,6 +347,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated cert-manager from version v1.15.3 to v1.16.0
 
 ### Patch Version Upgrades
+
 - Updated rook-ceph-cluster from version v1.15.2 to v1.15.3
 - Updated rook-ceph from version v1.15.2 to v1.15.3
 - Updated rabbitmq-cluster-operator from version 4.3.23 to 4.3.24
@@ -276,19 +357,24 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated argo-cd from version 7.6.5 to 7.6.8
 
 ### Improvements
+
 - [`85759c07`](../../commit/85759c07) MachinePool annotation required for the AWS native autoscaler to autoscale it
 - [`f43f1e77`](../../commit/f43f1e77) bootstrap crossplane
 - [`84054ce6`](../../commit/84054ce6) Change deployment.revisionHistoryLimit type to int from string for Traefik KubeAid app
 
 ## 3.0.0
+
 ### Major Version Upgrades
+
 - Updated traefik from version 31.1.1 to 32.0.0
 
 ### Minor Version Upgrades
+
 - Updated mariadb-operator from version 0.31.0 to 0.33.0
 - Updated cluster-autoscaler from version 9.37.0 to 9.41.0
 
 ### Patch Version Upgrades
+
 - Updated zfs-localpv from version 2.6.1 to 2.6.2
 - Updated teleport-kube-agent from version 16.4.0 to 16.4.2
 - Updated teleport-cluster from version 16.4.0 to 16.4.2
@@ -300,12 +386,15 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated argo-cd from version 7.6.1 to 7.6.5
 
 ### Improvements
+
 - [`c0dc582b`](../../commit/c0dc582b) Add network rules for private link access
 - [`5854e551`](../../commit/5854e551) Add coredns chart for custom DNS servers (#424)
 - [`20683255`](../../commit/20683255) Fix template to allow custom ingressClass for http solver in cert-manager https://gitea.obmondo.com/EnableIT/qd2xcggwag/issues/449
 
 ## 2.2.0
+
 ### Minor Version Upgrades
+
 - Updated traefik from version 31.0.0 to 31.1.1
 - Updated teleport-kube-agent from version 16.3.0 to 16.4.0
 - Updated teleport-cluster from version 16.3.0 to 16.4.0
@@ -316,6 +405,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated argo-cd from version 7.5.2 to 7.6.1
 
 ### Patch Version Upgrades
+
 - Updated zfs-localpv from version 2.6.0 to 2.6.1
 - Updated tigera-operator from version v3.28.1 to v3.28.2
 - Updated rook-ceph-cluster from version v1.15.1 to v1.15.2
@@ -326,12 +416,15 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated aws-ebs-csi-driver from version 2.35.0 to 2.35.1
 
 ### Improvements
+
 - [`f7e69e6c`](../../commit/f7e69e6c) Remove CPU Limits from CrossPlane KubeAid app
 - [`def0201d`](../../commit/def0201d) Support for specifying taints for a MachinePool | Adding a NOTE about MachinePool labels
 - [`101fadc5`](../../commit/101fadc5) add service monitoring to errbot and update image link
 
 ## 2.1.0
+
 ### Minor Version Upgrades
+
 - Updated teleport-kube-agent from version 16.2.1 to 16.3.0
 - Updated teleport-cluster from version 16.2.1 to 16.3.0
 - Updated opensearch-dashboards from version 2.21.2 to 2.22.0
@@ -341,6 +434,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated aws-ebs-csi-driver from version 2.34.0 to 2.35.0
 
 ### Patch Version Upgrades
+
 - Updated redmine from version 29.0.4 to 29.0.5
 - Updated oncall from version 1.9.22 to 1.9.25
 - Updated mattermost-team-edition from version 6.6.62 to 6.6.63
@@ -348,6 +442,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated external-dns from version 8.3.7 to 8.3.8
 
 ### Improvements
+
 - [`976335cd`](../../commit/976335cd) (add) : kube-prometheus version 0.14.0 and add-version script
 - [`a4b6de55`](../../commit/a4b6de55) Using user specified secret name instead of capi-cluster-token in AWS InfrastructureProvider
 - [`9cb20e84`](../../commit/9cb20e84) Using user specified secret name instead of capi-cluster-token in AWS InfrastructureProvider
@@ -357,14 +452,18 @@ All releases and the changes included in them (pulled from git commits added sin
 - [`6784ef4e`](../../commit/6784ef4e) Add readme to Upgrade Graylog and MongoDB to version 6.0.5 and 6.0.16 respectively
 
 ## 2.0.0
+
 ### Major Version Upgrades
+
 - Updated traefik from version 30.1.0 to 31.0.0
 
 ### Minor Version Upgrades
+
 - Updated velero from version 7.1.5 to 7.2.1
 - Updated cluster-api-operator from version 0.12.0 to 0.13.0
 
 ### Patch Version Upgrades
+
 - Updated teleport-kube-agent from version 16.2.0 to 16.2.1
 - Updated teleport-cluster from version 16.2.0 to 16.2.1
 - Updated snapshot-controller from version 3.0.5 to 3.0.6
@@ -380,6 +479,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated external-dns from version 8.3.5 to 8.3.7
 
 ### Improvements
+
 - [`350661b0`](../../commit/350661b0) chore: Remove Middleware and Use Ingress Route
 - [`ace356f0`](../../commit/ace356f0) (fix/multiple-machinepool-support) Having multiple KubeadmConfigs - one for each MachinePool
 - [`f9d42b03`](../../commit/f9d42b03) Adding AWS CCM as a KubeAid managed app | Removing AWS CCM, Hetzner CCM and Cilium HelmChartProxies | Removing Helm ClusterAPI addon | Installing Cilium and AWS CCM using postKubeadm commands
@@ -403,7 +503,9 @@ All releases and the changes included in them (pulled from git commits added sin
 - [`84694ba7`](../../commit/84694ba7) upgrade argocd
 
 ## 1.4.0
+
 ### Minor Version Upgrades
+
 - Updated teleport-kube-agent from version 16.1.7 to 16.2.0
 - Updated teleport-cluster from version 16.1.7 to 16.2.0
 - Updated reloader from version 1.0.121 to 1.1.0
@@ -413,6 +515,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated argo-cd from version 7.4.5 to 7.5.2
 
 ### Patch Version Upgrades
+
 - Updated whoami from version 5.1.1 to 5.1.2
 - Updated rabbitmq-cluster-operator from version 4.3.19 to 4.3.21
 - Updated opensearch-dashboards from version 2.21.0 to 2.21.1
@@ -422,6 +525,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated harbor from version 1.15.0 to 1.15.1
 
 ### Improvements
+
 - [`a6d60f64`](../../commit/a6d60f64) Update titles in CHANGELOG, script and add patch dump codition when no helm updates are available since last update
 - [`5afabefd`](../../commit/5afabefd) wiki for keycloak custom theme
 - [`ed933e77`](../../commit/ed933e77) install cni and ccm as a part of post kubadm commands since its needed for the other nodes to be provisioned
@@ -452,7 +556,9 @@ All releases and the changes included in them (pulled from git commits added sin
 - [`a15d1f66`](../../commit/a15d1f66) Updating Cilium version to 1.16.0 in ClusterAPI HelmChartProxy
 
 ## 1.3.0
+
 ### Minor Version Upgrades
+
 - Updated traefik from version 30.0.2 to 30.1.0
 - Updated rook-ceph-cluster from version v1.14.9 to v1.15.0
 - Updated rook-ceph from version v1.14.9 to v1.15.0
@@ -469,6 +575,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated cerebro from version 2.0.5 to 2.1.0
 
 ### Patch Version Upgrades
+
 - Updated velero from version 7.1.4 to 7.1.5
 - Updated teleport-kube-agent from version 16.1.4 to 16.1.7
 - Updated teleport-cluster from version 16.1.4 to 16.1.7
@@ -484,6 +591,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated argo-cd from version 7.4.2 to 7.4.5
 
 ### Improvements
+
 - [`f931fffe`](../../commit/f931fffe) updated the prometheus metrics alert to handle boot time as well
 - [`44a0e0ec`](../../commit/44a0e0ec) Add add-commit bash script and call it in helm-repo-update script and update CHANGELOG with commits as per new standard
 - [`a3293137`](../../commit/a3293137) refactor: Update TCP ingress route for puppetdb to use new domain name
@@ -535,12 +643,15 @@ All releases and the changes included in them (pulled from git commits added sin
 - [`334bfb84`](../../commit/334bfb84) fixes:
 
 ## 1.2.0
+
 ### Minor Version Upgrades
+
 - Updated opensearch-dashboards from version 2.19.1 to 2.20.0
 - Updated opensearch from version 2.21.0 to 2.22.0
 - Updated community-operator from version 0.10.0 to 0.11.0
 
 ### Patch Version Upgrades
+
 - Updated teleport-kube-agent from version 16.1.3 to 16.1.4
 - Updated teleport-cluster from version 16.1.3 to 16.1.4
 - Updated rabbitmq-cluster-operator from version 4.3.17 to 4.3.18
@@ -549,6 +660,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated argo-cd from version 7.4.1 to 7.4.2
 
 ### Improvements
+
 - [`ca279e10`](../../commit/ca279e10) Update changelog format
 - [`a553cce0`](../../commit/a553cce0) fixed the ingress alignment
 - [`c78a3a5b`](../../commit/c78a3a5b) small spelling fix and add log delition and garbage collection history
@@ -565,12 +677,15 @@ All releases and the changes included in them (pulled from git commits added sin
 - [`5c93bc15`](../../commit/5c93bc15) setup matomo in k8s
 
 ## 1.1.0
+
 ### Minor Version Upgrades
+
 - Updated keda from version 2.14.2 to 2.15.0
 - Updated cluster-api-operator from version 0.11.0 to 0.12.0
 - Updated argo-cd from version 7.3.11 to 7.4.1
 
 ### Patch Version Upgrades
+
 - Updated teleport-kube-agent from version 16.1.0 to 16.1.3
 - Updated teleport-cluster from version 16.1.0 to 16.1.3
 - Updated reloader from version 1.0.119 to 1.0.121
@@ -581,12 +696,15 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated dokuwiki from version 16.2.10 to 16.2.11
 
 ## 1.0.0
+
 ### Major Version Upgrades
+
 - Updated matomo from version 7.3.7 to 8.0.5
 - Updated redmine from version 28.2.7 to 29.0.3
 - Updated traefik from version 29.0.0 to 30.0.2
 
 ### Minor Version Upgrades
+
 - Updated aws-ebs-csi-driver from version 2.32.0 to 2.33.0
 - Updated cilium from version 1.15.6 to 1.16.0
 - Updated external-dns from version 8.1.0 to 8.3.3
@@ -595,6 +713,7 @@ All releases and the changes included in them (pulled from git commits added sin
 - Updated opencost from version 1.40.0 to 1.41.0
 
 ### Patch Version Upgrades
+
 - Updated argo-cd from version 7.3.4 to 7.3.11
 - Updated aws-efs-csi-driver from version 3.0.6 to 3.0.7
 - Updated cert-manager from version v1.15.1 to v1.15.2
