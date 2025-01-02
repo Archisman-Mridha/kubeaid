@@ -2,6 +2,41 @@
 
 All releases and the changes included in them (pulled from git commits added since last release) will be detailed in this file.
 
+## 8.0.0
+### Major Version Upgrades
+- Updated keycloakx from version 3.0.0 to 4.0.0
+- Updated ccm-hetzner from version 1.1.15 to 2.0.1
+
+### Minor Version Upgrades
+- Updated teleport-kube-agent from version 17.0.5 to 17.1.1
+- Updated teleport-cluster from version 17.0.5 to 17.1.1
+- Updated strimzi-kafka-operator from version 0.44.0 to 0.45.0
+- Updated rook-ceph-cluster from version v1.15.6 to v1.16.0
+- Updated rook-ceph from version v1.15.6 to v1.16.0
+- Updated opensearch from version 2.27.1 to 2.28.0
+- Updated community-operator from version 0.11.0 to 0.12.0
+- Updated gitlab-runner from version 0.71.0 to 0.72.0
+- Updated cluster-api-operator from version 0.14.0 to 0.15.0
+
+### Patch Version Upgrades
+- Updated sonarqube from version 10.8.0 to 10.8.1
+- Updated rabbitmq-cluster-operator from version 4.4.0 to 4.4.1
+- Added openobserve from version 0.14.7 to 0.14.7
+- Updated metallb from version 6.4.1 to 6.4.2
+- Updated gatekeeper from version 3.18.0 to 3.18.1
+- Updated external-dns from version 8.7.0 to 8.7.1
+- Updated crossplane from version 1.18.1 to 1.18.2
+- Updated cilium from version 1.16.4 to 1.16.5
+- Updated aws-efs-csi-driver from version 3.1.2 to 3.1.4
+- Updated argo-cd from version 7.7.10 to 7.7.11
+
+### Improvements
+- [`109b8841`](../../commit/109b8841) Fixing hetzner-robot Helm chart
+- [`26b6539e`](../../commit/26b6539e) Adding the hetzner-robot KubeAid App
+- [`8fb9ab22`](../../commit/8fb9ab22) Updated the docker rules and fixed the test case for docker container status
+- [`66d3c0ad`](../../commit/66d3c0ad) update from pg operator from zalando to cncf for relate in kbm
+- [`75ecc54e`](../../commit/75ecc54e) Update helm chart update script to handle individual helm update logging properly and fix name change bug
+
 ## 7.0.0
 
 ### Major Version Upgrades

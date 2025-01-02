@@ -5,14 +5,16 @@ kafka:
       authorization:
         type: simple
       listeners:
-        - name: external
+        - name: internal
           port: 9094
-          type: nodeport
+          type: internal
           tls: true
           authentication:
             type: tls
+
       storage:
         type: jbod
+        # volumes is to be set if the above storage type is jbod
         volumes:
         - id: 0
           class: rook-ceph-block
@@ -50,8 +52,40 @@ kafkaUser:
         - type: allow
           resource:
             type: topic
+            # resource of type cluster does not support name and patternType
             name: my-topic
             patternType: literal
           host: "*"
           operations:
             - Read
+            - Write
+        - type: allow
+          resource:
+            type: group
+            name: my-consumer-group
+            patternType: literal
+          host: "*"
+          operations:
+            - Read
+
+ingress:
+  enable: false
+  class: nginx
+  name: kafka
+  rules:
+    - host: localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: strimzi-kafka-kafka-internal-bootstrap # name of the bootstrap services <cluster_name>-kafka-<listener_name>-bootstrap
+                port:
+                  number: 9094
+  tls:
+    enable: false
+    config:
+      - hosts:
+        - localhost
+        secretName: local-host-tls

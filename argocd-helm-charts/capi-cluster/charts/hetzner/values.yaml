@@ -2,10 +2,12 @@ controlPlaneLoadBalancer:
   enabled: true
 
 controlPlaneEndpoint:
+  # This is also used as the Failover IP.
+  host: "" # Must be provided in the values file of the user's kubeaid-config.
   port: 6443
 
 robot:
   floating: false
+  sshKeysSecretName: hetzner-robot-ssh-keys
 
-robotSSHKeysSecretName: hetzner-robot-ssh-keys
 cloudCredentialsSecretName: cloud-credentials

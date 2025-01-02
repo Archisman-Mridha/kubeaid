@@ -66,13 +66,5 @@ spec:
           periodSeconds: 5
           timeoutSeconds: 5
           failureThreshold: 3
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: node-role.kubernetes.io/control-plane
-                    operator: In
-                    values:
-                      - ""
-                      - "true" # For compatibility with K3D.
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: ""

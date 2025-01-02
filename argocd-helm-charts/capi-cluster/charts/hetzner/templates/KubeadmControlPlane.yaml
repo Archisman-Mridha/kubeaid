@@ -216,6 +216,7 @@ spec:
       - kubectl create ns cilium
       - helm template kubeaid/argocd-helm-charts/cilium --values kubeaid/argocd-helm-charts/cilium/values.yaml -n cilium | kubectl apply -f -n cilium
       - helm template kubeaid/argocd-helm-charts/ccm-hetzner --set ccm-hetzner.secret.name=capi-cluster-hetzner --namespace kube-system --set ccm-hetzner.privateNetwork.enabled=false | kubectl apply -f -n kube-system
+      - helm template kubeaid/argocd-helm-charts/hetzner-robot --set failoverIP={{ .Values.controlPlaneEndpoint.host }} --namespace kube-system | kubectl apply -f -n kube-system
   machineTemplate:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
