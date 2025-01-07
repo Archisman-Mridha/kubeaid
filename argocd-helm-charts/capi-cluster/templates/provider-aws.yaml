@@ -22,9 +22,16 @@ spec:
   version: {{ .Values.global.capa.version }}
   fetchConfig:
     url: https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/{{ .Values.global.capa.version }}/infrastructure-components.yaml
+  deployment:
+    nodeSelector:
+      node-role.kubernetes.io/control-plane: ""
+    tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Exists"
+        effect: "NoSchedule"
   manager:
-    {{/* metrics: */}}
-    {{/*   bindAddress: ":8181" */}}
+    metrics:
+      bindAddress: ":8181"
     syncPeriod: 10m0s
     featureGates:
       MachinePool: {{ .Values.global.capa.enableMachinePools }}

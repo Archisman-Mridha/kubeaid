@@ -10,9 +10,25 @@ spec:
       apiServer:
         extraArgs:
           cloud-provider: external
+          {{- if ((.Values.controlPlane).apiServer).extraArgs }}
+          {{- ((.Values.controlPlane).apiServer).extraArgs | toYaml | nindent 10 }}
+          {{- end }}
+        {{- if ((.Values.controlPlane).apiServer).extraVolumes }}
+        extraVolumes: {{- ((.Values.controlPlane).apiServer).extraVolumes | toYaml | nindent 10 }}
+        {{- end }}
+      etcd:
+        local:
+          extraEnvs:
+            - name: ETCD_METRICS
+              value: extensive
+            - name: ETCD_LISTEN_METRICS_URLS
+              value: "http://0.0.0.0:9081"
       controllerManager:
         extraArgs:
           cloud-provider: external
+    {{- if (.Values.controlPlane).files }}
+    files: {{- (.Values.controlPlane).files | toYaml | nindent 6 }}
+    {{- end }}
     initConfiguration:
       skipPhases:
         - addon/kube-proxy
