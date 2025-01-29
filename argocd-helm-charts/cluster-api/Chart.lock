@@ -3,4 +3,4 @@ dependencies:
   repository: https://kubernetes-sigs.github.io/cluster-api-operator
   version: 0.15.1
 digest: sha256:b67be77e1939879144c8a8eca8b16cc218ad7265629c6de3d23eccc4a47e16a7
-generated: "2025-01-09T21:24:37.114804+05:30"
+generated: "2025-01-09T21:22:39.951437+05:30"

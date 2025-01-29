@@ -1,16 +1,35 @@
 {{- if .Values.storageClass.enabled -}}
+  {{- if .Values.storageClass.shared -}}
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: zfs-localpv-shared
+allowVolumeExpansion: true
+parameters:
+  recordsize: 4k
+  thinprovision: "no"
+  compression: "off"
+  dedup: "off"
+  fstype: zfs
+  poolname: {{ required "poolName is required for storage class " .Values.storageClass.poolName }}
+  shared: "yes"
+provisioner: zfs.csi.openebs.io
+reclaimPolicy: {{ .Values.storageClass.reclaimPolicy | default "Delete" }}
+  {{- end }}
+---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: zfs-localpv
+allowVolumeExpansion: true
 parameters:
-  recordsize: "4k"
+  recordsize: 4k
+  thinprovision: "no"
   compression: "off"
   dedup: "off"
-  fstype: "zfs"
-  poolname: "{{ .Values.storageClass.poolName }}"
+  fstype: zfs
+  poolname: {{ required "poolName is required for storage class " .Values.storageClass.poolName }}
 provisioner: zfs.csi.openebs.io
-{{- if .Values.storageClass.reclaimPolicy }}
-reclaimPolicy: {{ toYaml .Values.storageClass.reclaimPolicy }}
-{{- end }}
+reclaimPolicy: {{ .Values.storageClass.reclaimPolicy | default "Delete" }}
 {{- end -}}

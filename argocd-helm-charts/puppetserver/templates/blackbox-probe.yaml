@@ -2,13 +2,13 @@
 kind: Probe
 apiVersion: monitoring.coreos.com/v1
 metadata:
-  name: blackbox-probe-argocd
+  name: blackbox-probe-puppetserver
 spec:
-  interval: 6h
+  interval: 30m
   module: http_2xx
   prober:
     url: blackbox-exporter.monitoring.svc.cluster.local:19115
   targets:
     staticConfig:
-      static: {{ (((((.Values).puppetserver).puppetserver).masters).fqdns).alternateServerNames }}
+      static: https://{{ (((((.Values).puppetserver).puppetserver).masters).fqdns).alternateServerNames }}
 {{- end}}

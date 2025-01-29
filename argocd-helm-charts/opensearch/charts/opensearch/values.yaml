@@ -491,6 +491,8 @@ plugins:
   enabled: false
   installList: []
   # - example-fake-plugin
+  removeList: []
+  # - example-fake-plugin
 
 # -- Array of extra K8s manifests to deploy
 extraObjects: []
@@ -548,6 +550,9 @@ serviceMonitor:
   # Ensure this matches your OpenSearch service configuration.
   path: /_prometheus/metrics
 
+  # Scheme to use for scraping.
+  scheme: http
+
   # Frequency at which Prometheus will scrape metrics.
   # Adjust based on your needs.
   interval: 10s
@@ -556,3 +561,17 @@ serviceMonitor:
   # labels:
   #  k8s.example.com/prometheus: kube-prometheus
   labels: {}
+
+  # additional tlsConfig to be added to the ServiceMonitor
+  tlsConfig: {}
+
+  # Basic Auth configuration for the service monitor
+  # You can either use existingSecret, which expects a secret to be already present with data.username and data.password
+  # or set the credentials over the helm values, making helm create a secret for you
+  # basicAuth:
+  #   enaled: true
+  #   existingSecret: my-secret
+  #   username:  my-username
+  #   password: my-password
+  basicAuth:
+    enabled: false

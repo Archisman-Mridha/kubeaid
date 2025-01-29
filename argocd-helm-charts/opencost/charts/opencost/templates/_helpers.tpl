@@ -101,8 +101,9 @@ Create the name of the controller service account to use
   {{- else -}}
     {{- $host := tpl .Values.opencost.prometheus.internal.serviceName . }}
     {{- $ns := tpl .Values.opencost.prometheus.internal.namespaceName . }}
+    {{- $clusterName := .Values.clusterName }}
     {{- $port := .Values.opencost.prometheus.internal.port | int }}
-    {{- printf "http://%s.%s.svc.cluster.local:%d" $host $ns $port -}}
+    {{- printf "http://%s.%s.svc.%s:%d" $host $ns $clusterName $port -}}
   {{- end -}}
 {{- end -}}
 
@@ -115,9 +116,19 @@ Check that either thanos external or internal is defined
   {{- else -}}
     {{- $host := .Values.opencost.prometheus.thanos.internal.serviceName }}
     {{- $ns := .Values.opencost.prometheus.thanos.internal.namespaceName }}
+    {{- $clusterName := .Values.clusterName }}
     {{- $port := .Values.opencost.prometheus.thanos.internal.port | int }}
-    {{- printf "http://%s.%s.svc.cluster.local:%d" $host $ns $port -}}
+    {{- printf "http://%s.%s.svc.%s:%d" $host $ns $clusterName $port -}}
   {{- end -}}
+{{- end -}}
+
+{{/*
+  Fail if both kube-rbac-proxy and bearer token are set
+*/}}
+{{- define "kubeRBACProxyBearerTokenCheck" -}}
+{{- if and .Values.opencost.prometheus.kubeRBACProxy .Values.opencost.prometheus.bearer_token }}
+  {{- fail "Both kubeRBACProxy and bearer_token are set. Please specify only one." -}}
+{{- end -}}
 {{- end -}}
 
 {{/*

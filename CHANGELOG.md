@@ -2,6 +2,116 @@
 
 All releases and the changes included in them (pulled from git commits added since last release) will be detailed in this file.
 
+## 9.0.0
+### Major Version Upgrades
+- Updated sonarqube from version 10.8.1 to 2025.1.0
+
+### Minor Version Upgrades
+- Updated velero from version 8.2.0 to 8.3.0
+- Updated traefik from version 33.2.1 to 34.1.0
+- Updated teleport-kube-agent from version 17.1.5 to 17.2.2
+- Updated teleport-cluster from version 17.1.5 to 17.2.2
+- Updated opentelemetry-operator from version 0.78.1 to 0.79.0
+- Updated gitlab-runner from version 0.72.0 to 0.73.3
+- Updated cluster-autoscaler from version 9.45.0 to 9.46.0
+- Updated aws-ebs-csi-driver from version 2.38.1 to 2.39.1
+- Updated argocd-image-updater from version 0.11.4 to 0.12.0
+
+### Patch Version Upgrades
+- Updated whoami from version 5.2.0 to 5.2.1
+- Updated snapshot-controller from version 4.0.0 to 4.0.1
+- Updated sealed-secrets from version 2.17.0 to 2.17.1
+- Added rook-ceph-cluster from version v1.16.0 to v1.16.0
+- Updated rook-ceph from version v1.16.1 to v1.16.2
+- Updated reloader from version 1.2.0 to 1.2.1
+- Updated redmine from version 32.1.1 to 32.1.2
+- Updated rabbitmq-cluster-operator from version 4.4.1 to 4.4.3
+- Updated opensearch from version 2.30.0 to 2.30.1
+- Added openobserve from version 0.14.7 to 0.14.7
+- Updated opencost from version 1.43.0 to 1.43.2
+- Updated metallb from version 6.4.2 to 6.4.4
+- Updated mattermost-team-edition from version 6.6.67 to 6.6.70
+- Updated harbor from version 1.16.1 to 1.16.2
+- Updated fluent-bit from version 0.48.4 to 0.48.5
+- Updated external-dns from version 8.7.1 to 8.7.3
+- Updated erpnext from version 7.0.155 to 7.0.160
+- Updated cilium from version 1.16.5 to 1.16.6
+- Updated cert-manager from version v1.16.2 to v1.16.3
+- Updated argo-cd from version 7.7.15 to 7.7.17
+
+### Improvements
+- [`85a48265`](../../commit/85a48265) Migrating cnpg in mattermost and updating the logical backup templates.
+- [`3a498a67`](../../commit/3a498a67) fix: yamllint fix
+- [`54d4431e`](../../commit/54d4431e) feat: split the cronjob, so all the container does not get spawned on a single node
+- [`05cb0098`](../../commit/05cb0098) feat: added pvc support
+- [`09a33c39`](../../commit/09a33c39) feat: added instruction to download the dbs
+- [`9ce10d93`](../../commit/9ce10d93) chore: renamed from cve-dict to vuls-dict
+- [`47ab3474`](../../commit/47ab3474) fix: the appversion and correct key to lookup to find the image.tag
+- [`b1088620`](../../commit/b1088620) fix: deleted unwanted files from helm chart of cve-dictionary
+- [`8075b92c`](../../commit/8075b92c) feat: added vuls-cve and oval db
+- [`6d899590`](../../commit/6d899590) Fix project name in jsonnet for ArgoCD kubeaid apps
+- [`9d77e0f5`](../../commit/9d77e0f5) fixing probe name for puppetserver
+- [`b2db6ed7`](../../commit/b2db6ed7) adding ingress template for ciso-assistant
+- [`93444600`](../../commit/93444600) (fix/capi-cluster) : MachineDeployment min-size defaults to 0
+- [`df9eeb99`](../../commit/df9eeb99) (feat/capi-cluster) : add ClusterRole and ClusterRoleBinding, to support ClusterAPI scale from zero feature
+
+## 8.1.0
+### Minor Version Upgrades
+- Updated velero from version 8.1.0 to 8.2.0
+- Updated prometheus-smartctl-exporter from version 0.11.0 to 0.13.0
+- Updated postgres-operator from version 1.13.0 to 1.14.0
+- Updated opensearch-dashboards from version 2.25.0 to 2.26.0
+- Updated opensearch from version 2.28.0 to 2.30.0
+- Updated opentelemetry-operator from version 0.75.1 to 0.78.1
+- Updated opencost from version 1.42.3 to 1.43.0
+- Updated oncall from version 1.13.11 to 1.14.1
+- Updated keycloakx from version 4.0.0 to 6.0.0
+- Updated cluster-autoscaler from version 9.43.2 to 9.45.0
+- Updated cloudnative-pg from version 0.22.1 to 0.23.0
+
+### Patch Version Upgrades
+- Updated teleport-kube-agent from version 17.1.1 to 17.1.5
+- Updated teleport-cluster from version 17.1.1 to 17.1.5
+- Added rook-ceph-cluster from version v1.16.0 to v1.16.0
+- Updated rook-ceph from version v1.16.0 to v1.16.1
+- Updated openobserve-collector from version 0.3.18 to 0.3.21
+- Added openobserve from version 0.14.7 to 0.14.7
+- Updated kubernetes-dashboard from version 7.10.0 to 7.10.1
+- Updated keda from version 2.16.0 to 2.16.1
+- Updated harbor from version 1.16.0 to 1.16.1
+- Updated gatekeeper from version 3.18.1 to 3.18.2
+- Updated fluent-bit from version 0.48.3 to 0.48.4
+- Updated erpnext from version 7.0.146 to 7.0.155
+- Updated aws-efs-csi-driver from version 3.1.4 to 3.1.5
+- Updated argocd-image-updater from version 0.11.3 to 0.11.4
+- Updated argo-cd from version 7.7.11 to 7.7.15
+
+### Improvements
+- [`4241f405`](../../commit/4241f405) (chore/capi-cluster) : minor UX improve by modifying a Helm parameter path
+- [`f665ed21`](../../commit/f665ed21) (fix/capi-cluster) : using extraArgs instead of extraEnvs to enable ETCD metrics
+- [`3a7a104a`](../../commit/3a7a104a) fix: moving the opsmondo alert into respective git repo
+- [`3ca6d588`](../../commit/3ca6d588) fix: watchdog alerts should come from opsmondo helm chart
+- [`09df8811`](../../commit/09df8811) (traefik) : enabling ServiceMonitor
+- [`bc851e4d`](../../commit/bc851e4d) (capi-cluster) : using cluster-name + control-plane as label selectors in MachineHealthcheck
+- [`1f947eef`](../../commit/1f947eef) (cluster-api) : Updating cluster-api-operator subchart to v0.15.1
+- [`377a47af`](../../commit/377a47af) Updating container image versions in cluster-api and capi-cluster Helm chart
+- [`8d444ae6`](../../commit/8d444ae6) (capi-cluster) : syncing Chart.lock with Chart.yaml
+- [`72e80d21`](../../commit/72e80d21) (capi-cluster) : AWS Infrastructure Provider component should run in a master node
+- [`4c9661a0`](../../commit/4c9661a0) (capi-cluster) : Helm chart error fixes
+- [`a3563a80`](../../commit/a3563a80) (capi-cluster) : Always having ETCD metrics enabled
+- [`064f1c48`](../../commit/064f1c48) (feat/capi-cluster) : allowing users to pass : extraArgs and extraVolumes to KubeAPI | files to be added in master nodes
+- [`f2deec6e`](../../commit/f2deec6e) Update the README for relate chart Add nginx to relate deployment templated velero schedule's includenamespaces field
+- [`452c1edf`](../../commit/452c1edf) adding ciso-assistant in helm charts
+- [`bbcca257`](../../commit/bbcca257) fixed all blackbox probes
+- [`ffcdb71a`](../../commit/ffcdb71a) remove commit for each helm update
+- [`3a5d13af`](../../commit/3a5d13af) update kafka-operator chart, add steps in doc to use go with kafka
+- [`4d7095be`](../../commit/4d7095be) adding templates to setup mariadb and redis instance using corresponding operators for erpnext
+- [`dfea13b8`](../../commit/dfea13b8) adding erpnext helm chart under kubeaid to enable sales support data collection
+- [`dc1641de`](../../commit/dc1641de) add smartmon disk relocated sector alert, move all smartmon alert rules to one file
+- [`619be769`](../../commit/619be769) bug fix: mount eyaml secret on /tmp/puppet/configmap/eyaml/keys upstream pr - https://github.com/puppetlabs/puppetserver-helm-chart/pull/239
+- [`0e64d89d`](../../commit/0e64d89d) update default volume
+- [`86572b42`](../../commit/86572b42) add cnpg backup and ngnix server to serve static files
+
 ## 8.0.0
 ### Major Version Upgrades
 - Updated keycloakx from version 3.0.0 to 4.0.0
