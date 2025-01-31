@@ -6,11 +6,11 @@ kind: MachineDeployment
 metadata:
   name: {{ printf "%s-%s" $.Values.global.clusterName $nodeGroup.name }}
   annotations:
-    cluster.x-k8s.io/cluster-api-autoscaler-node-group-min-size: {{ $nodeGroup.minSize | default 0 | quote }}
-    cluster.x-k8s.io/cluster-api-autoscaler-node-group-max-size: {{ $nodeGroup.maxSize | default 3 | quote }}
+    cluster.x-k8s.io/cluster-api-autoscaler-node-group-min-size: {{ $nodeGroup.minSize | quote }}
+    cluster.x-k8s.io/cluster-api-autoscaler-node-group-max-size: {{ $nodeGroup.maxSize | quote }}
 spec:
   clusterName: {{ $.Values.global.clusterName }}
-  replicas: {{ $nodeGroup.replicas | default 2 }}
+  replicas: {{ $nodeGroup.minSize }}
   template:
     {{- if $nodeGroup.labels }}
     metadata:
