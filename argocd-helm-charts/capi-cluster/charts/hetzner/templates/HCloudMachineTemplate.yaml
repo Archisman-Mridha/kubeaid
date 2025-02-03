@@ -1,0 +1,29 @@
+{{- if .Values.controlPlane.hcloud.enabled }}
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: HCloudMachineTemplate
+metadata:
+  name: {{ .Values.global.clusterName }}-control-plane
+spec:
+  template:
+    spec:
+      imageName: ubuntu-22.04
+      placementGroupName: control-plane
+      type: {{ .Values.controlPlane.hcloud.machineType }}
+---
+{{- end }}
+
+{{- if .Values.hcloud.enabled }}
+{{- range $index, $nodeGroup := $.Values.hcloud.nodeGroups }}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: HCloudMachineTemplate
+metadata:
+  name: {{ printf "%s-%s" $.Values.global.clusterName $nodeGroup.name }}
+spec:
+  template:
+    spec:
+      imageName: ubuntu-22.04
+      placementGroupName: control-plane
+      type: {{ $nodeGroup.machineType }}
+{{- end }}
+{{- end }}

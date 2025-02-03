@@ -1,4 +1,5 @@
-{{- range $key, $value := .Values.nodes }}
+{{- if .Values.controlPlane.robot.enabled }}
+{{- range $key, $value := .Values.controlPlane.robot.nodes }}
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: HetznerBareMetalHost
 metadata:
@@ -14,6 +15,7 @@ spec:
       {{- range $value.wwn }}
         - {{ . | quote }}
       {{- end }}
-  description: "Cluster {{ $.Values.global.clusterName }} control plane node {{ $value.name }}"
+  description: "Bare metal node {{ $value.name }} used by cluster {{ $.Values.global.clusterName }}"
 ---
+{{- end }}
 {{- end }}

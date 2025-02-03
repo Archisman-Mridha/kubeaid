@@ -7,24 +7,32 @@ metadata:
     cluster.x-k8s.io/name: {{ .Values.global.clusterName }}
 spec:
   controlPlaneEndpoint:
-    host: {{ .Values.controlPlaneEndpoint.host }}
-    port: {{ .Values.controlPlaneEndpoint.port | default 6443 }}
+    host: {{ .Values.controlPlane.endpoint.host }}
+    port: {{ .Values.controlPlane.endpoint.port | default 6443 }}
+  {{- if .Values.controlPlane.loadBalancer.enabled }}
   controlPlaneLoadBalancer:
-    {{- if .Values.controlPlaneLoadBalancer.region }}
-    region: {{ .Values.controlPlaneLoadBalancer.region }}
+    enabled: true
+    {{- if .Values.controlPlane.loadBalancer.region }}
+    region: {{ .Values.controlPlane.loadBalancer.region }}
     {{- end }}
-    enabled: {{ .Values.controlPlaneLoadBalancer.enabled }}
+  {{- end }}
   controlPlaneRegions:
-  {{- range .Values.controlPlaneRegions }}
+  {{- range .Values.controlPlane.regions }}
   - {{ . | quote }}
   {{- end }}
+  {{- if or (.Values.controlPlane.hcloud.enabled) (.Values.hcloud.enabled) }}
   hcloudNetwork:
-    enabled: false
+    enabled: true
+    networZone: {{ .Valued.hcloud.network.zone | default "eu-central" }}
+  {{- end }}
   hcloudPlacementGroups:
-  - name: control-plane
-    type: spread
-  - name: md-0
-    type: spread
+    - name: control-plane
+      type: spread
+    - name: md-0
+      type: spread
+  # Reference to a token to be used when reconciling this cluster. This is generated in the
+  # security section under API TOKENS.
+  # NOTE : Read & write is necessary.
   hetznerSecretRef:
     key:
       hcloudToken: hcloud
@@ -33,10 +41,10 @@ spec:
     name: {{ .Values.cloudCredentialsSecretName }}
   sshKeys:
     hcloud:
-    - name: cluster
+      - name: {{ .Values.hcloud.sshKeyName }}
     robotRescueSecretRef:
       key:
         name: sshkey-name
         privateKey: ssh-privatekey
         publicKey: ssh-publickey
-      name: {{ .Values.robotSSHKeysSecretName }}
+      name: {{ .Values.sshKeysSecretName }}

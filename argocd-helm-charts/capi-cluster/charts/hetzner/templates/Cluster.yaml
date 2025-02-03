@@ -4,7 +4,6 @@ metadata:
   name: {{ .Values.global.clusterName }}
   labels:
     cluster.x-k8s.io/name: {{ .Values.global.clusterName }}
-    capi.syself.com/constant-bare-metal-hostname: "true"
 spec:
   clusterNetwork:
     pods:

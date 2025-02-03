@@ -6,6 +6,11 @@ spec:
   template:
     spec:
       iamInstanceProfile: control-plane.cluster-api-provider-aws.sigs.k8s.io
+      # Required by CAPA (Cluster API Provider AWS), when using IAM Roles instead of credentials
+      # stored in Kubernetes Secret.
+      instanceMetadataOptions:
+        httpPutResponseHopLimit: 2
+        httpTokens: required
       instanceType: {{ .Values.controlPlane.instanceType }}
       sshKeyName: {{ .Values.controlPlane.sshKeyName }}
       imageLookupBaseOS: ubuntu-20.04

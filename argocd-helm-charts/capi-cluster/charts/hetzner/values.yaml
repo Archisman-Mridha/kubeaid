@@ -1,11 +1,29 @@
-controlPlaneLoadBalancer:
-  enabled: true
+cloudCredentialsSecretName: cloud-credentials
 
-controlPlaneEndpoint:
-  port: 6443
+controlPlane:
+  loadBalancer:
+    enabled: true
+  endpoint:
+    port: 6443
+  hcloud:
+    enabled: true
+    machineType:
+  robot:
+    enabled: true
+    nodes: []
+  replicas: 3
+
+hcloud:
+  sshKeyName: kubeaid-demo-hetzner-cluster # Mandatory, even if hcloud.enabled is set to false.
+
+  enabled: true
+  network:
+    zone: eu-central
+
+  nodeGroups: []
 
 robot:
   floating: false
+  sshKeysSecretName: hetzner-robot-ssh-keys
 
-robotSSHKeysSecretName: hetzner-robot-ssh-keys
-cloudCredentialsSecretName: cloud-credentials
+  nodeGroups: []
