@@ -17,19 +17,25 @@ spec:
     {{- end }}
   {{- end }}
   controlPlaneRegions:
-  {{- range .Values.controlPlane.regions }}
-  - {{ . | quote }}
-  {{- end }}
-  {{- if or (.Values.controlPlane.hcloud.enabled) (.Values.hcloud.enabled) }}
+    {{- range .Values.controlPlane.regions }}
+    - {{ . | quote }}
+    {{- end }}
+  {{- if (.Values.hcloud).enabled }}
   hcloudNetwork:
     enabled: true
-    networZone: {{ .Valued.hcloud.network.zone | default "eu-central" }}
+    networZone: {{ .Values.hcloud.network.zone | default "eu-central" }}
   {{- end }}
   hcloudPlacementGroups:
     - name: control-plane
       type: spread
-    - name: md-0
+    {{- range $index, $nodeGroup := ($.Values.hcloud).nodeGroups }}
+    - name: {{ $nodeGroup.name }}
       type: spread
+    {{- end }}
+    {{- range $index, $nodeGroup := ($.Values.robot).nodeGroups }}
+    - name: {{ $nodeGroup.name }}
+      type: spread
+    {{- end }}
   # Reference to a token to be used when reconciling this cluster. This is generated in the
   # security section under API TOKENS.
   # NOTE : Read & write is necessary.
@@ -47,4 +53,4 @@ spec:
         name: sshkey-name
         privateKey: ssh-privatekey
         publicKey: ssh-publickey
-      name: {{ .Values.sshKeysSecretName }}
+      name: {{ .Values.robot.sshKeysSecretName }}

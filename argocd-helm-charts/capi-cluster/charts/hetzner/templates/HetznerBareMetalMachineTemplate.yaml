@@ -1,4 +1,4 @@
-{{- if .Values.controlPlane.robot.enabled }}
+{{- if and (.Values.robot.enabled) (.Values.robot.controlPlane) }}
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: HetznerBareMetalMachineTemplate
@@ -73,8 +73,8 @@ spec:
           name: {{ .Values.robot.sshKeysSecretName }}
 {{- end }}
 
-{{- if .Values.robot.nodeGroups }}
-{{- range $index, $nodeGroup := $.Values.nodeGroups }}
+{{- if and (.Values.robot.enabled) (.Values.robot.nodeGroups) }}
+{{- range $index, $nodeGroup := $.Values.robot.nodeGroups }}
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: HetznerBareMetalMachineTemplate
@@ -146,6 +146,6 @@ spec:
             name: sshkey-name
             privateKey: ssh-privatekey
             publicKey: ssh-publickey
-          name: {{ .Values.sshKeysSecretName }}
+          name: {{ .Values.robot.sshKeysSecretName }}
 {{- end }}
 {{- end }}
