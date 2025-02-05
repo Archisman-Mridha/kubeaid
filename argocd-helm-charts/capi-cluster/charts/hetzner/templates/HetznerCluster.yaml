@@ -8,23 +8,25 @@ metadata:
 spec:
   {{/* CASE : Control Plane is in Hetzner Bare Metal. The Control Plane endpoint host, should be
                the Failover IP you're using. */}}
-  {{- if and ((.Values.robot).enabled) (.Values.controlPlane.endpoint.host) }}
+  {{- if and ((.Values.robot).enabled) .Values.robot.controlPlane }}
   controlPlaneEndpoint:
     host: {{ .Values.controlPlane.endpoint.host }}
+    port: 6443
   {{- end }}
 
   {{/* CASE : Control Plane is in Hetzner Cloud */}}
-
-  {{- if and ((.Values.hcloud).enabled) ((.Values.controlPlane.loadBalancer).enabled) }}
+  {{- if (.Values.hcloud).enabled and .Values.hcloud.controlPlane }}
+  {{- if (.Values.hcloud.controlPlane.loadBalancer).enabled) }}
   controlPlaneLoadBalancer:
     enabled: true
     region: {{ .Values.controlPlane.loadBalancer.region }}
   {{- end }}
 
   controlPlaneRegions:
-    {{- range .Values.controlPlane.regions }}
-    - {{ . | quote }}
-    {{- end }}
+  {{- range .Values.controlPlane.regions }}
+  - {{ . | quote }}
+  {{- end }}
+  {{- end }}
 
   {{/* TODO : Make sure that Control Plane is either in Hetzner Bare Metal or in Hetzner Cloud. */}}
 

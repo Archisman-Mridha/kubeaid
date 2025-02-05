@@ -216,18 +216,24 @@ spec:
       - kubectl create ns cilium
       - helm template kubeaid/argocd-helm-charts/cilium --values kubeaid/argocd-helm-charts/cilium/values.yaml -n cilium | kubectl apply -f -n cilium
       - helm template kubeaid/argocd-helm-charts/ccm-hetzner --set ccm-hetzner.secret.name=capi-cluster-hetzner --namespace kube-system --set ccm-hetzner.privateNetwork.enabled=false | kubectl apply -f -n kube-system
+
+  version: {{ .Values.global.kubernetes.version }}
+
+  {{/* Control Plane is in HCloud. */}}
+  {{- if and ((.Values.hcloud).enabled) (.Values.hcloud.controlPlane) }}
   machineTemplate:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
-
-      {{/* CASE : Control Plane is in HCloud. */}}
-      {{- if and (.Values.hcloud.enabled) (.Values.hcloud.controlPlane) }}
       kind: HCloudMachineTemplate
-      {{/* CASE : Control Plane is in Hetzner Bare Metal. */}}
-      {{- else }}
-      kind: HetznerBareMetalMachineTemplate
-      {{- end }}
-
       name: {{ .Values.global.clusterName }}-control-plane
-  replicas: {{ .Values.controlPlane.replicas }}
-  version: {{ .Values.global.kubernetes.version }}
+  replicas: {{ .Values.hcloud.controlPlane.replicas }}
+
+  {{/* Control Plane is in Hetzner Bare Metal. */}}
+  {{- else }}
+  machineTemplate:
+    infrastructureRef:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+      kind: HetznerBareMetalMachineTemplate
+      name: {{ .Values.global.clusterName }}-control-plane
+  replicas: {{ len .Values.robot.controlPlane.nodes }}
+  {{- end }}
