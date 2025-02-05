@@ -1,4 +1,5 @@
-{{- if and (.Values.hcloud.enabled) (.Values.hcloud.controlPlane) }}
+{{/* CASE : Control Plane is in HCloud. */}}
+{{- if and ((.Values.hcloud).enabled) ((.Values.hcloud).controlPlane) }}
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: HCloudMachineTemplate
@@ -12,7 +13,8 @@ spec:
       type: {{ .Values.hcloud.controlPlane.machineType }}
 {{- end }}
 
-{{- if and (.Values.hcloud.enabled) (.Values.hcloud.nodeGroups) }}
+{{/* Handling node-groups in HCloud. */}}
+{{- if and ((.Values.hcloud).enabled) ((.Values.hcloud).nodeGroups) }}
 {{- range $index, $nodeGroup := $.Values.hcloud.nodeGroups }}
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1

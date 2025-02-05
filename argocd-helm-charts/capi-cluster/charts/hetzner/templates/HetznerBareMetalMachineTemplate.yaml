@@ -1,4 +1,5 @@
-{{- if and (.Values.robot.enabled) (.Values.robot.controlPlane) }}
+{{/* CASE : Control Plane is in Hetzner Bare Metal. */}}
+{{- if and ((.Values.robot).enabled) ((.Values.robot).controlPlane) }}
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: HetznerBareMetalMachineTemplate
@@ -73,7 +74,8 @@ spec:
           name: {{ .Values.robot.sshKeysSecretName }}
 {{- end }}
 
-{{- if and (.Values.robot.enabled) (.Values.robot.nodeGroups) }}
+{{/* Handling node-groups in Hetzner Bare Metal. */}}
+{{- if and ((.Values.robot).enabled) ((.Values.robot).nodeGroups) }}
 {{- range $index, $nodeGroup := $.Values.robot.nodeGroups }}
 ---
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1

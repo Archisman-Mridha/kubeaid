@@ -6,36 +6,51 @@ metadata:
   labels:
     cluster.x-k8s.io/name: {{ .Values.global.clusterName }}
 spec:
+  {{/* CASE : Control Plane is in Hetzner Bare Metal. The Control Plane endpoint host, should be
+               the Failover IP you're using. */}}
+  {{- if and ((.Values.robot).enabled) (.Values.controlPlane.endpoint.host) }}
   controlPlaneEndpoint:
     host: {{ .Values.controlPlane.endpoint.host }}
-    port: {{ .Values.controlPlane.endpoint.port | default 6443 }}
-  {{- if .Values.controlPlane.loadBalancer.enabled }}
+  {{- end }}
+
+  {{/* CASE : Control Plane is in Hetzner Cloud */}}
+
+  {{- if and ((.Values.hcloud).enabled) ((.Values.controlPlane.loadBalancer).enabled) }}
   controlPlaneLoadBalancer:
     enabled: true
-    {{- if .Values.controlPlane.loadBalancer.region }}
     region: {{ .Values.controlPlane.loadBalancer.region }}
-    {{- end }}
   {{- end }}
+
   controlPlaneRegions:
     {{- range .Values.controlPlane.regions }}
     - {{ . | quote }}
     {{- end }}
+
+  {{/* TODO : Make sure that Control Plane is either in Hetzner Bare Metal or in Hetzner Cloud. */}}
+
+
   {{- if (.Values.hcloud).enabled }}
   hcloudNetwork:
     enabled: true
     networZone: {{ .Values.hcloud.network.zone | default "eu-central" }}
   {{- end }}
+
   hcloudPlacementGroups:
     - name: control-plane
       type: spread
+
+    {{/* For node-groups in Hetzner Cloud. */}}
     {{- range $index, $nodeGroup := ($.Values.hcloud).nodeGroups }}
     - name: {{ $nodeGroup.name }}
       type: spread
     {{- end }}
+
+    {{ /* For node-groups in Hetzner Bare Metal. */ }}
     {{- range $index, $nodeGroup := ($.Values.robot).nodeGroups }}
     - name: {{ $nodeGroup.name }}
       type: spread
     {{- end }}
+
   # Reference to a token to be used when reconciling this cluster. This is generated in the
   # security section under API TOKENS.
   # NOTE : Read & write is necessary.
@@ -45,6 +60,7 @@ spec:
       hetznerRobotPassword: robot-password
       hetznerRobotUser: robot-user
     name: {{ .Values.cloudCredentialsSecretName }}
+
   sshKeys:
     hcloud:
       - name: {{ .Values.hcloud.sshKeyName }}

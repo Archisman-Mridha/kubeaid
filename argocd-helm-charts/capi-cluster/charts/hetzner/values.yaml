@@ -3,6 +3,7 @@ cloudCredentialsSecretName: cloud-credentials
 controlPlane:
   loadBalancer:
     enabled: true
+    region: fsn1
   regions:
     - fsn1
   endpoint:
@@ -15,7 +16,7 @@ hcloud:
   enabled: true
 
   controlPlane:
-    machineType:
+    machineType: cax11
 
   network:
     zone: eu-central
