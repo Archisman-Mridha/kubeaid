@@ -1,5 +1,5 @@
 {{/* Handling node-groups in HCloud. */}}
-{{- if and ((.Values.hcloud).enabled) ((.Values.hcloud).nodeGroups) }}
+{{- if and (.Values.hcloud).enabled (.Values.hcloud).nodeGroups }}
 {{- range $index, $nodeGroup := $.Values.hcloud.nodeGroups }}
 ---
 apiVersion: cluster.x-k8s.io/v1beta1
@@ -27,6 +27,7 @@ spec:
 
     spec:
       clusterName: {{ $.Values.global.clusterName }}
+      failureDomain: {{ $nodeGroup.failureDomain }}
       bootstrap:
         configRef:
           apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
