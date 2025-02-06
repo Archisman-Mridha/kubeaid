@@ -241,15 +241,22 @@ spec:
       - echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >>/root/.bashrc
       - apt-get -y autoremove && apt-get -y clean all
     postKubeadmCommands:
-      - set -x
-      - curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-      - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-      - apt-get -y update
-      - apt-get -y install git helm
+      # Install Helm.
+      - curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      # Clone KubeAid.
       - git clone https://github.com/Obmondo/kubeaid.git
-      - kubectl create ns cilium
-      - helm template kubeaid/argocd-helm-charts/cilium --values kubeaid/argocd-helm-charts/cilium/values.yaml -n cilium | kubectl apply -f -n cilium
-      - helm template kubeaid/argocd-helm-charts/ccm-hetzner --set ccm-hetzner.secret.name=capi-cluster-hetzner --namespace kube-system --set ccm-hetzner.privateNetwork.enabled=false | kubectl apply -f -n kube-system
+      # Copy kubeconfig to ~/.kube/config
+      - mkdir -p $HOME/.kube
+      - sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+      - sudo chown $(id -u):$(id -g) $HOME/.kube/config
+      # Install Cilium.
+      - kubectl create namespace cilium
+      - API_SERVER_URL=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
+      - API_SERVER_HOST=$(echo "$API_SERVER_URL" | awk -F[/:] '{print $4}')
+      - API_SERVER_PORT=$(echo "$API_SERVER_URL" | awk -F[/:] '{print $5}')
+      - helm template kubeaid/argocd-helm-charts/cilium --values kubeaid/argocd-helm-charts/cilium/values.yaml --set cilium.k8sServiceHost=${API_SERVER_HOST} --set cilium.k8sServicePort=${API_SERVER_PORT} --namespace cilium | kubectl apply -f -
+      # Install Hetzner Cloud Controller Manager.
+      - helm template kubeaid/argocd-helm-charts/ccm-hetzner --values kubeaid/argocd-helm-charts/ccm-hetzner/values.yaml --namespace kube-system | kubectl apply -f -
 
   version: {{ .Values.global.kubernetes.version }}
 

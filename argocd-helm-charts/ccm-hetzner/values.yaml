@@ -1,2 +1,3 @@
-secret:
-  name: cloud-credentials
+ccm-hetzner:
+  secret:
+    name: cloud-credentials
