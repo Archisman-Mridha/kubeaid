@@ -28,7 +28,7 @@ spec:
   {{- if (.Values.hcloud).enabled }}
   hcloudNetwork:
     enabled: true
-    networZone: {{ .Values.hcloud.network.zone | default "eu-central" }}
+    networkZone: {{ .Values.hcloud.network.zone | default "eu-central" }}
   {{- end }}
 
   hcloudPlacementGroups:

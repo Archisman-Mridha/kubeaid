@@ -8,7 +8,7 @@ metadata:
 spec:
   clusterName: {{ .Values.global.clusterName }}
   maxUnhealthy: 100%
-  nodeStartupTimeout: 15m
+  nodeStartupTimeout: 15m0s
   remediationTemplate:
     apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     kind: HCloudRemediationTemplate
@@ -18,9 +18,9 @@ spec:
       cluster.x-k8s.io/control-plane: ""
   unhealthyConditions:
   - status: Unknown
-    timeout: 180s
+    timeout: 3m0s
     type: Ready
   - status: "False"
-    timeout: 180s
+    timeout: 3m0s
     type: Ready
 {{- end }}

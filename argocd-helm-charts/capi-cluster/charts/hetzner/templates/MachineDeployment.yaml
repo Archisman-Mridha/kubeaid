@@ -34,7 +34,7 @@ spec:
           kind: KubeadmConfigTemplate
           name: {{ $.Values.global.clusterName }}
       infrastructureRef:
-        apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
         kind: HCloudMachineTemplate
         name: {{ printf "%s-%s" $.Values.global.clusterName $nodeGroup.name }}
       version: {{ $.Values.global.kubernetes.version }}
