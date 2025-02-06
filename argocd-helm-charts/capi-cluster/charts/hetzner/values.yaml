@@ -4,6 +4,8 @@ hcloud:
   sshKeyName: kubeaid-demo-hetzner-cluster # Mandatory, even if hcloud.enabled is set to false.
   enabled: true
   controlPlane:
+    endpoint:
+      host: ""
     loadBalancer:
       enabled: true
       region: fsn1
@@ -20,6 +22,6 @@ robot:
   sshKeysSecretName: hetzner-robot-ssh-keys
   controlPlane:
     endpoint:
-      port: 6443
+      host: ""
     nodes: []
   nodeGroups: []

@@ -6,13 +6,9 @@ metadata:
   labels:
     cluster.x-k8s.io/name: {{ .Values.global.clusterName }}
 spec:
-  {{/* CASE : Control Plane is in Hetzner Bare Metal. The Control Plane endpoint host, should be
-              the Failover IP you're using. */}}
-  {{- if and (.Values.robot).enabled .Values.robot.controlPlane }}
   controlPlaneEndpoint:
-    host: {{ .Values.robot.controlPlane.endpoint.host }}
+    host: {{ include "controlPlaneHost" . | default "" }}
     port: 6443
-  {{- end }}
 
   {{/* CASE : Control Plane is in Hetzner Cloud */}}
   {{- if and (.Values.hcloud).enabled .Values.hcloud.controlPlane }}
