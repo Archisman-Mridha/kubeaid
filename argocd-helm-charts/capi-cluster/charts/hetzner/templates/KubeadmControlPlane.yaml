@@ -244,7 +244,7 @@ spec:
       # Install Helm.
       - curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
       # Clone KubeAid.
-      - git clone https://github.com/Obmondo/kubeaid.git
+      - git clone https://github.com/Archisman-Mridha/kubeaid.git
       # Copy kubeconfig to ~/.kube/config
       - mkdir -p $HOME/.kube
       - sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
