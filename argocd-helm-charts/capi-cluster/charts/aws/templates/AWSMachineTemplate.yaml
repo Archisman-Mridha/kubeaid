@@ -10,7 +10,6 @@ spec:
       # stored in Kubernetes Secret.
       instanceMetadataOptions:
         httpPutResponseHopLimit: 2
-        httpTokens: required
       instanceType: {{ .Values.controlPlane.instanceType }}
       sshKeyName: {{ .Values.controlPlane.sshKeyName }}
       imageLookupBaseOS: ubuntu-20.04

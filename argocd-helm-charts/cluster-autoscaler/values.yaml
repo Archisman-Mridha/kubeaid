@@ -9,3 +9,4 @@ cluster-autoscaler:
 # REFER : https://cluster-api.sigs.k8s.io/tasks/automated-machine-management/autoscaling#rbac-changes-for-scaling-from-zero.
 enableClusterAPIScaleFromZeroSupport:
   aws: false
+  hcloud: false
