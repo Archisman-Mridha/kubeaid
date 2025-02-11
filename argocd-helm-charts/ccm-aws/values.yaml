@@ -1,7 +1,7 @@
 aws-cloud-controller-manager:
   namespace: kube-system
   image:
-    tag: v1.30.0
+    tag: v1.32.0
   args:
     - --v=2
     - --cloud-provider=aws

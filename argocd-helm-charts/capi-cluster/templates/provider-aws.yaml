@@ -35,4 +35,16 @@ spec:
     syncPeriod: 10m0s
     featureGates:
       MachinePool: {{ .Values.global.capa.enableMachinePools }}
+  {{- if .Values.aws.useHostNetwork }}
+  manifestPatches:
+    - |
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: capa-controller-manager
+        spec:
+          template:
+            spec:
+              hostNetwork: true
+  {{- end }}
 {{- end }}
