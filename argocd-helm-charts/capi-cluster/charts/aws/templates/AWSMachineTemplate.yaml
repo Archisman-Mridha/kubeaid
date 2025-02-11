@@ -34,6 +34,11 @@ spec:
     spec:
       ami: {{ toYaml $nodeGroup.ami | nindent 8 }}
       iamInstanceProfile: nodes.cluster-api-provider-aws.sigs.k8s.io
+      instanceMetadataOptions:
+        httpEndpoint: enabled
+        httpPutResponseHopLimit: 2
+        httpTokens: optional
+        instanceMetadataTags: disabled
       instanceType: {{ $nodeGroup.instanceType }}
       sshKeyName: {{ $nodeGroup.sshKeyName }}
       imageLookupBaseOS: ubuntu-20.04
