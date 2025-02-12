@@ -18,6 +18,3 @@ provider:
   hetzner: false
   aws: false
   azure: false
-
-aws:
-  useHostNetwork: false
