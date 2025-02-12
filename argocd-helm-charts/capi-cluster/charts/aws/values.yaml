@@ -8,4 +8,6 @@ vpc:
 pods:
   cidrBlock: 10.244.0.0/16
 controlPlane:
-  loadBalancerType: nlb
+  loadBalancer:
+    type: nlb
+    scheme: internet-facing

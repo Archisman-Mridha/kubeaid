@@ -29,4 +29,5 @@ spec:
           fromPort: 8
           toPort: 8
   controlPlaneLoadBalancer:
-    loadBalancerType: {{ .Values.controlPlane.loadBalancerType }}
+    loadBalancerType: {{ .Values.controlPlane.loadBalancer.type }}
+    scheme: {{ .Values.controlPlane.loadBalancer.scheme | default "internet-facing" }}
