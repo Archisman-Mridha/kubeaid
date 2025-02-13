@@ -14,6 +14,8 @@ spec:
       id: {{ .Values.vpc.id }}
       {{- end }}
       cidrBlock: {{ .Values.vpc.cidrBlock }}
+      availabilityZoneSelection: Ordered
+      availabilityZoneUsageLimit: 3
     cni:
       cniIngressRules:
         - description: Cilium
