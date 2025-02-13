@@ -30,9 +30,25 @@ spec:
         operator: "Exists"
         effect: "NoSchedule"
   manager:
+    cacheNamespace: {{ $namespace }}
     metrics:
       bindAddress: ":8181"
     syncPeriod: 10m0s
     featureGates:
       MachinePool: {{ .Values.global.capa.enableMachinePools }}
+  manifestPatches:
+    - |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: capa-controller-manager
+        namespace: {{ $namespace }}
+      spec:
+        template:
+          spec:
+            containers:
+              - name: manager
+                image: gcr.io/k8s-staging-cluster-api-aws/cluster-api-aws-controller:{{ .Values.global.capa.version }}
+                args:
+                  - --namespace={{ $namespace }}
 {{- end }}
