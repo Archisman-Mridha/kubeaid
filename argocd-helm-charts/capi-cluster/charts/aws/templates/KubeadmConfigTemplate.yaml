@@ -16,13 +16,13 @@ spec:
           {{- if $nodeGroup.taints }}
           taints: {{- toYaml $nodeGroup.taints | nindent 10 }}
           {{- end }}
-      {{- if $.Values.global.additionalUsers | len | gt 0 -}}
+      {{- if (gt (len $.Values.global.additionalUsers) 0) }}
       users:
-        {{- range $index, $additionalUser := $.Values.global.additionalUsers -}}
+        {{- range $index, $additionalUser := $.Values.global.additionalUsers }}
         - name: {{ $additionalUser.name }}
           sshAuthorizedKeys:
             - {{ $additionalUser.sshPublicKey }}
-        {{- end -}}
-      {{- end -}}
+        {{- end }}
+      {{- end }}
 {{- end }}
 {{- end }}
