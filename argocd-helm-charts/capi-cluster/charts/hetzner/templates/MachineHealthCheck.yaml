@@ -1,6 +1,6 @@
 ---
 {{/* CASE : Control Plane is in HCloud. */}}
-{{- if and ((.Values.hcloud).enabled) ((.Values.hcloud).controlPlane) }}
+{{- if (.Values.hcloud).controlPlane }}
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineHealthCheck
 metadata:

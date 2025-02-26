@@ -1,5 +1,5 @@
 {{/* CASE : Control Plane is in Hetzner Bare Metal. */}}
-{{- if and ((.Values.robot).enabled) ((.Values.robot).controlPlane) }}
+{{- if (.Values.robot).controlPlane }}
 {{- range $key, $value := .Values.robot.controlPlane.nodes }}
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: HetznerBareMetalHost

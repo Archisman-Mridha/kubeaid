@@ -11,7 +11,7 @@ spec:
     port: 6443
 
   {{/* CASE : Control Plane is in Hetzner Cloud */}}
-  {{- if and (.Values.hcloud).enabled .Values.hcloud.controlPlane }}
+  {{- if (.Values.hcloud).controlPlane }}
   {{- if (.Values.hcloud.controlPlane.loadBalancer).enabled }}
   controlPlaneLoadBalancer:
     enabled: true
@@ -25,7 +25,7 @@ spec:
 
   {{/* TODO : Make sure that Control Plane is either in Hetzner Bare Metal or in Hetzner Cloud. */}}
 
-  {{- if (.Values.hcloud).enabled }}
+  {{- if .Values.hcloud }}
   hcloudNetwork:
     enabled: true
     networkZone: {{ .Values.hcloud.network.zone | default "eu-central" }}
@@ -51,15 +51,22 @@ spec:
   # security section under API TOKENS.
   # NOTE : Read & write is necessary.
   hetznerSecretRef:
+    name: {{ .Values.cloudCredentialsSecretName }}
     key:
+      {{- if .Values.hcloud }}
       hcloudToken: hcloud
+      {{- end }}
+
+      {{- if .Values.robot }}
       hetznerRobotPassword: robot-password
       hetznerRobotUser: robot-user
-    name: {{ .Values.cloudCredentialsSecretName }}
+      {{- end }}
 
   sshKeys:
+    {{- if .Values.hcloud }}
     hcloud:
       - name: {{ .Values.hcloud.sshKeyName }}
+    {{- end }}
     robotRescueSecretRef:
       key:
         name: sshkey-name
