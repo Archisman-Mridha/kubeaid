@@ -1,7 +1,7 @@
 ---
 image:
   repository: ghcr.io/obmondo/hetzner-robot
-  tag: v1.0.0
+  tag: latest@sha256:fcf397bb5ecc8e703a13dd8234fd6fdbacd8fac48b05799ce202418ff21ac2a1
 
 # Failover IP that pod will manage
 failoverIP: ""
