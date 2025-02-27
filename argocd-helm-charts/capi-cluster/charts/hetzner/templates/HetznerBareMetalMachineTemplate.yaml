@@ -48,7 +48,7 @@ spec:
             ethernets:
               $interface_name:
                 addresses:
-                - {{ .Values.controlPlaneEndpoint.host }}/32
+                - {{ .Values.robot.controlPlane.endpoint.host }}/32
           EOT
           fi
           mkdir -p /etc/cloud/cloud.cfg.d && touch /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
