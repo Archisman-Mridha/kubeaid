@@ -258,7 +258,7 @@ spec:
       # Install Hetzner Cloud Controller Manager.
       - helm template kubeaid/argocd-helm-charts/ccm-hetzner --values kubeaid/argocd-helm-charts/ccm-hetzner/values.yaml --namespace kube-system | kubectl apply -f -
 
-      {{- if (.Values.robot).controlPlane }}
+      {{- if (and (.Values.robot).enabled (.Values.robot).controlPlane) }}
       # Install Hetzner Failover Script
       - helm template kubeaid/argocd-helm-charts/hetzner-robot --values kubeaid/argocd-helm-charts/hetzner-robot/values.yaml --set failoverIP={{ .Values.robot.controlPlane.endpoint.host }} --namespace kube-system | kubectl apply -f -
       {{- end }}
@@ -266,7 +266,7 @@ spec:
   version: {{ .Values.global.kubernetes.version }}
 
   {{/* Control Plane is in HCloud. */}}
-  {{- if (.Values.hcloud).controlPlane }}
+  {{- if (and (.Values.hcloud).enabled (.Values.hcloud).controlPlane) }}
   machineTemplate:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1beta1

@@ -3,6 +3,7 @@ cloudCredentialsSecretName: cloud-credentials
 hcloudSSHKeyName: kubeaid-demo-hetzner-cluster
 
 hcloud:
+  enabled: False
   controlPlane:
     endpoint:
       host: ""
@@ -18,6 +19,7 @@ hcloud:
   nodeGroups: []
 
 robot:
+  enabled: False
   sshKeysSecretName: hetzner-robot-ssh-keys
   controlPlane:
     endpoint:

@@ -1,6 +1,6 @@
 {{/* Handling node-groups in HCloud. */}}
 {{/* TODO : Distribute a node-group across multiple node-groups. */}}
-{{- if (.Values.hcloud).nodeGroups }}
+{{- if (and (.Values.hcloud).enabled (.Values.hcloud).nodeGroups) }}
 {{- range $index, $nodeGroup := $.Values.hcloud.nodeGroups }}
 ---
 apiVersion: cluster.x-k8s.io/v1beta1
@@ -49,7 +49,7 @@ spec:
 {{- end }}
 
 {{/* Handling node-groups in Hetzner Bare Metal. */}}
-{{- if (.Values.robot).nodeGroups }}
+{{- if (and (.Values.robot).enabled (.Values.robot).nodeGroups) }}
 {{- range $index, $nodeGroup := $.Values.hcloud.nodeGroups }}
 ---
 apiVersion: cluster.x-k8s.io/v1beta1

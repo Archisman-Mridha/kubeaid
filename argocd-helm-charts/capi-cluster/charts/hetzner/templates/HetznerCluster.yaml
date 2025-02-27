@@ -11,7 +11,7 @@ spec:
     port: 6443
 
   {{/* CASE : Control Plane is in Hetzner Cloud */}}
-  {{- if (.Values.hcloud).controlPlane }}
+  {{- if (and (.Values.hcloud).enabled (.Values.hcloud).controlPlane) }}
   {{- if (.Values.hcloud.controlPlane.loadBalancer).enabled }}
   controlPlaneLoadBalancer:
     enabled: true
@@ -25,7 +25,7 @@ spec:
 
   {{/* TODO : Make sure that Control Plane is either in Hetzner Bare Metal or in Hetzner Cloud. */}}
 
-  {{- if .Values.hcloud }}
+  {{- if (.Values.hcloud).enabled }}
   hcloudNetwork:
     enabled: true
     networkZone: {{ .Values.hcloud.network.zone | default "eu-central" }}
@@ -47,20 +47,16 @@ spec:
       type: spread
     {{- end }}
 
-  # Reference to a token to be used when reconciling this cluster. This is generated in the
-  # security section under API TOKENS.
-  # NOTE : Read & write is necessary.
   hetznerSecretRef:
     name: {{ .Values.cloudCredentialsSecretName }}
     key:
-      {{- if .Values.hcloud }}
+      # Reference to a token to be used when reconciling this cluster. This is generated in the
+      # security section under API TOKENS.
+      # NOTE : Read & write is necessary.
       hcloudToken: hcloud
-      {{- end }}
 
-      {{- if .Values.robot }}
       hetznerRobotPassword: robot-password
       hetznerRobotUser: robot-user
-      {{- end }}
 
   sshKeys:
     hcloud:
