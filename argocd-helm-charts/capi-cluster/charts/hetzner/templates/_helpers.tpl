@@ -1,8 +1,8 @@
 {{/* TODO : Enforce mutual exclusions. */}}
 {{- define "controlPlaneHost" -}}
-{{- if (.Values.hcloud).controlPlane }}
+{{- if (and (.Values.hcloud).enabled (.Values.hcloud).controlPlane) }}
 {{ .Values.hcloud.controlPlane.endpoint.host }}
 {{- else }}
-{{ .Values.robot.controlPlane.endpoint.host }}
+{{ (.Values.robot).controlPlane.endpoint.host }}
 {{- end }}
 {{- end }}
