@@ -63,10 +63,8 @@ spec:
       {{- end }}
 
   sshKeys:
-    {{- if .Values.hcloud }}
     hcloud:
-      - name: {{ .Values.hcloud.sshKeyName }}
-    {{- end }}
+      - name: {{ .Values.hcloudSSHKeyName }}
     robotRescueSecretRef:
       key:
         name: sshkey-name

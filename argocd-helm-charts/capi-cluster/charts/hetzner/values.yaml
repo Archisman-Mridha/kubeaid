@@ -1,7 +1,8 @@
 cloudCredentialsSecretName: cloud-credentials
 
+hcloudSSHKeyName: kubeaid-demo-hetzner-cluster
+
 hcloud:
-  sshKeyName: kubeaid-demo-hetzner-cluster
   controlPlane:
     endpoint:
       host: ""
