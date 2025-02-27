@@ -10,6 +10,14 @@ spec:
     host: {{ include "controlPlaneHost" . | default "" }}
     port: 6443
 
+  {{/* CASE : Control Plane is in Hetzner Bare Metal */}}
+  {{- if (and (.Values.robot).enabled .Values.robot.controlPlane) }}
+  controlPlaneRegions:
+  {{- range .Values.robot.controlPlane.regions }}
+  - {{ . | quote }}
+  {{- end }}
+  {{- end }}
+
   {{/* CASE : Control Plane is in Hetzner Cloud */}}
   {{- if (and (.Values.hcloud).enabled (.Values.hcloud).controlPlane) }}
   {{- if (.Values.hcloud.controlPlane.loadBalancer).enabled }}
