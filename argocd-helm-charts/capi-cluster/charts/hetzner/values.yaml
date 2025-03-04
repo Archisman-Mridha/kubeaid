@@ -1,6 +1,6 @@
 cloudCredentialsSecretName: cloud-credentials
 
-hcloudSSHKeyName: kubeaid-demo-hetzner-cluster
+hcloudSSHKeyName: kubeaid-demo
 
 hcloud:
   enabled: False
@@ -20,7 +20,7 @@ hcloud:
 
 robot:
   enabled: False
-  sshKeysSecretName: hetzner-robot-ssh-keys
+  rescueSSHKeysSecretsName: kubeaid-demo-robot-rescue-ssh-keys
   controlPlane:
     endpoint:
       host: ""

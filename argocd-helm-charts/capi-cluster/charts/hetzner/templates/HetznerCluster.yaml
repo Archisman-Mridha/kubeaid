@@ -67,11 +67,15 @@ spec:
       hetznerRobotUser: robot-user
 
   sshKeys:
+    # ClusterAPI will access the nodes using these HCloud SSH Keys.
+    # NOTE : Each SSH Key is cluster wide.
     hcloud:
       - name: {{ .Values.hcloudSSHKeyName }}
+    # Defines the reference to the secret where the SSH key for the rescue system is stored.
+    # Make sure, that any other HCloud SSH Key with this name doesn't exist.
     robotRescueSecretRef:
       key:
         name: sshkey-name
         privateKey: ssh-privatekey
         publicKey: ssh-publickey
-      name: {{ .Values.robot.sshKeysSecretName }}
+      name: {{ .Values.robot.rescueSSHKeysSecretsName }}
