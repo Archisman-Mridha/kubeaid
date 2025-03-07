@@ -12,10 +12,17 @@ spec:
     vpc:
       {{- if .Values.vpc.id }}
       id: {{ .Values.vpc.id }}
+      {{- else }}
+      cidrBlock: {{ .Values.vpc.cidrBlock | default "10.14.0.0/22" }}
       {{- end }}
-      cidrBlock: {{ .Values.vpc.cidrBlock }}
       availabilityZoneSelection: Ordered
       availabilityZoneUsageLimit: 3
+    {{- if .Values.vpc.id }}
+    subnets:
+      {{- range $index, $subnetID := $.Values.vpc.subnets }}
+      - id: {{ $subnetID }}
+      {{- end }}
+    {{- end }}
     cni:
       cniIngressRules:
         - description: Cilium
