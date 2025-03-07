@@ -380,7 +380,7 @@ local kp =
               },
             },
           },
-          ruleNamespaceSelector: null,
+          ruleNamespaceSelector: {},
         },
       },
       networkPolicy+: {
