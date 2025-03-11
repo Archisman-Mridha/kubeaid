@@ -1,5 +1,6 @@
 cloudCredentialsSecretName: cloud-credentials
 
+# Name of the HCloud SSH Key that ClusterAPI will use to SSH into the nodes.
 hcloudSSHKeyName: kubeaid-demo
 
 hcloud:
@@ -20,7 +21,9 @@ hcloud:
 
 robot:
   enabled: False
-  rescueSSHKeysSecretsName: kubeaid-demo-robot-rescue-ssh-keys
+  # Name of the Hetzner Robot rescue SSH Key, for the cluster nodes, which ClusterAPI will create
+  # and save into a Kubernetes Secret in the cluster.
+  rescueSSHKeysSecretsName: kubeaid-demo-hetzner-robot-rescue-ssh-keys
   controlPlane:
     endpoint:
       host: ""
