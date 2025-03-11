@@ -35,11 +35,11 @@ spec:
           size: 20G
         postInstallScript: |
           #!/bin/bash
-          if {{ .Values.robot }}; then
-            wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-            chmod a+x /usr/local/bin/yq
-            touch /etc/netplan/60-floating-ip.yaml && chmod 600 /etc/netplan/60-floating-ip.yaml
-            interface_name=$(/usr/local/bin/yq '.network.ethernets.[] | key' /etc/netplan/01-netcfg.yaml)
+          {{- if .Values.robot.enabled }}
+          wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          chmod a+x /usr/local/bin/yq
+          touch /etc/netplan/60-floating-ip.yaml && chmod 600 /etc/netplan/60-floating-ip.yaml
+          interface_name=$(/usr/local/bin/yq '.network.ethernets.[] | key' /etc/netplan/01-netcfg.yaml)
           cat << EOT > /etc/netplan/60-floating-ip.yaml
           # Floating IP from Hetzner
           network:
@@ -50,7 +50,7 @@ spec:
                 addresses:
                 - {{ .Values.robot.controlPlane.endpoint.host }}/32
           EOT
-          fi
+          {{- end }}
           mkdir -p /etc/cloud/cloud.cfg.d && touch /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
           echo "network: { config: disabled }" > /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
           apt-get update && apt-get install -y cloud-init apparmor apparmor-utils
@@ -112,11 +112,11 @@ spec:
           size: 20G
         postInstallScript: |
           #!/bin/bash
+          {{- if .Values.robot.enabled }}
           wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
           chmod a+x /usr/local/bin/yq
           touch /etc/netplan/60-floating-ip.yaml && chmod 600 /etc/netplan/60-floating-ip.yaml
           interface_name=$(/usr/local/bin/yq '.network.ethernets.[] | key' /etc/netplan/01-netcfg.yaml)
-
           cat << EOT > /etc/netplan/60-floating-ip.yaml
           # Floating IP from Hetzner
           network:
@@ -125,9 +125,9 @@ spec:
             ethernets:
               $interface_name:
                 addresses:
-                - {{ .Values.controlPlaneEndpoint.host }}/32
+                - {{ .Values.robot.controlPlane.endpoint.host }}/32
           EOT
-
+          {{- end }}
           mkdir -p /etc/cloud/cloud.cfg.d && touch /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
           echo "network: { config: disabled }" > /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
           apt-get update && apt-get install -y cloud-init apparmor apparmor-utils
