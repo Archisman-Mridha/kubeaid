@@ -1,4 +1,4 @@
-{{- if .Values.selfManagedCluster.enabled }}
+{{- if .Values.selfManaged.enabled }}
 apiVersion: controlplane.cluster.x-k8s.io/v1beta1
 kind: KubeadmControlPlane
 metadata:
@@ -39,31 +39,36 @@ spec:
         overwrite: false
         tableType: gpt
     files:
-    - contentFrom:
-        secret:
-          key: sp.json
-          name: {{ .Values.selfManagedCluster.clientSecret.ControlplanSecret }}
-      owner: root:root
-      path: /etc/kubernetes/azure.json
-      permissions: "0644"
+      {{/* Understand what this file is about. */}}
+      - contentFrom:
+          secret:
+            key: sp.json
+            name: {{ .Values.selfManaged.clientSecret.controlPlane }}
+        owner: root:root
+        path: /etc/kubernetes/azure.json
+        permissions: "0644"
     initConfiguration:
       nodeRegistration:
         kubeletExtraArgs:
           cloud-provider: external
-        name: {{ .Values.selfManagedCluster.localHostname }}
+        name: '{{ ds.meta_data["local_hostname"] }}'
     joinConfiguration:
       nodeRegistration:
         kubeletExtraArgs:
           cloud-provider: external
-        name: {{ .Values.selfManagedCluster.localHostname }}
+        name: '{{ ds.meta_data["local_hostname"] }}'
     mounts:
-    - - LABEL=etcd_disk
-      - /var/lib/etcddisk
+      - - LABEL=etcd_disk
+        - /var/lib/etcddisk
+    preKubeadmCommands:
+      - if [ -f /tmp/kubeadm.yaml ] || [ -f /run/kubeadm/kubeadm.yaml ]; then echo '127.0.0.1   apiserver.{{ Values.global.clusterName }}.capz.io apiserver' >> /etc/hosts; fi
+    postKubeadmCommands:
+      - if [ -f /tmp/kubeadm-join-config.yaml ] || [ -f /run/kubeadm/kubeadm-join-config.yaml ]; then echo '127.0.0.1   apiserver.{{ Values.global.clusterName }}.capz.io apiserver' >> /etc/hosts; fi
   machineTemplate:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
       kind: AzureMachineTemplate
-      name: {{ .Values.global.clusterName }}-system
-  replicas: 1
+      name: {{ .Values.global.clusterName }}-control-plane
+  replicas: {{ .Values.selfManaged.controlPlane.replicas }}
   version: {{ .Values.global.kubernetes.version }}
 {{- end }}

@@ -1,40 +1,49 @@
-{{- if .Values.selfManagedCluster.enabled }}
+{{- if .Values.selfManaged.enabled }}
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: AzureCluster
 metadata:
   name: {{ .Values.global.clusterName }}
+  namespace: {{ .Release.Namespace }}
 spec:
-  location: {{ .Values.location }}
-
-  resourceGroup: {{ .Values.resourceGroup }}
   subscriptionID: {{ .Values.subscriptionID }}
+  resourceGroup: {{ .Values.resourceGroup }}
 
-  identityRef:
-    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
-    kind: AzureClusterIdentity
-    name: {{ .Values.global.clusterName }}-cluster-identity
-
-  bastionSpec:
-    azureBastion:
-      name: bastion
-      enableTunneling: true
-      publicIP:
-        name: bastion
-      sku: Standard
-      subnet:
-        name: AzureBastionSubnet
-        role: ControlPlane
+  location: {{ .Values.location }}
 
   networkSpec:
     apiServerLB:
-      type: {{ .Values.selfManagedCluster.apiLoadbalancer }}
+      type: {{ .Values.selfManaged.controlPlane.loadbalancerType }}
     vnet:
-      name: {{ .Values.global.vnet.name }}
+      name: {{ .Values.global.clusterName }}
       cidrBlocks:
-        - {{ .Values.global.vnet.cidrBlock | default "10.14.0.0/22" }}
+        - {{ .Values.selfManaged.virtualNetwork.cidrBlock | default "10.14.0.0/22" }}
     subnets:
       - name: control-plane
         role: ControlPlane
       - name: worker-nodes
         role: Node
+
+  bastionSpec:
+    azureBastion:
+      name: bastion
+      publicIP:
+        name: bastion
+      {{/* SKU is also known as a tier. You can see all the tiers here :
+           https://learn.microsoft.com/en-us/azure/bastion/configuration-settings#skus .*/}}
+      sku: Standard
+      {{/* You can establish a secure tunnel over SSH / RDP, from your local machine to the VMs in
+           the VPC. */}}
+      enableTunneling: true
+      {{/* For Subnet, if you already have a subnet configured in your virtual network that is named
+           AzureBastionSubnet, it will automatically select in the portal. If you don't, you can
+           create one.
+           REFERENCE : https://learn.microsoft.com/en-us/azure/bastion/tutorial-create-host-portal. */}}
+      subnet:
+        name: AzureBastionSubnet
+        role: ControlPlane
+
+  identityRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+    kind: AzureClusterIdentity
+    name: {{ .Values.global.clusterName }}-cluster-identity
 {{- end }}
