@@ -1,4 +1,3 @@
-{{- if .Values.selfManaged.enabled }}
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: AzureCluster
 metadata:
@@ -12,16 +11,16 @@ spec:
 
   networkSpec:
     apiServerLB:
-      type: {{ .Values.selfManaged.controlPlane.loadbalancerType }}
+      type: {{ .Values.controlPlane.loadbalancerType }}
     vnet:
       name: {{ .Values.global.clusterName }}
       cidrBlocks:
-        - {{ .Values.selfManaged.virtualNetwork.cidrBlock | default "10.14.0.0/22" }}
+        - {{ .Values.virtualNetwork.cidrBlock | default "10.14.0.0/22" }}
     subnets:
       - name: control-plane
-        role: ControlPlane
+        role: control-plane
       - name: worker-nodes
-        role: Node
+        role: node
 
   bastionSpec:
     azureBastion:
@@ -46,4 +45,3 @@ spec:
     apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
     kind: AzureClusterIdentity
     name: {{ .Values.global.clusterName }}-cluster-identity
-{{- end }}

@@ -1,12 +1,10 @@
-selfManaged:
-  enabled: true
-  virtualNetwork:
-    cidrBlock: 10.14.0.0/22
-  controlPlane:
-    diskSizeGB: 30
-    sku: Standard_D2_v3
-    replicas: 3
-    loadBalancerType: Public
-  clientSecret:
-    controlPlane:
-    workerNode:
+virtualNetwork:
+  cidrBlock: 10.14.0.0/22
+
+servicePrincipalSecretName: azure-service-principal
+
+controlPlane:
+  loadBalancerType: Public
+  vmSize: Standard_D2_v3
+  diskSizeGB: 30
+  replicas: 3

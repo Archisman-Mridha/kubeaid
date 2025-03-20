@@ -1,4 +1,3 @@
-{{- if .Values.selfManaged.enabled }}
 apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
 metadata:
@@ -11,7 +10,7 @@ spec:
       - contentFrom:
           secret:
             key: sp.json
-            name: {{ .Values.selfManaged.clientSecret.workerNode }}
+            name: {{ .Values.servicePrincipalSecretName }}
         owner: root:root
         path: /etc/kubernetes/azure.json
         permissions: "0644"
@@ -20,4 +19,3 @@ spec:
           kubeletExtraArgs:
             cloud-provider: external
           name: '{{ ds.meta_data["local_hostname"] }}'
-{{- end }}
