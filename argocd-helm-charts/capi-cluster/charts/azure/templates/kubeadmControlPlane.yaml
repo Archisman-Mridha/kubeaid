@@ -55,12 +55,12 @@ spec:
       nodeRegistration:
         kubeletExtraArgs:
           cloud-provider: external
-        name: '{{ ds.meta_data["local_hostname"] }}'
+        name: '{{"{{"}} ds.meta_data.local_hostname {{"}}"}}'
     joinConfiguration:
       nodeRegistration:
         kubeletExtraArgs:
           cloud-provider: external
-        name: '{{ ds.meta_data["local_hostname"] }}'
+        name: '{{"{{"}} ds.meta_data.local_hostname {{"}}"}}'
     mounts:
       - - LABEL=etcd_disk
         - /var/lib/etcddisk

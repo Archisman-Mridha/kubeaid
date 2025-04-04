@@ -1,7 +1,7 @@
 virtualNetwork:
   cidrBlock: 10.14.0.0/22
 
-servicePrincipalSecretName: azure-service-principal
+servicePrincipalSecretName: service-principal
 
 controlPlane:
   loadBalancerType: Public
