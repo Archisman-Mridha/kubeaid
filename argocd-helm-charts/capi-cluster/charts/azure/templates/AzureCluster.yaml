@@ -18,8 +18,12 @@ spec:
     subnets:
       - name: control-plane
         role: control-plane
+        cidrBlocks:
+          - {{ .Values.virtualNetwork.cidrBlocks.controlPlane | default "10.1.0.0/24" }}
       - name: worker-nodes
         role: node
+        cidrBlocks:
+          - {{ .Values.virtualNetwork.cidrBlocks.workerNodes | default "10.2.0.0/24" }}
 
   bastionSpec:
     azureBastion:
