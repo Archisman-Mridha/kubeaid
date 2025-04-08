@@ -13,6 +13,8 @@ global:
     version: v1.18.1
   kubeaid:
     repo: https://github.com/Obmondo/KubeAid.git
+  pods:
+    cidrBlock: 10.244.0.0/16
 
 provider:
   hetzner: false

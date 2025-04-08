@@ -2,7 +2,6 @@ apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
 kind: KubeadmConfigTemplate
 metadata:
   name: {{ .Values.global.clusterName }}-md-0
-  namespace: {{ .Release.Namespace }}
 spec:
   template:
     spec:
@@ -18,4 +17,4 @@ spec:
         nodeRegistration:
           kubeletExtraArgs:
             cloud-provider: external
-          name: '{{ ds.meta_data["local_hostname"] }}'
+          name: '{{"{{"}} ds.meta_data.local_hostname {{"}}"}}'

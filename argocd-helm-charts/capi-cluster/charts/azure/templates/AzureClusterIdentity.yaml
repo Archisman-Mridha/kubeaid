@@ -6,7 +6,6 @@ metadata:
          moved as well. */}}
     clusterctl.cluster.x-k8s.io/move-hierarchy: "true"
   name: {{ .Values.global.clusterName }}-cluster-identity
-  namespace: {{ .Release.Namespace }}
 spec:
   {{/* Azure AD Workload identity is similar to IRSA in AWS. You can read more about it here :
        https://azure.github.io/azure-workload-identity/docs/introduction.html. */}}

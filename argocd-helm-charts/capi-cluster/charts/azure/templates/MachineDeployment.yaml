@@ -4,7 +4,7 @@
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
 metadata:
-  name: {{ printf "%s-%s-%s" $.Values.global.clusterName $nodeGroup.name $failureDomain }}
+  name: {{ printf "%s-%s" $.Values.global.clusterName $nodeGroup.name }}
   annotations:
     cluster.x-k8s.io/cluster-api-autoscaler-node-group-min-size: {{ $nodeGroup.minSize | quote }}
     cluster.x-k8s.io/cluster-api-autoscaler-node-group-max-size: {{ $nodeGroup.maxSize | quote }}
@@ -42,6 +42,4 @@ spec:
         kind: AzureMachineTemplate
         name: {{ printf "%s-%s" $.Values.global.clusterName $nodeGroup.name }}
       version: {{ $.Values.global.kubernetes.version }}
-{{- end }}
-{{- end }}
 {{- end }}

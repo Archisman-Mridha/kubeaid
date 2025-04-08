@@ -2,7 +2,6 @@ apiVersion: controlplane.cluster.x-k8s.io/v1beta1
 kind: KubeadmControlPlane
 metadata:
   name: {{ .Values.global.clusterName }}-control-plane
-  namespace: {{ .Release.Namespace }}
 spec:
   kubeadmConfigSpec:
     clusterConfiguration:
@@ -65,9 +64,9 @@ spec:
       - - LABEL=etcd_disk
         - /var/lib/etcddisk
     preKubeadmCommands:
-      - if [ -f /tmp/kubeadm.yaml ] || [ -f /run/kubeadm/kubeadm.yaml ]; then echo '127.0.0.1   apiserver.{{ Values.global.clusterName }}.capz.io apiserver' >> /etc/hosts; fi
+      - if [ -f /tmp/kubeadm.yaml ] || [ -f /run/kubeadm/kubeadm.yaml ]; then echo '127.0.0.1   apiserver.{{ .Values.global.clusterName }}.capz.io apiserver' >> /etc/hosts; fi
     postKubeadmCommands:
-      - if [ -f /tmp/kubeadm-join-config.yaml ] || [ -f /run/kubeadm/kubeadm-join-config.yaml ]; then echo '127.0.0.1   apiserver.{{ Values.global.clusterName }}.capz.io apiserver' >> /etc/hosts; fi
+      - if [ -f /tmp/kubeadm-join-config.yaml ] || [ -f /run/kubeadm/kubeadm-join-config.yaml ]; then echo '127.0.0.1   apiserver.{{ .Values.global.clusterName }}.capz.io apiserver' >> /etc/hosts; fi
   machineTemplate:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
