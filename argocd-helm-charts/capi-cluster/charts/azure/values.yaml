@@ -1,5 +1,5 @@
 virtualNetwork:
-  cidrBlock: 10.14.0.0/22
+  cidrBlock: 10.0.0.0/16
 
 servicePrincipalSecretName: service-principal
 
