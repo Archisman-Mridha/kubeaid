@@ -28,7 +28,9 @@ spec:
         effect: "NoSchedule"
   manager:
     cacheNamespace: {{ $namespace }}
-    metrics:
-      bindAddress: ":8443"
+    # BUG : CAPZ infrastructure provider errors out, complaining :
+    #           unknown flag: --metrics-bind-addr.
+    # metrics:
+    #   bindAddress: ":8443"
     syncPeriod: 10m0s
 {{- end }}
