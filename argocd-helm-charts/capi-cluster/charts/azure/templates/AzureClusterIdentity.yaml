@@ -33,9 +33,9 @@ spec:
   clientID: {{ .Values.clientIDUserAssignedIdentity }}
   {{/* Kubernetes Secret reference which should contain either a Service Principal password or
        certificate secret. */}}
-  clientSecret:
+  {{/* clientSecret:
     name: {{ .Values.clientSecretSecret.name }}
-    namespace: {{ .Values.clientSecretSecret.namespace }}
+    namespace: {{ .Values.clientSecretSecret.namespace }} */}}
 
   {{/* The namespaces the clusters are allowed to use the identity from.
        An empty allowedNamespaces object indicates that AzureClusters can use this identity from any

@@ -14,7 +14,7 @@ spec:
     vnet:
       name: {{ .Values.global.clusterName }}
       cidrBlocks:
-        - {{ .Values.virtualNetwork.cidrBlock | default "10.0.0.0/16" }}
+        - {{ .Values.virtualNetwork.cidrBlock | default "10.0.0.0/8" }}
     subnets:
       - name: control-plane
         role: control-plane
