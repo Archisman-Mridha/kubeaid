@@ -12,7 +12,7 @@ spec:
       - contentFrom:
           secret:
             key: worker-node-azure.json
-            name: {{ .Values.global.clusterName }}-{{ $nodeGroup.name }}-azure-json
+            name: {{ $.Values.global.clusterName }}-{{ $nodeGroup.name }}-azure-json
         owner: root:root
         path: /etc/kubernetes/azure.json
         permissions: "0644"
