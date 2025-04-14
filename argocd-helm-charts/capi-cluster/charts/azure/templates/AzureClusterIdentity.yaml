@@ -30,7 +30,7 @@ spec:
                            more Azure Resources.
                            
         REFERENCE : https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview#managed-identity-types. */}}
-  clientID: {{ .Values.clientIDUserAssignedIdentity }}
+  clientID: {{ .Values.userAssignedIdentity.clientID }}
 
   allowedNamespaces: 
     list:

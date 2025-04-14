@@ -21,7 +21,7 @@ spec:
       sshPublicKey: {{ $.Values.sshPublicKey | b64enc }}
       identity: UserAssigned
       userAssignedIdentities:
-        - providerID: /subscriptions/{{ .Values.subscriptionID }}/resourceGroups/{{ .Values.resourceGroup }}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{{ .Values.clientIDUserAssignedIdentity }}
+        - providerID: /subscriptions/{{ .Values.subscriptionID }}/resourceGroups/{{ .Values.resourceGroup }}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/{{ .Values.userAssignedIdentity.name }}
 
 ---
 {{- range $index, $nodeGroup := $.Values.nodeGroups }}
