@@ -12,7 +12,7 @@ spec:
       dataDisks:
         {{/* Atleast 80GB is recommended.
              REFERENCE : https://etcd.io/docs/v3.4/faq/ */}}
-        - diskSizeGB: 80
+        - diskSizeGB: 256
           lun: 0
           nameSuffix: etcddisk
       networkInterfaces:

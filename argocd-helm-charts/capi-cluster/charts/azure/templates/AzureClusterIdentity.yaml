@@ -31,17 +31,7 @@ spec:
                            
         REFERENCE : https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview#managed-identity-types. */}}
   clientID: {{ .Values.clientIDUserAssignedIdentity }}
-  {{/* Kubernetes Secret reference which should contain either a Service Principal password or
-       certificate secret. */}}
-  {{/* clientSecret:
-    name: {{ .Values.clientSecretSecret.name }}
-    namespace: {{ .Values.clientSecretSecret.namespace }} */}}
 
-  {{/* The namespaces the clusters are allowed to use the identity from.
-       An empty allowedNamespaces object indicates that AzureClusters can use this identity from any
-       namespace.
-       If this object is nil, no namespaces will be allowed (default behaviour, if this field is not
-       provided) */}}
   allowedNamespaces: 
     list:
       - {{ .Release.Namespace }}

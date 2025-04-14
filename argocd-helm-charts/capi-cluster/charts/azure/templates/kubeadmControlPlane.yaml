@@ -11,7 +11,7 @@ spec:
         timeoutForControlPlane: 20m
       controllerManager:
         extraArgs:
-          allocate-node-cidrs: "true"
+          allocate-node-cidrs: "false"
           cloud-provider: external
           cluster-name: {{ .Values.global.clusterName }}
       etcd:
@@ -21,21 +21,21 @@ spec:
             quota-backend-bytes: "8589934592"
     diskSetup:
       filesystems:
-      - device: /dev/disk/azure/scsi1/lun0
-        extraOpts:
-        - -E
-        - lazy_itable_init=1,lazy_journal_init=1
-        filesystem: ext4
-        label: etcd_disk
-      - device: ephemeral0.1
-        filesystem: ext4
-        label: ephemeral0
-        replaceFS: ntfs
+        - device: /dev/disk/azure/scsi1/lun0
+          extraOpts:
+            - -E
+            - lazy_itable_init=1,lazy_journal_init=1
+          filesystem: ext4
+          label: etcd_disk
+        - device: ephemeral0.1
+          filesystem: ext4
+          label: ephemeral0
+          replaceFS: ntfs
       partitions:
-      - device: /dev/disk/azure/scsi1/lun0
-        layout: true
-        overwrite: false
-        tableType: gpt
+        - device: /dev/disk/azure/scsi1/lun0
+          layout: true
+          overwrite: false
+          tableType: gpt
     files:
       {{/* Automated tools that use Azure services should always have restricted permissions to
            ensure that Azure resources are secure. Therefore, instead of having applications sign
@@ -45,8 +45,8 @@ spec:
            REFERENCE : https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-1 */}}
       - contentFrom:
           secret:
-            key: sp.json
-            name: {{ .Values.servicePrincipalSecretName }}
+            key: control-plane-azure.json
+            name: {{ .Values.global.clusterName }}-control-plane-azure-json
         owner: root:root
         path: /etc/kubernetes/azure.json
         permissions: "0644"
@@ -63,10 +63,8 @@ spec:
     mounts:
       - - LABEL=etcd_disk
         - /var/lib/etcddisk
-    preKubeadmCommands:
-      - if [ -f /tmp/kubeadm.yaml ] || [ -f /run/kubeadm/kubeadm.yaml ]; then echo '127.0.0.1   apiserver.{{ .Values.global.clusterName }}.capz.io apiserver' >> /etc/hosts; fi
-    postKubeadmCommands:
-      - if [ -f /tmp/kubeadm-join-config.yaml ] || [ -f /run/kubeadm/kubeadm-join-config.yaml ]; then echo '127.0.0.1   apiserver.{{ .Values.global.clusterName }}.capz.io apiserver' >> /etc/hosts; fi
+    preKubeadmCommands: []
+    postKubeadmCommands: []
   machineTemplate:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
