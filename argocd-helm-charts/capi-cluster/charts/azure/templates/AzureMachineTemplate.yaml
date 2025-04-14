@@ -15,9 +15,6 @@ spec:
         - diskSizeGB: 256
           lun: 0
           nameSuffix: etcddisk
-      networkInterfaces:
-        - privateIPConfigs: 110
-          subnetName: control-plane
       sshPublicKey: {{ $.Values.sshPublicKey | b64enc }}
       identity: UserAssigned
       userAssignedIdentities:
@@ -36,8 +33,5 @@ spec:
       osDisk:
         diskSizeGB: {{ $nodeGroup.diskSizeGB }}
         osType: Linux
-      networkInterfaces:
-        - privateIPConfigs: 110
-          subnetName: node
       sshPublicKey: {{ $.Values.sshPublicKey | b64enc }}
 {{- end }}
