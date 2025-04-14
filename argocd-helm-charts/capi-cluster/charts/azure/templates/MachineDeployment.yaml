@@ -38,7 +38,7 @@ spec:
           kind: KubeadmConfigTemplate
           name: {{ printf "%s-%s" $.Values.global.clusterName $nodeGroup.name }}
       infrastructureRef:
-        apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
         kind: AzureMachineTemplate
         name: {{ printf "%s-%s" $.Values.global.clusterName $nodeGroup.name }}
       version: {{ $.Values.global.kubernetes.version }}
