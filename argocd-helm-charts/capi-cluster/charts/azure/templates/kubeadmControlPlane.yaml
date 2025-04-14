@@ -8,7 +8,7 @@ spec:
       apiServer:
         extraArgs:
           cloud-provider: external
-        timeoutForControlPlane: 20m
+        timeoutForControlPlane: 20m0s
       controllerManager:
         extraArgs:
           allocate-node-cidrs: "false"
@@ -63,7 +63,6 @@ spec:
     mounts:
       - - LABEL=etcd_disk
         - /var/lib/etcddisk
-    preKubeadmCommands: []
     postKubeadmCommands:
       # Install Helm.
       - curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
