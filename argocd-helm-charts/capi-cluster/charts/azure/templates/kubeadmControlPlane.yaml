@@ -68,6 +68,8 @@ spec:
         path: /etc/kubernetes/azure.json
         permissions: "0644"
     initConfiguration:
+      skipPhases:
+        - addon/kube-proxy
       nodeRegistration:
         kubeletExtraArgs:
           cloud-provider: external
