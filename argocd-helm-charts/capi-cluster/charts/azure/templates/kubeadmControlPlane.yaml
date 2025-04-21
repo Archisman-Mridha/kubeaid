@@ -8,7 +8,7 @@ spec:
       apiServer:
         extraArgs:
           cloud-provider: external
-          service-account-issuer: {{ .Values.serviceAccountIssuerURL }}
+          service-account-issuer: {{ .Values.serviceAccountIssuer.url }}
           service-account-key-file: "/etc/kubernetes/pki/sa.pub"
           service-account-signing-key-file: "/etc/kubernetes/pki/sa.key"
         timeoutForControlPlane: 20m0s
@@ -42,12 +42,12 @@ spec:
     files:
       {{/* TODO : Consume Service Account signer public and private keys via Kubernetes Secrets. */}}
       - content: |
-          {{ .Values.serviceAccountSigner.publicKey }}
+{{- .Values.serviceAccountIssuer.publicKey | nindent 10 }}
         owner: root:root
         path: "/etc/kubernetes/pki/sa.pub"
         permissions: "0644"
       - content: |
-          {{ .Values.serviceAccountSigner.privateKey }}
+{{- .Values.serviceAccountIssuer.privateKey | nindent 10 }}
         owner: root:root
         path: "/etc/kubernetes/pki/sa.key"
         permissions: "0644"
