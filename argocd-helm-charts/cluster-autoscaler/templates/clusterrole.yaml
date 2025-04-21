@@ -13,6 +13,8 @@ rules:
     - awsmachinetemplates
     {{- else if .Values.enableClusterAPIScaleFromZeroSupport.hcloud }}
     - hcloudmachinetemplates
+    {{- else if .Values.enableClusterAPIScaleFromZeroSupport.azure }}
+    - azuremachinetemplates
     {{- end }}
     verbs:
     - get
