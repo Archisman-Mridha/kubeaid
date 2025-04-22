@@ -96,7 +96,22 @@ spec:
       - API_SERVER_URL=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
       - API_SERVER_HOST=$(echo "$API_SERVER_URL" | awk -F[/:] '{print $4}')
       - API_SERVER_PORT=$(echo "$API_SERVER_URL" | awk -F[/:] '{print $5}')
-      - helm template kubeaid/argocd-helm-charts/cilium --values kubeaid/argocd-helm-charts/cilium/values.yaml --set cilium.k8sServiceHost=${API_SERVER_HOST} --set cilium.k8sServicePort=${API_SERVER_PORT} --namespace cilium | kubectl apply -f -
+      - |
+        helm template kubeaid/argocd-helm-charts/cilium \
+          --values kubeaid/argocd-helm-charts/cilium/values.yaml \
+          --set cilium.ipam.mode="cluster-pool" \
+          --set cilium.ipam.operator.clusterPoolIPv4PodCIDRList[0]=192.168.0.0/16 \
+          --set cilium.kubeProxyReplacement=true \
+          --set cilium.k8sServiceHost=${API_SERVER_HOST} \
+          --set cilium.k8sServicePort=${API_SERVER_PORT} \
+          --set cilium.routingMode=native \
+          --set cilium.ipv4NativeRoutingCIDR=192.168.0.0/16 \
+          --set autoDirectNodeRoutes=true \
+          --set directRoutingSkipUnreachable=true \
+          --set cilium.bpf.masquerade=true \
+          --set cilium.bpf.datapathMode=netkit \
+          --set cilium.enableIPv4BIGTCP=true \
+          --namespace cilium | kubectl apply -f -
       # Install Azure Cloud Controller Manager.
       - helm template kubeaid/argocd-helm-charts/ccm-azure --set cloud-provider-azure.infra.clusterName={{ .Values.global.clusterName }} --namespace kube-system | kubectl apply -f -
   machineTemplate:
