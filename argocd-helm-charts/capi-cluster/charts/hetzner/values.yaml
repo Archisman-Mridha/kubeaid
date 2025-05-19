@@ -33,3 +33,7 @@ controlPlane:
   loadBalancer:
     enabled: true
     region: hel1
+
+nodeGroups:
+  bareMetal: []
+  hcloud: []

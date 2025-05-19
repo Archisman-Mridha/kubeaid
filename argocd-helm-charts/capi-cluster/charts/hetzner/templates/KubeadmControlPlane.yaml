@@ -202,7 +202,7 @@ spec:
       - set -x
       - export CONTAINERD=1.7.26
       - export RUNC=1.2.5
-      - export KUBERNETES_VERSION="{{ .Values.kubernetesVersion }}"
+      - export KUBERNETES_VERSION=$(echo {{ $.Values.global.kubernetes.version }} | sed 's/^v//')
       - export TRIMMED_KUBERNETES_VERSION=$(echo ${KUBERNETES_VERSION} | sed 's/^v//'
         | awk -F . '{print $1 "." $2}')
       - ARCH="$(dpkg --print-architecture)"
@@ -253,6 +253,7 @@ spec:
       - sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
       # Install Cilium.
+      - kubectl create namespace cilium
       - API_SERVER_URL=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
       - API_SERVER_HOST=$(echo "$API_SERVER_URL" | awk -F[/:] '{print $4}')
       - API_SERVER_PORT=$(echo "$API_SERVER_URL" | awk -F[/:] '{print $5}')
@@ -262,7 +263,7 @@ spec:
           --set cilium.kubeProxyReplacement=true \
           --set cilium.k8sServiceHost=${API_SERVER_HOST} \
           --set cilium.k8sServicePort=${API_SERVER_PORT} \
-          --namespace cilium --create-namespace | kubectl apply -f -
+          --namespace cilium | kubectl apply -f -
 
       # Install Hetzner Cloud Controller Manager.
       - helm template kubeaid/argocd-helm-charts/ccm-hetzner --values kubeaid/argocd-helm-charts/ccm-hetzner/values.yaml --namespace kube-system | kubectl apply -f -

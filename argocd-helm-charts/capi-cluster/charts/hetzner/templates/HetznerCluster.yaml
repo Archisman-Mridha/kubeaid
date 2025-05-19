@@ -65,6 +65,7 @@ spec:
     # NOTE : Each SSH Key is cluster wide.
     hcloud:
       - name: {{ .Values.hcloudSSHKeyPairName }}
+    {{- if or (eq .Values.mode "bare-metal") (eq .Values.mode "hybrid") }}
     # Defines the reference to the secret where the SSH key for the rescue system is stored.
     # Make sure, that any other HCloud SSH Key with this name doesn't exist.
     robotRescueSecretRef:
@@ -73,3 +74,4 @@ spec:
         privateKey: ssh-privatekey
         publicKey: ssh-publickey
       name: {{ .Values.rescueSSHKeyPairSecretName }}
+    {{- end }}

@@ -109,7 +109,7 @@ spec:
       - export CONTAINERD=1.7.25
       - export RUNC=1.2.3
       - export KUBERNETES_VERSION=$(echo {{ $.Values.global.kubernetes.version }} | sed 's/^v//')
-      - export TRIMMED_KUBERNETES_VERSION=$(echo {{ $.Values.global.kubernetes.version }} | sed 's/^v//'
+      - export TRIMMED_KUBERNETES_VERSION=$(echo ${KUBERNETES_VERSION} | sed 's/^v//'
         | awk -F . '{print $1 "." $2}')
       - ARCH="$(dpkg --print-architecture)"
       - localectl set-locale LANG=en_US.UTF-8
