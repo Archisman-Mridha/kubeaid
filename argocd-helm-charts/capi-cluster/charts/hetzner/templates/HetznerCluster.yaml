@@ -1,4 +1,3 @@
----
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: HetznerCluster
 metadata:
@@ -7,59 +6,53 @@ metadata:
     cluster.x-k8s.io/name: {{ .Values.global.clusterName }}
 spec:
   controlPlaneEndpoint:
-    host: {{ include "controlPlaneHost" . | default "" }}
+    host: {{ (.Values.controlPlane.endpoint).host | default "" | quote }}
     port: 6443
 
-  {{/* CASE : Control Plane is in Hetzner Bare Metal */}}
-  {{- if (and (.Values.robot).enabled .Values.robot.controlPlane) }}
-  controlPlaneRegions:
-  {{- range .Values.robot.controlPlane.regions }}
-  - {{ . | quote }}
-  {{- end }}
-  {{- end }}
+  controlPlaneRegions: {{ toYaml .Values.controlPlane.regions | nindent 4 }}
 
-  {{/* CASE : Control Plane is in Hetzner Cloud */}}
-  {{- if (and (.Values.hcloud).enabled (.Values.hcloud).controlPlane) }}
-  {{- if (.Values.hcloud.controlPlane.loadBalancer).enabled }}
+{{/* Handling control-plane in HCloud */}}
+{{- if or (eq .Values.mode "hcloud") (eq .Values.mode "hybrid") }}
+
+  {{- if (.Values.controlPlane.loadBalancer).enabled }}
   controlPlaneLoadBalancer:
     enabled: true
-    region: {{ .Values.hcloud.controlPlane.loadBalancer.region }}
-  {{- end }}
-  controlPlaneRegions:
-  {{- range .Values.hcloud.controlPlane.regions }}
-  - {{ . | quote }}
-  {{- end }}
+    region: {{ .Values.controlPlane.loadBalancer.region }}
   {{- end }}
 
-  {{/* TODO : Make sure that Control Plane is either in Hetzner Bare Metal or in Hetzner Cloud. */}}
-
-  {{- if (.Values.hcloud).enabled }}
+  {{- if (.Values.network).enabled }}
   hcloudNetwork:
     enabled: true
-    networkZone: {{ .Values.hcloud.network.zone | default "eu-central" }}
+    networkZone: {{ .Values.zone }}
   {{- end }}
+
+{{- end }}
 
   hcloudPlacementGroups:
     - name: control-plane
       type: spread
 
-    {{/* For node-groups in Hetzner Cloud. */}}
-    {{- range $index, $nodeGroup := ($.Values.hcloud).nodeGroups }}
+    {{/* For node-groups in HCloud. */}}
+    {{- if or (eq .Values.mode "hcloud") (eq .Values.mode "hybrid") }}
+    {{- range $index, $nodeGroup := .Values.nodeGroups.hcloud }}
     - name: {{ $nodeGroup.name }}
       type: spread
     {{- end }}
+    {{- end }}
 
     {{/* For node-groups in Hetzner Bare Metal. */}}
-    {{- range $index, $nodeGroup := ($.Values.robot).nodeGroups }}
+    {{- if or (eq .Values.mode "bare-metal") (eq .Values.mode "hybrid") }}
+    {{- range $index, $nodeGroup := .Values.nodeGroups.bareMetal }}
     - name: {{ $nodeGroup.name }}
       type: spread
+    {{- end }}
     {{- end }}
 
   hetznerSecretRef:
     name: {{ .Values.cloudCredentialsSecretName }}
     key:
-      # Reference to a token to be used when reconciling this cluster. This is generated in the
-      # security section under API TOKENS.
+      # Reference to a token to be used when reconciling this cluster.
+      # You can generate an HCloud token in the security section under API TOKENS.
       # NOTE : Read & write is necessary.
       hcloudToken: hcloud
 
@@ -67,10 +60,11 @@ spec:
       hetznerRobotUser: robot-user
 
   sshKeys:
-    # ClusterAPI will access the nodes using these HCloud SSH Keys.
+    # ClusterAPI will access the VMs using these HCloud SSH Keys (before bootstrapping the
+    # Kubernetes cluster).
     # NOTE : Each SSH Key is cluster wide.
     hcloud:
-      - name: {{ .Values.hcloudSSHKeyName }}
+      - name: {{ .Values.hcloudSSHKeyPairName }}
     # Defines the reference to the secret where the SSH key for the rescue system is stored.
     # Make sure, that any other HCloud SSH Key with this name doesn't exist.
     robotRescueSecretRef:
@@ -78,4 +72,4 @@ spec:
         name: sshkey-name
         privateKey: ssh-privatekey
         publicKey: ssh-publickey
-      name: {{ .Values.robot.rescueSSHKeysSecretsName }}
+      name: {{ .Values.rescueSSHKeyPairSecretName }}

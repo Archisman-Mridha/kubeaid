@@ -1,31 +1,35 @@
+mode: hybrid
+
 cloudCredentialsSecretName: cloud-credentials
 
-# Name of the HCloud SSH Key that ClusterAPI will use to SSH into the nodes.
-hcloudSSHKeyName: kubeaid-demo
+zone: eu-central
+location: hel1
 
-hcloud:
-  enabled: False
-  controlPlane:
-    endpoint:
-      host: ""
-    loadBalancer:
-      enabled: true
-      region: fsn1
-    regions:
-      - fsn1
-    machineType: cax11
-    replicas: 3
-  network:
-    zone: eu-central
-  nodeGroups: []
+hcloudSSHKeyPairName: cluster
+rescueSSHKeyPairSecretName: rescue-ssh-keypair
 
-robot:
-  enabled: False
-  # Name of the Hetzner Robot rescue SSH Key, for the cluster nodes, which ClusterAPI will create
-  # and save into a Kubernetes Secret in the cluster.
-  rescueSSHKeysSecretsName: kubeaid-demo-hetzner-robot-rescue-ssh-keys
+network:
+  enabled: true
+
+imageName: ubuntu-24.04
+
+installImage:
   controlPlane:
-    endpoint:
-      host: ""
-    nodes: []
-  nodeGroups: []
+    imagePath: /root/.oldroot/nfs/images/Ubuntu-2204-jammy-amd64-base.tar.gz
+    rootPartitionSize: all
+    swRaid: 1
+  worker:
+    imagePath: /root/.oldroot/nfs/images/Ubuntu-2204-jammy-amd64-base.tar.gz
+    rootPartitionSize: all
+    swRaid: 1
+
+controlPlane:
+  machineType: cax11
+  replicas: 3
+  regions:
+    - fsn1
+    - nbg1
+    - hel1
+  loadBalancer:
+    enabled: true
+    region: hel1

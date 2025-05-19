@@ -1,7 +1,6 @@
 {{/* Handling node-groups in HCloud. */}}
-{{/* TODO : Distribute a node-group across multiple node-groups. */}}
-{{- if (and (.Values.hcloud).enabled (.Values.hcloud).nodeGroups) }}
-{{- range $index, $nodeGroup := $.Values.hcloud.nodeGroups }}
+{{- if or (eq .Values.mode "hcloud") (eq .Values.mode "hybrid") }}
+{{- range $nodeGroupIndex, $nodeGroup := $.Values.nodeGroups.hcloud }}
 ---
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
@@ -12,13 +11,16 @@ metadata:
     cluster.x-k8s.io/cluster-api-autoscaler-node-group-max-size: {{ $nodeGroup.maxSize | quote }}
     capacity.cluster-autoscaler.kubernetes.io/memory: "{{ $nodeGroup.memory }}G"
     capacity.cluster-autoscaler.kubernetes.io/cpu: "{{ $nodeGroup.cpu }}"
-    capacity.cluster-autoscaler.kubernetes.io/ephemeral-disk: "{{ $nodeGroup.rootVolumeSize | default 35 }}Gi"
+    capacity.cluster-autoscaler.kubernetes.io/ephemeral-disk: "{{ $nodeGroup.diskSizeGB }}Gi"
     capacity.cluster-autoscaler.kubernetes.io/maxPods: "500"
     capacity.cluster-autoscaler.kubernetes.io/labels: "{{- $labels := list }}{{- range $key, $value := $nodeGroup.labels }}{{- $labels = append $labels (printf "%s=%s" $key $value) }}{{- end }}{{- join "," $labels }}"
     capacity.cluster-autoscaler.kubernetes.io/taints: "{{- $taints := list }}{{- range $taint := $nodeGroup.taints }}{{- $taints = append $taints (printf "%s=%s:%s" $taint.key $taint.value $taint.effect) }}{{- end }}{{- join "," $taints }}"
 spec:
   clusterName: {{ $.Values.global.clusterName }}
-  replicas: {{ $nodeGroup.minSize }}
+  version: {{ $.Values.global.kubernetes.version }}
+
+  failureDomain: {{ $.Values.location }}
+  replicas: {{ $nodeGroup.replicas }}
   template:
     {{- if $nodeGroup.labels }}
     metadata:
@@ -31,61 +33,32 @@ spec:
       # REFER : https://cluster-api.sigs.k8s.io/developer/architecture/controllers/metadata-propagation#machine
       labels: {{- toYaml $nodeGroup.labels | nindent 8 }}
     {{- end }}
-
     spec:
       clusterName: {{ $.Values.global.clusterName }}
-      failureDomain: {{ $nodeGroup.failureDomain }}
       bootstrap:
         configRef:
           apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
           kind: KubeadmConfigTemplate
-          name: {{ $.Values.global.clusterName }}
+          name: {{ printf "%s-%s" $.Values.global.clusterName $nodeGroup.name }}
       infrastructureRef:
         apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
         kind: HCloudMachineTemplate
         name: {{ printf "%s-%s" $.Values.global.clusterName $nodeGroup.name }}
-      version: {{ $.Values.global.kubernetes.version }}
 {{- end }}
 {{- end }}
 
 {{/* Handling node-groups in Hetzner Bare Metal. */}}
-{{- if (and (.Values.robot).enabled (.Values.robot).nodeGroups) }}
-{{- range $index, $nodeGroup := $.Values.hcloud.nodeGroups }}
+{{- if eq .Values.mode "bare-metal" }}
+{{- range $nodeGroupIndex, $nodeGroup := $.Values.nodeGroups.bareMetal }}
 ---
 apiVersion: cluster.x-k8s.io/v1beta1
 kind: MachineDeployment
 metadata:
   name: {{ printf "%s-%s" $.Values.global.clusterName $nodeGroup.name }}
-  annotations:
-    cluster.x-k8s.io/cluster-api-autoscaler-node-group-min-size: {{ $nodeGroup.minSize | quote }}
-    cluster.x-k8s.io/cluster-api-autoscaler-node-group-max-size: {{ $nodeGroup.maxSize | quote }}
 spec:
   clusterName: {{ $.Values.global.clusterName }}
-  replicas: {{ $nodeGroup.minSize }}
-  template:
-    {{- if $nodeGroup.labels }}
-    metadata:
-      # Label should meet one of the following criterias to propagate to Node :
-      #
-      # (1) Has node-role.kubernetes.io as prefix.
-      # (2) Belongs to node-restriction.kubernetes.io domain.
-      # (3) Belongs to node.cluster.x-k8s.io domain.
-      #
-      # REFER : https://cluster-api.sigs.k8s.io/developer/architecture/controllers/metadata-propagation#machine
-      labels: {{- toYaml $nodeGroup.labels | nindent 8 }}
-    {{- end }}
+  version: {{ $.Values.global.kubernetes.version }}
 
-    spec:
-      clusterName: {{ $.Values.global.clusterName }}
-      bootstrap:
-        configRef:
-          apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
-          kind: KubeadmConfigTemplate
-          name: {{ $.Values.global.clusterName }}
-      infrastructureRef:
-        apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
-        kind: HCloudMachineTemplate
-        name: {{ printf "%s-%s" $.Values.global.clusterName $nodeGroup.name }}
-      version: {{ $.Values.global.kubernetes.version }}
+  {{/* TODO */}}
 {{- end }}
 {{- end }}
