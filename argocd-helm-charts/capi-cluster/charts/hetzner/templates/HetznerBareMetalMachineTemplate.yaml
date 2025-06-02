@@ -31,9 +31,9 @@ spec:
         portAfterInstallImage: 22
         secretRef:
           key:
-            name: name
-            privateKey: private-key
-            publicKey: public-key
+            name: sshkey-name
+            privateKey: ssh-privatekey
+            publicKey: ssh-publickey
           name: {{ .Values.rescueSSHKeyPairSecretName }}
 {{- end }}
 
