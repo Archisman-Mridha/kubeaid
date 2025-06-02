@@ -25,7 +25,7 @@ spec:
           echo "network: { config: disabled }" > /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
           apt-get update && apt-get install -y cloud-init apparmor apparmor-utils
           cloud-init clean --logs
-        swRaid: {{ .Values.installImage.controlPlane.swRaid }}
+        swraid: {{ .Values.installImage.controlPlane.swRaid }}
       sshSpec:
         portAfterCloudInit: 22
         portAfterInstallImage: 22
@@ -66,7 +66,7 @@ spec:
           echo "network: { config: disabled }" > /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
           apt-get update && apt-get install -y cloud-init apparmor apparmor-utils
           cloud-init clean --logs
-        swRaid: {{ $.Values.installImage.worker.swRaid }}
+        swraid: {{ $.Values.installImage.worker.swRaid }}
       sshSpec:
         portAfterCloudInit: 22
         portAfterInstallImage: 22
