@@ -13,7 +13,7 @@ spec:
   rootDeviceHints:
     raid:
       wwn:
-      {{- range .wwn }}
+      {{- range $bareMetalHost.wwns }}
         - "{{ . }}"
       {{- end }}
   maintenanceMode: false
@@ -37,7 +37,7 @@ spec:
   rootDeviceHints:
     raid:
       wwn:
-      {{- range .wwn }}
+      {{- range $bareMetalHost.wwns }}
         - "{{ . }}"
       {{- end }}
   maintenanceMode: false
