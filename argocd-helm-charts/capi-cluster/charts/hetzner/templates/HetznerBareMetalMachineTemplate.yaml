@@ -8,7 +8,7 @@ spec:
     spec:
       installImage:
         image:
-          path: {{ .Values.installImage.controlPlane.imagePath }}
+          path: {{ .Values.installImage.imagePath }}
         partitions:
           - fileSystem: esp
             mount: /boot/efi
@@ -16,12 +16,19 @@ spec:
           - fileSystem: ext4
             mount: /boot
             size: 1024M
-          - fileSystem: ext4
+          # Logical Volume Group.
+          - fileSystem: vg0
+            mount: lvm
+            size: 100G
+        logicalVolumeDefinitions:
+          - vg: vg0
+            name: root
             mount: /
-            size: {{ .Values.installImage.controlPlane.rootPartitionSize }}
+            filesystem: ext4
+            size: 30G
         postInstallScript: |
           #!/bin/bash
-                    {{- if (.Values.controlPlane.endpoint).host }}
+          {{- if (.Values.controlPlane.endpoint).host }}
           wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
           chmod a+x /usr/local/bin/yq
           touch /etc/netplan/60-floating-ip.yaml && chmod 600 /etc/netplan/60-floating-ip.yaml
@@ -34,14 +41,17 @@ spec:
             ethernets:
               $interface_name:
                 addresses:
-                - {{ (.Values.controlPlane.endpoint).host }}/32
+                  - {{ (.Values.controlPlane.endpoint).host }}/32
           EOT
           {{- end }}
           mkdir -p /etc/cloud/cloud.cfg.d && touch /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
           echo "network: { config: disabled }" > /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
           apt-get update && apt-get install -y cloud-init apparmor apparmor-utils
           cloud-init clean --logs
-        swraid: {{ .Values.installImage.controlPlane.swRaid }}
+        {{- if (default true (.Values.controlPlane.raid).enabled) }}
+        swraid: 1
+        swraidLevel: {{ .Values.controlPlane.raid.level | default 1 }}
+        {{- end }}
       sshSpec:
         portAfterCloudInit: 22
         portAfterInstallImage: 22
@@ -65,17 +75,24 @@ spec:
     spec:
       installImage:
         image:
-          path: {{ $.Values.installImage.worker.imagePath }}
+          path: {{ $.Values.installImage.imagePath }}
         partitions:
-        - fileSystem: esp
-          mount: /boot/efi
-          size: 512M
-        - fileSystem: ext4
-          mount: /boot
-          size: 1024M
-        - fileSystem: ext4
-          mount: /
-          size: {{ $.Values.installImage.worker.rootPartitionSize }}
+          - fileSystem: esp
+            mount: /boot/efi
+            size: 512M
+          - fileSystem: ext4
+            mount: /boot
+            size: 1024M
+          # Logical Volume Group.
+          - fileSystem: vg0
+            mount: lvm
+            size: 100G
+        logicalVolumeDefinitions:
+          - vg: vg0
+            name: root
+            mount: /
+            filesystem: ext4
+            size: 30G
         postInstallScript: |
           #!/bin/bash
           {{- if (.Values.controlPlane.endpoint).host }}
@@ -91,14 +108,17 @@ spec:
             ethernets:
               $interface_name:
                 addresses:
-                - {{ (.Values.controlPlane.endpoint).host }}/32
+                  - {{ (.Values.controlPlane.endpoint).host }}/32
           EOT
           {{- end }}
           mkdir -p /etc/cloud/cloud.cfg.d && touch /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
           echo "network: { config: disabled }" > /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
           apt-get update && apt-get install -y cloud-init apparmor apparmor-utils
           cloud-init clean --logs
-        swraid: {{ $.Values.installImage.worker.swRaid }}
+        {{- if (default true ($nodeGroup.raid).enabled) }}
+        swraid: 1
+        swraidLevel: {{ $nodeGroup.raid.level | default 1 }}
+        {{- end }}
       sshSpec:
         portAfterCloudInit: 22
         portAfterInstallImage: 22

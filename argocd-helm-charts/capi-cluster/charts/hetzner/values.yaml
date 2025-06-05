@@ -5,6 +5,7 @@ cloudCredentialsSecretName: cloud-credentials
 zone: eu-central
 location: hel1
 
+hcloudSSHKeyPairName: kubeaid-demo
 hetznerSSHKeyPairName: kubeaid-demo
 
 network:
@@ -13,25 +14,19 @@ network:
 imageName: ubuntu-24.04
 
 installImage:
-  controlPlane:
-    imagePath: /root/.oldroot/nfs/images/Ubuntu-2404-noble-amd64-base.tar.gz
-    rootPartitionSize: all
-    swRaid: 1
-  worker:
-    imagePath: /root/.oldroot/nfs/images/Ubuntu-2404-noble-amd64-base.tar.gz
-    rootPartitionSize: all
-    swRaid: 1
+  imagePath: /root/.oldroot/nfs/images/Ubuntu-2404-noble-amd64-base.tar.gz
 
 controlPlane:
   machineType: cax11
   replicas: 3
+  loadBalancer:
+    enabled: true
+    region: hel1
+
   regions:
     - fsn1
     - nbg1
     - hel1
-  loadBalancer:
-    enabled: true
-    region: hel1
 
 nodeGroups:
   bareMetal: []
