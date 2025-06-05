@@ -12,7 +12,7 @@ spec:
     spec:
       installImage:
         image:
-          path: {{ .Values.installImage.imagePath }}
+          path: {{ .Values.bareMetal.installImage.imagePath }}
         partitions:
           - fileSystem: esp
             mount: /boot/efi
@@ -83,7 +83,7 @@ spec:
     spec:
       installImage:
         image:
-          path: {{ $.Values.installImage.imagePath }}
+          path: {{ $.Values.bareMetal.installImage.imagePath }}
         partitions:
           - fileSystem: esp
             mount: /boot/efi

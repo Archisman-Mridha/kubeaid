@@ -314,6 +314,6 @@ spec:
       apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
       kind: HCloudMachineTemplate
       name: {{ .Values.global.clusterName }}-control-plane
-  replicas: {{ .Values.controlPlane.replicas }}
+  replicas: {{ .Values.controlPlane.hcloud.replicas }}
   {{- end }}
   version: {{ .Values.global.kubernetes.version }}
