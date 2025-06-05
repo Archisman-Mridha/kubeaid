@@ -5,8 +5,7 @@ cloudCredentialsSecretName: cloud-credentials
 zone: eu-central
 location: hel1
 
-hcloudSSHKeyPairName: kubeaid-demo
-rescueSSHKeyPairSecretName: rescue-ssh-keypair
+hetznerSSHKeyPairName: kubeaid-demo
 
 network:
   enabled: true
