@@ -27,8 +27,6 @@ controlPlane:
       enabled: true
       region: hel1
 
-  bareMetal:
-
 nodeGroups:
   bareMetal: []
   hcloud: []

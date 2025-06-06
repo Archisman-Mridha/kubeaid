@@ -52,9 +52,9 @@ spec:
           echo "network: { config: disabled }" > /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
           apt-get update && apt-get install -y cloud-init apparmor apparmor-utils
           cloud-init clean --logs
-        {{- if (default true (.Values.controlPlane.raid).enabled) }}
+        {{- if (default true (.Values.controlPlane.bareMetal.raid).enabled) }}
         swraid: 1
-        swraidLevel: {{ .Values.controlPlane.raid.level | default 1 }}
+        swraidLevel: {{ (.Values.controlPlane.bareMetal.raid).level | default 1 }}
         {{- end }}
       sshSpec:
         portAfterCloudInit: 22
@@ -64,7 +64,7 @@ spec:
             name: sshkey-name
             privateKey: ssh-privatekey
             publicKey: ssh-publickey
-          name: {{ $.Values.hetznerSSHKeyPairName }}
+          name: {{ $.Values.bareMetal.sshKeyPair.secretName }}
 {{- end }}
 
 {{- if or (eq .Values.mode "bare-metal") (eq .Values.mode "hybrid") }}
@@ -125,7 +125,7 @@ spec:
           cloud-init clean --logs
         {{- if (default true ($nodeGroup.raid).enabled) }}
         swraid: 1
-        swraidLevel: {{ $nodeGroup.raid.level | default 1 }}
+        swraidLevel: {{ ($nodeGroup.raid).level | default 1 }}
         {{- end }}
       sshSpec:
         portAfterCloudInit: 22
@@ -135,6 +135,6 @@ spec:
             name: sshkey-name
             privateKey: ssh-privatekey
             publicKey: ssh-publickey
-          name: {{ $.Values.hetznerSSHKeyPairName }}
+          name: {{ $.Values.bareMetal.sshKeyPair.secretName }}
 {{- end }}
 {{- end }}
