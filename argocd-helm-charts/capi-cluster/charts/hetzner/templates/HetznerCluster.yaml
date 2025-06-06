@@ -66,7 +66,7 @@ spec:
       - name: {{ .Values.hcloud.sshKeyPairName }}
       {{- end }}
       {{- if or (eq .Values.mode "bare-metal") (eq .Values.mode "hybrid") }}
-      - name: {{ .Values.bareMetal.sshKeyPairName }}
+      - name: {{ .Values.bareMetal.sshKeyPair.name }}
       {{- end }}
     {{- if or (eq .Values.mode "bare-metal") (eq .Values.mode "hybrid") }}
     # Defines the reference to the secret where the SSH key for the rescue system is stored.
@@ -76,5 +76,5 @@ spec:
         name: sshkey-name
         privateKey: ssh-privatekey
         publicKey: ssh-publickey
-      name: {{ .Values.bareMetal.sshKeyPairName }}
+      name: {{ .Values.bareMetal.sshKeyPair.secretName }}
     {{- end }}

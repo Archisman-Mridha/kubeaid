@@ -8,9 +8,11 @@ hcloud:
   sshHKeyPairName: kubeaid-demo
 
 bareMetal:
-  sshKeyPairName: kubeaid-demo
   installImage:
     imagePath: /root/.oldroot/nfs/images/Ubuntu-2404-noble-amd64-base.tar.gz
+  sshKeyPair:
+    name: kubeaid-demo
+    secretName: hetzner-ssh-keypair
 
 controlPlane:
   regions:
