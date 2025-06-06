@@ -291,7 +291,7 @@ spec:
           --namespace kube-system | kubectl apply -f -
       {{- end }}
 
-      {{- if and (eq .Values.mode "bare-metal") (gt (len $.Values.controlPlane.bareMetal.bareMetalHosts) 1) }}
+      {{- if and (eq .Values.mode "bare-metal") (.Values.controlPlane.bareMetal.endpoint.isFailoverIP) }}
       # Install Hetzner Failover Script.
       - |
         helm template hetzner-robot kubeaid/argocd-helm-charts/hetzner-robot \
