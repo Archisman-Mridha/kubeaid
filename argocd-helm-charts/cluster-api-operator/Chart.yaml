@@ -1,7 +1,7 @@
 apiVersion: v2
-name: cluster-api
+name: cluster-api-operator
 version: 1.0.0
 dependencies:
   - name: cluster-api-operator
-    version: 0.15.1
+    version: 0.20.0
     repository: https://kubernetes-sigs.github.io/cluster-api-operator

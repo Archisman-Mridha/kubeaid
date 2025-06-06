@@ -1,4 +1,0 @@
-cluster-api-operator:
-  bootstrap: kubeadm:v1.9.4
-  controlPlane: kubeadm:v1.9.4
-  core: cluster-api:v1.9.4
