@@ -5,14 +5,14 @@ cloudCredentialsSecretName: cloud-credentials
 hcloud:
   zone: eu-central
   imageName: ubuntu-24.04
-  sshHKeyPairName: kubeaid-demo
+  sshHKeyPairName: kubeaid
 
 bareMetal:
   wipeDisks: false
   installImage:
     imagePath: /root/.oldroot/nfs/images/Ubuntu-2404-noble-amd64-base.tar.gz
   sshKeyPair:
-    name: kubeaid-demo
+    name: kubeaid
     secretName: hetzner-ssh-keypair
 
 controlPlane:
