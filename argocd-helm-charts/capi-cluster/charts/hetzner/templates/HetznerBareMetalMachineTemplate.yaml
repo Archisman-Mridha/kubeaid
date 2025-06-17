@@ -10,6 +10,9 @@ metadata:
 spec:
   template:
     spec:
+      hostSelector:
+        matchLabels:
+          role: {{ $.Values.global.clusterName }}-control-plane
       installImage:
         image:
           path: {{ .Values.bareMetal.installImage.imagePath }}
@@ -81,6 +84,9 @@ metadata:
 spec:
   template:
     spec:
+      hostSelector:
+        matchLabels:
+          role: {{ printf "%s-%s" $.Values.global.clusterName $nodeGroup.name }}
       installImage:
         image:
           path: {{ $.Values.bareMetal.installImage.imagePath }}

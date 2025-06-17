@@ -8,6 +8,10 @@ metadata:
   name: {{ $bareMetalHost.serverID | quote }}
   labels:
     role: {{ $.Values.global.clusterName }}-control-plane
+  {{- if $.Values.bareMetal.wipeDisks }}
+  annotations:
+    capi.syself.com/wipe-disk: all
+  {{- end }}
 spec:
   serverID: {{ $bareMetalHost.serverID }}
   rootDeviceHints:
@@ -32,6 +36,10 @@ metadata:
   name: {{ $bareMetalHost.serverID | quote }}
   labels:
     role: {{ printf "%s-%s" $.Values.global.clusterName $nodeGroup.name }}
+  {{- if $.Values.bareMetal.wipeDisks }}
+  annotations:
+    capi.syself.com/wipe-disk: all
+  {{- end }}
 spec:
   serverID: {{ $bareMetalHost.serverID }}
   rootDeviceHints:
