@@ -220,6 +220,8 @@ spec:
       - localectl set-locale LANGUAGE=en_US.UTF-8
       - apt-get update -y
       - apt-get -y install at jq unzip wget socat mtr logrotate apt-transport-https
+      # Hack
+      - cp /var/run/kubeadm/kubeadm-join-config.yaml /kubeadm-join-config.yaml
       - sed -i '/swap/d' /etc/fstab
       - swapoff -a
       - modprobe overlay && modprobe br_netfilter && sysctl --system
@@ -250,6 +252,9 @@ spec:
       - echo 'source <(kubectl completion bash)' >>/root/.bashrc
       - echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >>/root/.bashrc
       - apt-get -y autoremove && apt-get -y clean all
+      # Hack
+      - mkdir -p /var/run/kubeadm
+      - cp /kubeadm-join-config.yaml /var/run/kubeadm/kubeadm-join-config.yaml
     postKubeadmCommands:
       # Install Helm.
       - curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
