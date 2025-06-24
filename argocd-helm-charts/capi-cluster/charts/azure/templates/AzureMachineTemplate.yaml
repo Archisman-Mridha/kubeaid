@@ -6,12 +6,10 @@ spec:
   template:
     spec:
       vmSize: {{ .Values.controlPlane.vmSize }}
+      {{- if .Values.imageID }}
       image:
-        marketplace:
-          offer: {{ .Values.canonicalUbuntuImage.offer }}
-          publisher: Canonical
-          sku: {{ .Values.canonicalUbuntuImage.sku }}
-          version: latest
+        id: {{ .Values.imageID }}
+      {{- end }}
       osDisk:
         diskSizeGB: {{ .Values.controlPlane.diskSizeGB }}
         osType: Linux
@@ -36,12 +34,10 @@ spec:
   template:
     spec:
       vmSize: {{ $nodeGroup.vmSize }}
+      {{- if $.Values.imageID }}
       image:
-        marketplace:
-          offer: {{ .Values.canonicalUbuntuImage.offer }}
-          publisher: Canonical
-          sku: {{ .Values.canonicalUbuntuImage.sku }}
-          version: latest
+        id: {{ $.Values.imageID }}
+      {{- end }}
       osDisk:
         diskSizeGB: {{ $nodeGroup.diskSizeGB }}
         osType: Linux

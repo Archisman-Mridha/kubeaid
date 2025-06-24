@@ -119,14 +119,22 @@ podTemplate:
 
 ### NATS Container Resources
 
+We recommend setting both **requests and limits** - for both **CPU and memory** - **to the same value** for the following reasons:
+
+* It ensures your NATS pod has [predictable performance](https://www.datadoghq.com/blog/kubernetes-cpu-requests-limits/#predictability:~:text=If%20containers%20are,available%20capacity%20decreases.).  
+* The NATS server [automatically sets](https://github.com/nats-io/nats-server/blob/v2.11.0/main.go#L131-L132) [GOMAXPROCS](https://github.com/golang/go/blob/go1.24.1/src/runtime/extern.go#L230-L234) to the number of CPU cores defined in the `limits` section. If `limits` are not set, GOMAXPROCS defaults to the node's physical core count, which can lead to [poor performance](https://github.com/golang/go/issues/33803).  
+* The pod will be assigned to the ["Guaranteed" QoS class](https://kubernetes.io/docs/concepts/workloads/pods/pod-qos/#guaranteed), making it less likely to be evicted when node resources are constrained.  
+
+Deviate from this recommendation only if you fully understand the implications of your settings.  
+
 ```yaml
 container:
   env:
-    # different from k8s units, suffix must be B, KiB, MiB, GiB, or TiB
-    # should be ~90% of memory limit
-    GOMEMLIMIT: 7GiB
+    # Different from k8s units, suffix must be B, KiB, MiB, GiB, or TiB
+    # Should be ~80% of memory limit
+    GOMEMLIMIT: 6GiB
   merge:
-    # recommended limit is at least 2 CPU cores and 8Gi Memory for production JetStream clusters
+    # Recommended minimum: at least 2 CPU cores and 8Gi memory for production JetStream clusters
     resources:
       requests:
         cpu: "2"
@@ -138,11 +146,27 @@ container:
 
 ### Specify Image Version
 
-```yaml
-container:
-  image:
-    tag: x.y.z-alpine
-```
+The container image can now be overridden by specifying either the image tag, an image digest, or a full image name. Examples below illustrate the options:
+
+- To set the tag:
+  ```yaml
+  container:
+    image:
+      tag: x.y.z-alpine
+  ```
+- To use an image digest, which overrides the tag:
+  ```yaml
+  container:
+    image:
+      repository: nats
+      digest: sha256:abcdef1234567890...
+  ```
+- To override the registry, repository, tag, and digest all at once, specify a full image name:
+  ```yaml
+  container:
+    image:
+      fullImageName: custom-reg.io/myimage@sha256:abcdef1234567890...
+  ```
 
 ### Operator Mode with NATS Resolver
 

@@ -57,6 +57,10 @@ spec:
       {{- end }}
     {{- end }}
     spec:
+      {{- with .Values.hostAliases -}}
+      hostAliases:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
     {{- if .Values.image.imagePullSecrets }}
       imagePullSecrets:
       {{- range .Values.image.imagePullSecrets }}
@@ -65,8 +69,12 @@ spec:
     {{- end }}
       restartPolicy: Always
       serviceAccountName: {{ include "velero.serverServiceAccount" . }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.server.automountServiceAccountToken }}
       {{- if .Values.priorityClassName }}
       priorityClassName: {{ include "velero.priorityClassName" . }}
+      {{- end }}
+      {{- if .Values.runtimeClassName }}
+      runtimeClassName: {{ include "velero.runtimeClassName" . }}
       {{- end }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       containers:
@@ -130,6 +138,9 @@ spec:
             {{- end }}
             {{- with .garbageCollectionFrequency }}
             - --garbage-collection-frequency={{ . }}
+            {{- end }}
+            {{- with .itemBlockWorkerCount }}
+            - --item-block-worker-count={{ . }}
             {{- end }}
             {{- with .logFormat }}
             - --log-format={{ . }}
@@ -252,10 +263,7 @@ spec:
               value: /credentials/cloud
           {{- end }}
           {{- with .Values.configuration.extraEnvVars }}
-          {{- range $key, $value := . }}
-            - name: {{ default "none" $key }}
-              value: {{ tpl (default "none" $value) $ | quote }}
-          {{- end }}
+          {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.credentials.extraEnvVars }}
           {{- range $key, $value := . }}

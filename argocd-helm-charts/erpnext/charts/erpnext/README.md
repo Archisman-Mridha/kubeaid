@@ -49,16 +49,15 @@ helm upgrade --install frappe-bench --namespace erpnext frappe/erpnext --set per
 
 This chart bootstraps a [Frappe/ERPNext](https://github.com/frappe/frappe_docker) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
-
 ## Parameters
 
 The following table lists the configurable parameters of the ERPNext chart and their default values.
 
-# erpnext
+### erpnext
 
-![Version: 7.0.109](https://img.shields.io/badge/Version-7.0.109-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v15.34.1](https://img.shields.io/badge/AppVersion-v15.34.1-informational?style=flat-square)
+![Version: 7.0.171](https://img.shields.io/badge/Version-7.0.171-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v15.53.4](https://img.shields.io/badge/AppVersion-v15.53.4-informational?style=flat-square)
 
-Kubernetes Helm Chart for the latest stable ERPNext branch
+Kubernetes Helm Chart for ERPNext and Frappe Framework Apps.
 
 ## Requirements
 
@@ -76,7 +75,7 @@ Kubernetes Helm Chart for the latest stable ERPNext branch
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"frappe/erpnext"` |  |
-| image.tag | string | `"v15.34.1"` |  |
+| image.tag | string | `"v15.53.4"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations | object | `{}` |  |
 | ingress.enabled | bool | `false` |  |
@@ -87,7 +86,6 @@ Kubernetes Helm Chart for the latest stable ERPNext branch
 | jobs.backup.affinity | object | `{}` |  |
 | jobs.backup.backoffLimit | int | `0` |  |
 | jobs.backup.enabled | bool | `false` |  |
-| jobs.backup.jobName | string | `""` |  |
 | jobs.backup.nodeSelector | object | `{}` |  |
 | jobs.backup.resources | object | `{}` |  |
 | jobs.backup.siteName | string | `"erp.cluster.local"` |  |
@@ -100,10 +98,11 @@ Kubernetes Helm Chart for the latest stable ERPNext branch
 | jobs.configure.enabled | bool | `true` |  |
 | jobs.configure.envVars | list | `[]` |  |
 | jobs.configure.fixVolume | bool | `true` |  |
-| jobs.configure.jobName | string | `""` |  |
 | jobs.configure.nodeSelector | object | `{}` |  |
 | jobs.configure.resources | object | `{}` |  |
 | jobs.configure.tolerations | list | `[]` |  |
+| jobs.createSite.adminExistingSecret | string | `""` |  |
+| jobs.createSite.adminExistingSecretKey | string | `"password"` |  |
 | jobs.createSite.adminPassword | string | `"changeit"` |  |
 | jobs.createSite.affinity | object | `{}` |  |
 | jobs.createSite.backoffLimit | int | `0` |  |
@@ -111,7 +110,6 @@ Kubernetes Helm Chart for the latest stable ERPNext branch
 | jobs.createSite.enabled | bool | `false` |  |
 | jobs.createSite.forceCreate | bool | `false` |  |
 | jobs.createSite.installApps[0] | string | `"erpnext"` |  |
-| jobs.createSite.jobName | string | `""` |  |
 | jobs.createSite.nodeSelector | object | `{}` |  |
 | jobs.createSite.resources | object | `{}` |  |
 | jobs.createSite.siteName | string | `"erp.cluster.local"` |  |
@@ -131,7 +129,6 @@ Kubernetes Helm Chart for the latest stable ERPNext branch
 | jobs.dropSite.backoffLimit | int | `0` |  |
 | jobs.dropSite.enabled | bool | `false` |  |
 | jobs.dropSite.forced | bool | `false` |  |
-| jobs.dropSite.jobName | string | `""` |  |
 | jobs.dropSite.nodeSelector | object | `{}` |  |
 | jobs.dropSite.resources | object | `{}` |  |
 | jobs.dropSite.siteName | string | `"erp.cluster.local"` |  |
@@ -139,7 +136,6 @@ Kubernetes Helm Chart for the latest stable ERPNext branch
 | jobs.migrate.affinity | object | `{}` |  |
 | jobs.migrate.backoffLimit | int | `0` |  |
 | jobs.migrate.enabled | bool | `false` |  |
-| jobs.migrate.jobName | string | `""` |  |
 | jobs.migrate.nodeSelector | object | `{}` |  |
 | jobs.migrate.resources | object | `{}` |  |
 | jobs.migrate.siteName | string | `"erp.cluster.local"` |  |
@@ -148,7 +144,6 @@ Kubernetes Helm Chart for the latest stable ERPNext branch
 | jobs.volumePermissions.affinity | object | `{}` |  |
 | jobs.volumePermissions.backoffLimit | int | `0` |  |
 | jobs.volumePermissions.enabled | bool | `false` |  |
-| jobs.volumePermissions.jobName | string | `""` |  |
 | jobs.volumePermissions.nodeSelector | object | `{}` |  |
 | jobs.volumePermissions.resources | object | `{}` |  |
 | jobs.volumePermissions.tolerations | list | `[]` |  |
@@ -170,7 +165,9 @@ Kubernetes Helm Chart for the latest stable ERPNext branch
 | nginx.defaultTopologySpread.topologyKey | string | `"kubernetes.io/hostname"` |  |
 | nginx.defaultTopologySpread.whenUnsatisfiable | string | `"DoNotSchedule"` |  |
 | nginx.envVars | list | `[]` |  |
+| nginx.environment.clientMaxBodySize | string | `"50m"` |  |
 | nginx.environment.frappeSiteNameHeader | string | `"$host"` |  |
+| nginx.environment.proxyReadTimeout | string | `"120"` |  |
 | nginx.environment.upstreamRealIPAddress | string | `"127.0.0.1"` |  |
 | nginx.environment.upstreamRealIPHeader | string | `"X-Forwarded-For"` |  |
 | nginx.environment.upstreamRealIPRecursive | string | `"off"` |  |
@@ -188,12 +185,12 @@ Kubernetes Helm Chart for the latest stable ERPNext branch
 | nginx.service.type | string | `"ClusterIP"` |  |
 | nginx.sidecars | list | `[]` |  |
 | nginx.tolerations | list | `[]` |  |
+| persistence.logs.accessModes[0] | string | `"ReadWriteMany"` |  |
 | persistence.logs.enabled | bool | `false` |  |
 | persistence.logs.size | string | `"8Gi"` |  |
-| persistence.logs.accessModes[0] | string | `ReadWriteMany` |  |
+| persistence.worker.accessModes[0] | string | `"ReadWriteMany"` |  |
 | persistence.worker.enabled | bool | `true` |  |
 | persistence.worker.size | string | `"8Gi"` |  |
-| persistence.worker.accessModes[0] | string | `ReadWriteMany` |  |
 | podSecurityContext.supplementalGroups[0] | int | `1000` |  |
 | postgresql.auth.postgresPassword | string | `"changeit"` |  |
 | postgresql.auth.username | string | `"postgres"` |  |
@@ -201,13 +198,13 @@ Kubernetes Helm Chart for the latest stable ERPNext branch
 | postgresql.primary.service.ports.postgresql | int | `5432` |  |
 | redis-cache.architecture | string | `"standalone"` |  |
 | redis-cache.auth.enabled | bool | `false` |  |
-| redis-cache.auth.sentinal | bool | `false` |  |
+| redis-cache.auth.sentinel | bool | `false` |  |
 | redis-cache.enabled | bool | `true` |  |
 | redis-cache.master.containerPorts.redis | int | `6379` |  |
 | redis-cache.master.persistence.enabled | bool | `false` |  |
 | redis-queue.architecture | string | `"standalone"` |  |
 | redis-queue.auth.enabled | bool | `false` |  |
-| redis-queue.auth.sentinal | bool | `false` |  |
+| redis-queue.auth.sentinel | bool | `false` |  |
 | redis-queue.enabled | bool | `true` |  |
 | redis-queue.master.containerPorts.redis | int | `6379` |  |
 | redis-queue.master.persistence.enabled | bool | `false` |  |
@@ -325,8 +322,6 @@ Kubernetes Helm Chart for the latest stable ERPNext branch
 | worker.short.tolerations | list | `[]` |  |
 
 ----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)
-              |
 
 The above parameters map to the env variables defined in [frappe_docker](http://github.com/frappe/frappe_docker). For more information please refer to the [frappe_docker](http://github.com/frappe/frappe_docker) images documentation.
 

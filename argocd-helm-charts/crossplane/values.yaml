@@ -5,11 +5,3 @@ crossplane:
   resourcesRBACManager:
     limits:
       cpu: null
-
-azure:
-  enable: false
-  compositions:
-    workloadIdentityInfrastructure:
-      enable: false
-    disasterRecoveryInfrastructure:
-      enable: false

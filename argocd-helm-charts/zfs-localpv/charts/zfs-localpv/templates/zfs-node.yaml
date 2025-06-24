@@ -26,6 +26,9 @@ spec:
         {{- with .Values.zfsNode.podLabels}}
         {{ toYaml . | nindent 8 }}
         {{- end}}
+        {{- with .Values.loggingLabels}}
+        {{ toYaml . | nindent 8 }}
+        {{- end}}
     spec:
 {{- if .Values.zfsNode.priorityClass.create }}
       priorityClassName: {{ template "zfslocalpv.zfsNode.priorityClassName" . }}
@@ -148,7 +151,7 @@ spec:
 {{- end }}
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
-{{ toYaml .Values.imagePullSecrets | indent 2 }}
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
 {{- end }}
 {{- if .Values.zfsNode.nodeSelector }}
       nodeSelector:

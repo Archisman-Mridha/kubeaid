@@ -145,7 +145,6 @@ local default_vars = {
   prometheus: {
     storage: {
       size: '30Gi',
-      classname: 'rook-ceph-block',
     },
     retention: '30d',
   },
@@ -158,6 +157,7 @@ local default_vars = {
   addMixins: {
     ceph: true,
     'argo-cd': true,
+    'node-pressure': true,
     sealedsecrets: true,
     etcd: true,
     velero: false,
@@ -168,7 +168,6 @@ local default_vars = {
     // Enable this when we move metrics generation into obmondo-k8s-agent
     // gitea/EnableIT/internal/issues/21
     'node-count-monthly-status': false,
-    'node-memory': true,
     'argo-cd-sync-state': true,
     rabbitmq: false,
     'monitor-prometheus-stack': false,
@@ -231,10 +230,13 @@ local mixins = remove_nulls([
     (import 'mixins/argo-cd/mixin.libsonnet'),
     vars,
   ),
-  addMixin(
-    'node-memory',
-    (import 'mixins/memory/mixin.libsonnet'),
-    vars,
+  (
+    if std.objectHas(vars, 'kube_prometheus_version') && std.member(['v0.13.0', 'v0.14.0'], vars.kube_prometheus_version) then
+      addMixin(
+        'node-pressure',
+        (import 'mixins/node-pressure/mixin.libsonnet'),
+        vars,
+      )
   ),
   addMixin(
     'opensearch',
@@ -243,12 +245,7 @@ local mixins = remove_nulls([
   ),
   addMixin(
     'rabbitmq',
-    (import 'github.com/adinhodovic/rabbitmq-mixin/mixin.libsonnet'),
-    vars,
-  ),
-  addMixin(
-    'monitoring',
-    (import 'mixins/monitoring/mixin.libsonnet'),
+    (import 'github.com/grafana/jsonnet-libs/rabbitmq-mixin/mixin.libsonnet'),
     vars,
   ),
   addMixin(
@@ -376,8 +373,9 @@ local kp =
               spec: {
                 accessModes: ['ReadWriteOnce'],
                 resources: { requests: { storage: vars.prometheus.storage.size } },
-                storageClassName: vars.prometheus.storage.classname,
-              },
+              } + if std.objectHas(vars.prometheus.storage, 'classname') then (
+                { storageClassName: vars.prometheus.storage.classname }
+              ) else {},
             },
           },
           ruleNamespaceSelector: {},

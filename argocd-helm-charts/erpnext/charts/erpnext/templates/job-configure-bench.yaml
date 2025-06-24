@@ -64,6 +64,7 @@ spec:
             {{- end}}
             bench set-config -g redis_cache $REDIS_CACHE;
             bench set-config -g redis_queue $REDIS_QUEUE;
+            bench set-config -g redis_socketio $REDIS_QUEUE;
             bench set-config -gp socketio_port $SOCKETIO_PORT;
         {{- end }}
         env:
@@ -78,7 +79,11 @@ spec:
             value: {{ .Values.dbHost }}
             {{- end }}
           - name: DB_PORT
+            {{- if .Values.mariadb.enabled }}
             value: {{ .Values.mariadb.primary.service.ports.mysql | quote }}
+            {{- else }}
+            value: {{ .Values.dbPort | quote }}
+            {{- end }}
           - name: REDIS_CACHE
             {{- if index .Values "redis-cache" "enabled" }}
             value: redis://{{ .Release.Name }}-redis-cache-master:{{ index .Values "redis-cache" "master" "containerPorts" "redis" }}

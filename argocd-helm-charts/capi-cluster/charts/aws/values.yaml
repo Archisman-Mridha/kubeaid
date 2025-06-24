@@ -2,7 +2,8 @@ secretName: cloud-credentials
 
 bastion:
   enabled: True
-
+pods:
+  cidrBlock: 10.244.0.0/16
 controlPlane:
   loadBalancer:
     type: nlb

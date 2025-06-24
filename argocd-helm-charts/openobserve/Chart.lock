@@ -1,9 +1,9 @@
 dependencies:
 - name: openobserve
   repository: https://charts.openobserve.ai/
-  version: 0.14.7
+  version: 0.14.78
 - name: openobserve-collector
   repository: https://charts.openobserve.ai/
-  version: 0.3.21
-digest: sha256:ceae91943c3306f330fd0cc35983f6b05f25d62aa9b25a022255207ecff366d2
-generated: "2025-01-24T15:14:37.450184259+05:30"
+  version: 0.3.22
+digest: sha256:8546b290bf2abf069ecfeb9f966cd8e38b078482ae05ac103b57feb5e4e8a94c
+generated: "2025-06-17T12:12:43.129596634+05:30"

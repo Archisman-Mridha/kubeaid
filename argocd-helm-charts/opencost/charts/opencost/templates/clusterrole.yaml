@@ -12,6 +12,7 @@ rules:
       - configmaps
       - deployments
       - nodes
+      - nodes/proxy
       - pods
       - services
       - resourcequotas
@@ -78,4 +79,19 @@ rules:
       - get
       - list
       - watch
+
+{{- if and .Values.opencost.platforms.openshift.enabled .Values.opencost.platforms.openshift.enablePromAccess }}
+  - apiGroups:
+      - monitoring.coreos.com
+    resources:
+      - prometheuses
+      - thanosrulers
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+{{- end }}
 {{- end }}

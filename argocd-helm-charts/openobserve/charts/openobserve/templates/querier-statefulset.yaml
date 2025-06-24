@@ -50,6 +50,10 @@ spec:
         {{- if .Values.nats.enabled }}
         - name: check-nats
           image: {{ .Values.image.busybox.repository }}:{{ .Values.image.busybox.tag }}
+          resources:
+            limits:
+              cpu: 50m
+              memory: 50Mi
           command: ['sh', '-c', '
             until nc -zv {{ .Release.Name }}-nats 4222; do
               echo "Waiting for NATS to be ready...";
@@ -108,9 +112,14 @@ spec:
             {{- with .Values.extraEnv }}
             {{- toYaml . |  nindent 12 }}
             {{- end }}
+            {{- with .Values.querier.extraEnv }}
+            {{- toYaml . |  nindent 12 }}
+            {{- end }}
+          {{- if .Values.querier.persistence.enabled }}
           volumeMounts:
             - name: cache
               mountPath: /data
+          {{- end }}
       {{- with .Values.nodeSelector.querier }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -123,15 +132,17 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  {{- if .Values.querier.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
         name: cache
       spec:
         accessModes:
-          {{- range .Values.ingester.persistence.accessModes }}
+          {{- range .Values.querier.persistence.accessModes }}
             - {{ . | quote }}
           {{- end }}
         resources:
           requests:
             storage: {{ .Values.querier.persistence.size }}
         storageClassName: {{ .Values.querier.persistence.storageClass }}
+  {{- end }}

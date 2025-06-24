@@ -23,7 +23,7 @@ app:
     pullSecrets: []
   scheduling:
     # Node labels for pod assignment
-    # Ref: https://kubernetes.io/docs/user-guide/node-selection/
+    # Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
     nodeSelector: {}
   security:
     # Allow overriding csrfKey used by API/Auth containers.
@@ -145,10 +145,13 @@ auth:
   role: auth
   image:
     repository: docker.io/kubernetesui/dashboard-auth
-    tag: 1.2.3
+    tag: 1.3.0
   scaling:
     replicas: 1
     revisionHistoryLimit: 10
+  service:
+    type: ClusterIP
+    extraSpec: ~
   containers:
     ports:
       - name: auth
@@ -184,10 +187,13 @@ api:
   role: api
   image:
     repository: docker.io/kubernetesui/dashboard-api
-    tag: 1.10.2
+    tag: 1.13.0
   scaling:
     replicas: 1
     revisionHistoryLimit: 10
+  service:
+    type: ClusterIP
+    extraSpec: ~
   containers:
     ports:
       - name: api
@@ -241,10 +247,13 @@ web:
   role: web
   image:
     repository: docker.io/kubernetesui/dashboard-web
-    tag: 1.6.1
+    tag: 1.7.0
   scaling:
     replicas: 1
     revisionHistoryLimit: 10
+  service:
+    type: ClusterIP
+    extraSpec: ~
   containers:
     ports:
       - name: web
@@ -305,6 +314,9 @@ metricsScraper:
   scaling:
     replicas: 1
     revisionHistoryLimit: 10
+  service:
+    type: ClusterIP
+    extraSpec: ~
   containers:
     ports:
       - containerPort: 8000

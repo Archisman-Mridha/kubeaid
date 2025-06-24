@@ -1,14 +1,13 @@
 annotations:
-  artifacthub.io/changes: |
-    - "fix(Traefik Proxy): support uppercase letters in entrypoint names"
-    - "feat(deps): update traefik docker tag to v3.3.2"
-    - "feat(Traefik Hub): add OAS validateRequestMethodAndPath - CRDs update"
-    - "chore(release): publish v34.1.0 and CRDs v1.2.0"
+  artifacthub.io/changes: "- \"fix(schema): \U0001F41B allow additional properties
+    on `global`\"\n- \"fix(chart): update icon link to track upstream master branch\"\n-
+    \"fix(Traefik Hub): add strict check on admission cert\"\n- \"feat(Traefik Hub):
+    add v3.17 version mapping\"\n- \"chore(release): \U0001F680 publish v36.1.0\"\n"
 apiVersion: v2
-appVersion: v3.3.2
+appVersion: v3.4.1
 description: A Traefik based Kubernetes ingress controller
 home: https://traefik.io/
-icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
+icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 keywords:
 - traefik
 - ingress
@@ -17,14 +16,12 @@ kubeVersion: '>=1.22.0-0'
 maintainers:
 - email: michel.loiseleur@traefik.io
   name: mloiseleur
-- email: charlie.haley@traefik.io
-  name: charlie-haley
 - email: remi.buisson@traefik.io
   name: darkweaver87
 - name: jnoordsij
 name: traefik
 sources:
-- https://github.com/traefik/traefik
 - https://github.com/traefik/traefik-helm-chart
+- https://github.com/traefik/traefik
 type: application
-version: 34.1.0
+version: 36.1.0

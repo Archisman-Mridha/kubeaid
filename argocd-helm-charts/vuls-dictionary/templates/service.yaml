@@ -7,9 +7,13 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port: {{ .Values.service.goCVEDictionary.port }}
+      targetPort: http-go-cve
       protocol: TCP
-      name: http
+      name: http-go-cve
+    - port: {{ .Values.service.govalDictionary.port }}
+      targetPort: http-goval
+      protocol: TCP
+      name: http-goval
   selector:
     {{- include "vuls-dictionary.selectorLabels" . | nindent 4 }}

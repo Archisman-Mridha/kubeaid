@@ -2,11 +2,11 @@ image:
   cve:
     repository: vuls/go-cve-dictionary
     pullPolicy: IfNotPresent
-    tag: "v0.11.0"
+    tag: "v0.12.1"
   oval:
     repository: vuls/goval-dictionary
     pullPolicy: IfNotPresent
-    tag: "v0.11.0"
+    tag: "v0.12.0"
 
 # This is for the secretes for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
@@ -42,7 +42,10 @@ service:
   # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
   type: ClusterIP
   # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
-  port: 80
+  govalDictionary:
+    port: 1324
+  goCVEDictionary:
+    port: 1323
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
@@ -52,21 +55,16 @@ ingress:
   hosts:
     - host: chart-example.local
       paths:
-        - path: /
-          pathType: ImplementationSpecific
+        - path: /goval-dictionary
+          pathType: Prefix
+          servicePort: 1324
+        - path: /go-cve-dictionary
+          pathType: Prefix
+          servicePort: 1323
   tls: []
 
 resources: {}
 
-# This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
-livenessProbe:
-  httpGet:
-    path: /
-    port: http
-readinessProbe:
-  httpGet:
-    path: /
-    port: http
 
 nodeSelector: {}
 
@@ -134,5 +132,6 @@ cve:
     - fortinet
 
 persistence:
+  storageClass: zfs-localpv
   enabled: true
   size: 5Gi

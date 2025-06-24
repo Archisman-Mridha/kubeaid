@@ -14,10 +14,12 @@ spec:
       id: {{ .Values.vpc.id }}
       {{- else }}
       cidrBlock: {{ .Values.vpc.cidrBlock | default "10.14.0.0/22" }}
-      {{- end }}
       availabilityZoneSelection: Ordered
       availabilityZoneUsageLimit: 3
+      {{- end }}
     {{- if .Values.vpc.id }}
+    {{/* The user must specify 3 subnets- each in a different Availability Zone (AZ). This
+         validation is done by KubeAid Bootstrap Script. */}}
     subnets:
       {{- range $index, $subnetID := $.Values.vpc.subnets }}
       - id: {{ $subnetID }}
