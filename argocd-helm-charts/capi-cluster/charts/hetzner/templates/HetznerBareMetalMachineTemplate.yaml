@@ -35,6 +35,14 @@ spec:
             size: 30G
         postInstallScript: |
           #!/bin/bash
+          {{/*
+            Netplan is the default network configuration utility on Ubuntu. It configures network
+            interfaces using YAML files, which are then translated into systemd-networkd or
+            NetworkManager configurations.
+
+            Using Netplan, we'll bind the Floating IP with the master node's primary network
+            interface.
+          */}}
           {{- if (.Values.controlPlane.bareMetal.endpoint).host }}
           wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
           chmod a+x /usr/local/bin/yq
