@@ -352,6 +352,7 @@ spec:
           --set cilium.k8sServicePort=${API_SERVER_PORT} \
           --namespace cilium | kubectl apply -f -
 
+      {{/* Handling control-plane in HCloud. */}}
       {{- if or (eq .Values.mode "hcloud") (eq .Values.mode "hybrid") }}
       # Install HCloud Cloud Controller Manager.
       - |
@@ -360,7 +361,8 @@ spec:
           --namespace kube-system | kubectl apply -f -
       {{- end }}
 
-      {{- if or (eq .Values.mode "bare-metal") (eq .Values.mode "hybrid") }}
+      {{/* Handling control-plane in Hetzner Bare Metal. */}}
+      {{- if eq .Values.mode "bare-metal" }}
       # Install Hetzner Bare Metal Cloud Controller Manager.
       - |
         helm template ccm-hetzner kubeaid/argocd-helm-charts/ccm-hetzner \
