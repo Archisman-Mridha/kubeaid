@@ -170,13 +170,6 @@ spec:
       owner: root:root
       path: /etc/systemd/system/containerd.service
       permissions: "0744"
-    - content: |
-        cilium:
-          extraArgs:
-            - "--devices=eth+,enp+"
-      owner: root:root
-      path: /cilium.values.yaml
-      permissions: "0744"
     {{/*
       TODO : We need to apply the netplan config, only when using a Floating IP.
              Otherwise, when using a single master node for the control-plane, we just provide
@@ -357,7 +350,7 @@ spec:
           --set cilium.kubeProxyReplacement=true \
           --set cilium.k8sServiceHost=${API_SERVER_HOST} \
           --set cilium.k8sServicePort=${API_SERVER_PORT} \
-          --values /cilium.values.yaml \
+          --set cilium.extraArgs[0]="--devices=eth0,enp9s0" \
           --namespace cilium | kubectl apply -f -
 
       {{/* Handling control-plane in HCloud. */}}
