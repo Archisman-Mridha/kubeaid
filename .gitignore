@@ -15,3 +15,5 @@ defaults
 build/vendor/
 build/jsonnetfile.json
 build/jsonnetfile.lock.json
+
+!argocd-helm-charts/cilium-*.tgz
