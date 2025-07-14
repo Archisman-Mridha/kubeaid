@@ -278,13 +278,6 @@ For full list of changes please check ArtifactHub [changelog].
 
 Highlighted versions provide information about additional steps that should be performed by user when upgrading to newer version.
 
-### 8.0.0
-
-In this release we upgrade the Helm chart to deploy the next major version of Argo CD (v3.0.0).
-Please carefully read at least those resources:
-- [v2.14 to 3.0 upgrade instructions]
-- [Argo CD v3.0 Release Blog Post]
-
 ### 7.9.0
 
 Chart versions from >= 7.7.2 and < 7.9.0 are using a Redis version which is no longer using an open source version of Redis.
@@ -766,15 +759,6 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | configs.cm."application.instanceLabelKey" | string | `"argocd.argoproj.io/instance"` | The name of tracking label used by Argo CD for resource pruning |
 | configs.cm."application.sync.impersonation.enabled" | bool | `false` | Enable control of the service account used for the sync operation (alpha) |
 | configs.cm."exec.enabled" | bool | `false` | Enable exec feature in Argo UI |
-| configs.cm."resource.customizations.ignoreResourceUpdates.ConfigMap" | string | See [values.yaml] | Ignore the cluster-autoscaler status |
-| configs.cm."resource.customizations.ignoreResourceUpdates.Endpoints" | string | See [values.yaml] | Ignores update if Endpoints is not excluded globally |
-| configs.cm."resource.customizations.ignoreResourceUpdates.all" | string | See [values.yaml] | Ignoring status for all resources. An update will still be sent if the status update causes the health to change. |
-| configs.cm."resource.customizations.ignoreResourceUpdates.apps_ReplicaSet" | string | See [values.yaml] | Ignore the common scaling annotations |
-| configs.cm."resource.customizations.ignoreResourceUpdates.argoproj.io_Application" | string | See [values.yaml] | Some Application fields are generated and not related to the application updates itself |
-| configs.cm."resource.customizations.ignoreResourceUpdates.argoproj.io_Rollout" | string | See [values.yaml] | Ignore Argo Rollouts generated fields |
-| configs.cm."resource.customizations.ignoreResourceUpdates.autoscaling_HorizontalPodAutoscaler" | string | See [values.yaml] | Legacy annotations used on HPA autoscaling/v1 |
-| configs.cm."resource.customizations.ignoreResourceUpdates.discovery.k8s.io_EndpointSlice" | string | See [values.yaml] | Ignores update if EndpointSlice is not excluded globally |
-| configs.cm."resource.exclusions" | string | See [values.yaml] | Resource Exclusion/Inclusion |
 | configs.cm."server.rbac.log.enforce.enable" | bool | `false` | Enable logs RBAC enforcement |
 | configs.cm."statusbadge.enabled" | bool | `false` | Enable Status Badge |
 | configs.cm."timeout.hard.reconciliation" | string | `"0s"` | Timeout to refresh application data as well as target manifests cache |
@@ -798,7 +782,6 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | configs.params."controller.self.heal.timeout.seconds" | int | `5` | Specifies timeout between application self heal attempts |
 | configs.params."controller.status.processors" | int | `20` | Number of application status processors |
 | configs.params."controller.sync.timeout.seconds" | int | `0` | Specifies the timeout after which a sync would be terminated. 0 means no timeout |
-| configs.params."hydrator.enabled" | bool | `false` | Enable the hydrator feature (hydrator is in Alpha phase) |
 | configs.params."otlp.address" | string | `""` | Open-Telemetry collector address: (e.g. "otel-collector:4317") |
 | configs.params."reposerver.parallelism.limit" | int | `0` | Limit on number of concurrent manifests generate requests. Any value less the 1 means no limit. |
 | configs.params."server.basehref" | string | `"/"` | Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from / |
@@ -1013,7 +996,6 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | repoServer.service.labels | object | `{}` | Repo server service labels |
 | repoServer.service.port | int | `8081` | Repo server service port |
 | repoServer.service.portName | string | `"tcp-repo-server"` | Repo server service port name |
-| repoServer.service.trafficDistribution | string | `""` | Traffic distribution preference for the repo server service. If the field is not set, the implementation will apply its default routing strategy. |
 | repoServer.serviceAccount.annotations | object | `{}` | Annotations applied to created service account |
 | repoServer.serviceAccount.automountServiceAccountToken | bool | `true` | Automount API credentials for the Service Account |
 | repoServer.serviceAccount.create | bool | `true` | Create repo server service account |
@@ -1220,7 +1202,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | dex.extraContainers | list | `[]` | Additional containers to be added to the dex pod |
 | dex.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Dex imagePullPolicy |
 | dex.image.repository | string | `"ghcr.io/dexidp/dex"` | Dex image repository |
-| dex.image.tag | string | `"v2.43.1"` | Dex image tag |
+| dex.image.tag | string | `"v2.42.1"` | Dex image tag |
 | dex.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | dex.initContainers | list | `[]` | Init containers to add to the dex pod |
 | dex.initImage.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Argo CD init image imagePullPolicy |
@@ -1309,7 +1291,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | redis.exporter.env | list | `[]` | Environment variables to pass to the Redis exporter |
 | redis.exporter.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Image pull policy for the redis-exporter |
 | redis.exporter.image.repository | string | `"ghcr.io/oliver006/redis_exporter"` | Repository to use for the redis-exporter |
-| redis.exporter.image.tag | string | `"v1.74.0"` | Tag to use for the redis-exporter |
+| redis.exporter.image.tag | string | `"v1.70.0"` | Tag to use for the redis-exporter |
 | redis.exporter.livenessProbe.enabled | bool | `false` | Enable Kubernetes liveness probe for Redis exporter |
 | redis.exporter.livenessProbe.failureThreshold | int | `5` | Minimum consecutive failures for the [probe] to be considered failed after having succeeded |
 | redis.exporter.livenessProbe.initialDelaySeconds | int | `30` | Number of seconds after the container has started before [probe] is initiated |
@@ -1326,7 +1308,7 @@ NOTE: Any values you put under `.Values.configs.cm` are passed to argocd-cm Conf
 | redis.extraArgs | list | `[]` | Additional command line arguments to pass to redis-server |
 | redis.extraContainers | list | `[]` | Additional containers to be added to the redis pod |
 | redis.image.imagePullPolicy | string | `""` (defaults to global.image.imagePullPolicy) | Redis image pull policy |
-| redis.image.repository | string | `"ecr-public.aws.com/docker/library/redis"` | Redis repository |
+| redis.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
 | redis.image.tag | string | `"7.2.8-alpine"` | Redis tag |
 | redis.imagePullSecrets | list | `[]` (defaults to global.imagePullSecrets) | Secrets with credentials to pull images from a private registry |
 | redis.initContainers | list | `[]` | Init containers to add to the redis pod |
@@ -1408,12 +1390,11 @@ The main options are listed here:
 | redis-ha.haproxy.containerSecurityContext | object | See [values.yaml] | HAProxy container-level security context |
 | redis-ha.haproxy.enabled | bool | `true` | Enabled HAProxy LoadBalancing/Proxy |
 | redis-ha.haproxy.hardAntiAffinity | bool | `true` | Whether the haproxy pods should be forced to run on separate nodes. |
-| redis-ha.haproxy.image.repository | string | `"ecr-public.aws.com/docker/library/haproxy"` | HAProxy Image Repository |
 | redis-ha.haproxy.labels | object | `{"app.kubernetes.io/name":"argocd-redis-ha-haproxy"}` | Custom labels for the haproxy pod. This is relevant for Argo CD CLI. |
 | redis-ha.haproxy.metrics.enabled | bool | `true` | HAProxy enable prometheus metric scraping |
 | redis-ha.haproxy.tolerations | list | `[]` | [Tolerations] for use with node taints for haproxy pods. |
 | redis-ha.hardAntiAffinity | bool | `true` | Whether the Redis server pods should be forced to run on separate nodes. |
-| redis-ha.image.repository | string | `"ecr-public.aws.com/docker/library/redis"` | Redis repository |
+| redis-ha.image.repository | string | `"public.ecr.aws/docker/library/redis"` | Redis repository |
 | redis-ha.image.tag | string | `"7.2.8-alpine"` | Redis tag |
 | redis-ha.persistentVolume.enabled | bool | `false` | Configures persistence on Redis nodes |
 | redis-ha.redis.config | object | See [values.yaml] | Any valid redis config options in this section will be applied to each server (see `redis-ha` chart) |
@@ -1437,7 +1418,7 @@ If you want to use an existing Redis (eg. a managed service from a cloud provide
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| externalRedis.existingSecret | string | `""` | The name of an existing secret with Redis (must contain key `redis-password`. And should contain `redis-username` if username is not `default`) and Sentinel credentials. When it's set, the `externalRedis.username` and `externalRedis.password` parameters are ignored |
+| externalRedis.existingSecret | string | `""` | The name of an existing secret with Redis (must contain key `redis-password`) and Sentinel credentials. When it's set, the `externalRedis.password` parameter is ignored |
 | externalRedis.host | string | `""` | External Redis server host |
 | externalRedis.password | string | `""` | External Redis password |
 | externalRedis.port | int | `6379` | External Redis server port |
@@ -1762,5 +1743,3 @@ Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/
 [Argo CD Manifest Hydrator]: https://argo-cd.readthedocs.io/en/stable/proposals/manifest-hydrator/
 [Manifest Hydrator]: https://github.com/argoproj/argo-cd/blob/master/docs/proposals/manifest-hydrator.md
 [CNCF Allowlist License Policy]: https://github.com/cncf/foundation/blob/main/allowed-third-party-license-policy.md#cncf-allowlist-license-policy
-[v2.14 to 3.0 upgrade instructions]: https://argo-cd.readthedocs.io/en/stable/operator-manual/upgrading/2.14-3.0/
-[Argo CD v3.0 Release Blog Post]: https://blog.argoproj.io/argo-cd-v3-0-release-candidate-a0b933f4e58f
