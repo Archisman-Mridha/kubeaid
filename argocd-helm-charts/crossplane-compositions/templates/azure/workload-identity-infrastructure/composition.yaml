@@ -6,9 +6,6 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
   name: workload-identity-infrastructure
-  annotations:
-    argocd.argoproj.io/hook: Sync
-    argocd.argoproj.io/sync-wave: "2"
 
 spec:
   # Referring the Composite Resource (XR).

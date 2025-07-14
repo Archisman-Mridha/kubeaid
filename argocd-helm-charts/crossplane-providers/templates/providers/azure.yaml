@@ -18,9 +18,6 @@ apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: azure-network
-  annotations:
-    argocd.argoproj.io/hook: Sync
-    argocd.argoproj.io/sync-wave: "1"
 spec:
   package: xpkg.crossplane.io/crossplane-contrib/provider-azure-network:v1.11.2
 
@@ -29,9 +26,6 @@ apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: azure-storage
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
-    argocd.argoproj.io/hook: Sync
 spec:
   package: xpkg.crossplane.io/crossplane-contrib/provider-azure-storage:v1.12.0
 
@@ -40,9 +34,6 @@ apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: azure-managed-identity
-  annotations:
-    argocd.argoproj.io/hook: Sync
-    argocd.argoproj.io/sync-wave: "1"
 spec:
   package: xpkg.crossplane.io/crossplane-contrib/provider-azure-managedidentity:v1.12.0
 
@@ -51,9 +42,6 @@ apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: azure-ad
-  annotations:
-    argocd.argoproj.io/hook: Sync
-    argocd.argoproj.io/sync-wave: "1"
 spec:
   package: xpkg.crossplane.io/crossplane-contrib/provider-azuread:v1.7.0
 
@@ -62,9 +50,6 @@ apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: azure-authorization
-  annotations:
-    argocd.argoproj.io/hook: Sync
-    argocd.argoproj.io/sync-wave: "1"
 spec:
   package: xpkg.crossplane.io/crossplane-contrib/provider-azure-authorization:v1.12.0
 {{- end }}

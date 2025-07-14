@@ -3,9 +3,6 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
   name: xdisasterrecoveryinfrastructures.azure.kubeaid.org
-  annotations:
-    argocd.argoproj.io/hook: Sync
-    argocd.argoproj.io/sync-wave: "2"
 
 spec:
   group: azure.kubeaid.org
