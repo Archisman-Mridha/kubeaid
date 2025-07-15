@@ -124,7 +124,7 @@ spec:
                     matchLabels:
                       uami: velero
                   audience:
-                    - velero
+                    - "api://AzureADTokenExchange"
                   subject: "system:serviceaccount:velero:velero"
             patches:
               - type: PatchSet
