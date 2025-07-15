@@ -38,9 +38,9 @@ spec:
       vmSize: {{ $nodeGroup.vmSize }}
       image:
         marketplace:
-          offer: {{ .Values.canonicalUbuntuImage.offer }}
+          offer: {{ $.Values.canonicalUbuntuImage.offer }}
           publisher: Canonical
-          sku: {{ .Values.canonicalUbuntuImage.sku }}
+          sku: {{ $.Values.canonicalUbuntuImage.sku }}
           version: latest
       osDisk:
         diskSizeGB: {{ $nodeGroup.diskSizeGB }}
