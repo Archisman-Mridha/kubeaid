@@ -31,7 +31,6 @@ spec:
             metadata:
               annotations:
                 {{`{{ setResourceNameAnnotation "storage-account-owner-role-assignment" }}`}}
-                crossplane.io/external-name: "/subscriptions/{{`{{ $xrSpec.subscriptionID }}`}}/resourceGroups/{{`{{ $xrSpec.clusterName }}`}}/providers/Microsoft.Storage/storageAccounts/{{`{{ $xrSpec.storageAccountName }}`}}/providers/Microsoft.Authorization/roleAssignments/f8cbc552-059a-236c-b8db-ef70b1865a6c"
             spec:
               forProvider:
                 principalType: ServicePrincipal
@@ -54,7 +53,6 @@ spec:
             metadata:
               annotations:
                 {{`{{ setResourceNameAnnotation "capi-uami-contributor-role-assignment" }}`}}
-                crossplane.io/external-name: "/subscriptions/{{`{{ $xrSpec.subscriptionID }}`}}/providers/Microsoft.Authorization/roleAssignments/c5b04f8c-3406-d42d-9e36-b0e25833d1ec"
             spec:
               forProvider:
                 roleDefinitionName: Contributor
