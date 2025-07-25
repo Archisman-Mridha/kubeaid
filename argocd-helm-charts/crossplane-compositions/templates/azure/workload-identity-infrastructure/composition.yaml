@@ -15,6 +15,50 @@ spec:
 
   mode: Pipeline
   pipeline:
+    - step: render-go-templates
+      functionRef:
+        name: go-templating
+      input:
+        apiVersion: gotemplating.fn.crossplane.io/v1beta1
+        kind: GoTemplate
+        source: Inline
+        inline:
+          template: |
+            {{`{{- $xrSpec := .observed.composite.resource.spec -}}`}}
+            ---
+            apiVersion: authorization.azure.upbound.io/v1beta1
+            kind: RoleAssignment
+            metadata:
+              annotations:
+                {{`{{ setResourceNameAnnotation "storage-account-owner-role-assignment" }}`}}
+                crossplane.io/external-name: "/subscriptions/{{`{{ $xrSpec.subscriptionID }}`}}/resourceGroups/{{`{{ $xrSpec.clusterName }}`}}/providers/Microsoft.Storage/storageAccounts/{{`{{ $xrSpec.storageAccountName }}`}}/providers/Microsoft.Authorization/roleAssignments/f8cbc552-059a-236c-b8db-ef70b1865a6c"
+            spec:
+              forProvider:
+                principalType: ServicePrincipal
+                roleDefinitionName: Storage Blob Data Owner
+            ---
+            apiVersion: managedidentity.azure.upbound.io/v1beta1
+            kind: UserAssignedIdentity
+            metadata:
+              labels:
+                uami: capi
+              annotations:
+                {{`{{ setResourceNameAnnotation "capi-uami" }}`}}
+                crossplane.io/external-name: "/subscriptions/{{`{{ $xrSpec.subscriptionID }}`}}/resourceGroups/{{`{{ $xrSpec.clusterName }}`}}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/capi"
+            spec:
+              forProvider:
+                name: capi
+            ---
+            apiVersion: authorization.azure.upbound.io/v1beta1
+            kind: RoleAssignment
+            metadata:
+              annotations:
+                {{`{{ setResourceNameAnnotation "capi-uami-contributor-role-assignment" }}`}}
+                crossplane.io/external-name: "/subscriptions/{{`{{ $xrSpec.subscriptionID }}`}}/providers/Microsoft.Authorization/roleAssignments/c5b04f8c-3406-d42d-9e36-b0e25833d1ec"
+            spec:
+              forProvider:
+                roleDefinitionName: Contributor
+
     - step: patch-and-transform
       functionRef:
         name: patch-and-transform
@@ -90,13 +134,6 @@ spec:
                 patchSetName: resourceGroupName
 
           - name: storage-account-owner-role-assignment
-            base:
-              apiVersion: authorization.azure.upbound.io/v1beta1
-              kind: RoleAssignment
-              spec:
-                forProvider:
-                  principalType: ServicePrincipal
-                  roleDefinitionName: Storage Blob Data Owner
             patches:
               - type: PatchSet
                 patchSetName: aadApplicationPrincipalID
@@ -131,15 +168,6 @@ spec:
                 toFieldPath: spec.forProvider.storageAccountName
 
           - name: capi-uami
-            base:
-              apiVersion: managedidentity.azure.upbound.io/v1beta1
-              kind: UserAssignedIdentity
-              metadata:
-                labels:
-                  uami: capi
-              spec:
-                forProvider:
-                  name: capi
             patches:
               - type: PatchSet
                 patchSetName: location
@@ -150,12 +178,6 @@ spec:
                 toFieldPath: status.capiUAMIPrincipalId
 
           - name: capi-uami-contributor-role-assignment
-            base:
-              apiVersion: authorization.azure.upbound.io/v1beta1
-              kind: RoleAssignment
-              spec:
-                forProvider:
-                  roleDefinitionName: Contributor
             patches:
               - type: FromCompositeFieldPath
                 fromFieldPath: status.capiUAMIPrincipalId
@@ -173,6 +195,9 @@ spec:
             base:
               apiVersion: managedidentity.azure.upbound.io/v1beta1
               kind: FederatedIdentityCredential
+              metadata:
+                annotations:
+                  crossplane.io/external-name: capi-capz
               spec:
                 forProvider:
                   parentIdSelector:
@@ -191,6 +216,9 @@ spec:
             base:
               apiVersion: managedidentity.azure.upbound.io/v1beta1
               kind: FederatedIdentityCredential
+              metadata:
+                annotations:
+                  crossplane.io/external-name: capi-aso
               spec:
                 forProvider:
                   parentIdSelector:
@@ -204,4 +232,8 @@ spec:
                 patchSetName: resourceGroupName
               - type: PatchSet
                 patchSetName: serviceAccountTokenIssuerURL
+
+    - step: automatically-detect-ready-composed-resources
+      functionRef:
+        name: auto-ready
 {{- end }}

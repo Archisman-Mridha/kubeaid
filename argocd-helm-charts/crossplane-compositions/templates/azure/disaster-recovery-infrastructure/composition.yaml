@@ -11,6 +11,39 @@ spec:
 
   mode: Pipeline
   pipeline:
+    - step: render-go-templates
+      functionRef:
+        name: go-templating
+      input:
+        apiVersion: gotemplating.fn.crossplane.io/v1beta1
+        kind: GoTemplate
+        source: Inline
+        inline:
+          template: |
+            {{`{{- $xrSpec := .observed.composite.resource.spec -}}`}}
+            ---
+            apiVersion: managedidentity.azure.upbound.io/v1beta1
+            kind: UserAssignedIdentity
+            metadata:
+              labels:
+                uami: velero
+              annotations:
+                {{`{{ setResourceNameAnnotation "velero-uami" }}`}}
+                crossplane.io/external-name: "/subscriptions/{{`{{ $xrSpec.subscriptionID }}`}}/resourceGroups/{{`{{ $xrSpec.clusterName }}`}}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/velero"
+            spec:
+              forProvider:
+                name: velero
+            ---
+            apiVersion: authorization.azure.upbound.io/v1beta1
+            kind: RoleAssignment
+            metadata:
+              annotations:
+                {{`{{ setResourceNameAnnotation "velero-contributor-role-assignment" }}`}}
+                crossplane.io/external-name: "/subscriptions/{{`{{ $xrSpec.subscriptionID }}`}}/providers/Microsoft.Authorization/roleAssignments/0e8f10fc-1700-5719-ff00-4c1db1305796"
+            spec:
+              forProvider:
+                roleDefinitionName: Contributor
+
     - step: patch-and-transform
       functionRef:
         name: patch-and-transform
@@ -76,15 +109,6 @@ spec:
                 toFieldPath: spec.forProvider.storageAccountName
 
           - name: velero-uami
-            base:
-              apiVersion: managedidentity.azure.upbound.io/v1beta1
-              kind: UserAssignedIdentity
-              metadata:
-                labels:
-                  uami: velero
-              spec:
-                forProvider:
-                  name: velero
             patches:
               - type: PatchSet
                 patchSetName: location
@@ -95,12 +119,6 @@ spec:
                 toFieldPath: status.veleroUAMIPrincipalId
 
           - name: velero-contributor-role-assignment
-            base:
-              apiVersion: authorization.azure.upbound.io/v1beta1
-              kind: RoleAssignment
-              spec:
-                forProvider:
-                  roleDefinitionName: Contributor
             patches:
               - type: FromCompositeFieldPath
                 fromFieldPath: status.veleroUAMIPrincipalId
@@ -118,6 +136,9 @@ spec:
             base:
               apiVersion: managedidentity.azure.upbound.io/v1beta1
               kind: FederatedIdentityCredential
+              metadata:
+                annotations:
+                  crossplane.io/external-name: velero
               spec:
                 forProvider:
                   parentIdSelector:
@@ -131,4 +152,8 @@ spec:
                 patchSetName: resourceGroupName
               - type: PatchSet
                 patchSetName: serviceAccountTokenIssuerURL
+
+    - step: automatically-detect-ready-composed-resources
+      functionRef:
+        name: auto-ready
 {{- end }}
