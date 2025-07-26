@@ -1,4 +1,3 @@
-{{- if .Values.azure.compositions.workloadIdentityInfrastructure.enable }}
 
 # Composite resource definitions (XRDs) define the schema for a custom API.
 # Users create composite resources (XRs) and Claims (XCs) using the API schema defined by an XRD.
@@ -72,4 +71,3 @@ spec:
               properties:
                 capiUAMIPrincipalId:
                   type: string
-{{- end }}

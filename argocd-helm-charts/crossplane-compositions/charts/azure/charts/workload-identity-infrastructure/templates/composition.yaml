@@ -1,4 +1,3 @@
-{{- if .Values.azure.compositions.workloadIdentityInfrastructure.enable }}
 
 # Compositions are a template for creating multiple managed resources as a single object.
 
@@ -234,4 +233,3 @@ spec:
     - step: automatically-detect-ready-composed-resources
       functionRef:
         name: auto-ready
-{{- end }}

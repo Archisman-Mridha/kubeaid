@@ -1,4 +1,3 @@
-{{- if .Values.azure.enable }}
 apiVersion: azure.upbound.io/v1beta1
 kind: ProviderConfig
 metadata:
@@ -10,4 +9,3 @@ spec:
       namespace: {{ .Release.Namespace }}
       name: azure-credentials
       key: credentials
-{{- end }}

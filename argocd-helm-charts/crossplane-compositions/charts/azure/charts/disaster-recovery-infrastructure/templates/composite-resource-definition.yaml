@@ -1,4 +1,3 @@
-{{- if .Values.azure.compositions.disasterRecoveryInfrastructure.enable }}
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
@@ -53,4 +52,3 @@ spec:
               properties:
                 veleroUAMIPrincipalId:
                   type: string
-{{- end }}
