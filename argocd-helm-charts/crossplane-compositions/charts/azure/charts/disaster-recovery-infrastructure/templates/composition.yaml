@@ -41,7 +41,7 @@ spec:
                 crossplane.io/external-name: "/subscriptions/{{`{{ $xrSpec.subscriptionID }}`}}/providers/Microsoft.Authorization/roleAssignments/f8cbc552-059a-236c-b8db-ef70b1865a6c"
             spec:
               forProvider:
-                roleDefinitionName: StorageBlobDataOwner
+                roleDefinitionName: "Storage Blob Data Owner"
                 name: f8cbc552-059a-236c-b8db-ef70b1865a6c
 
     - step: patch-and-transform
