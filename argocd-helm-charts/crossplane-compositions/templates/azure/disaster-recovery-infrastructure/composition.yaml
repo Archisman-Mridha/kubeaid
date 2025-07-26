@@ -41,7 +41,7 @@ spec:
                 {{`{{ setResourceNameAnnotation "velero-contributor-role-assignment" }}`}}
             spec:
               forProvider:
-                roleDefinitionName: Contributor
+                roleDefinitionName: StorageBlobDataOwner
 
     - step: patch-and-transform
       functionRef:
