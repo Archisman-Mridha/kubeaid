@@ -52,9 +52,11 @@ spec:
             metadata:
               annotations:
                 {{`{{ setResourceNameAnnotation "capi-uami-contributor-role-assignment" }}`}}
+                crossplane.io/external-name: "/subscriptions/{{`{{ $xrSpec.subscriptionID }}`}}/providers/Microsoft.Authorization/roleAssignments/0e8f10fc-1700-5719-ff00-4c1db1305796"
             spec:
               forProvider:
                 roleDefinitionName: Contributor
+                name: 0e8f10fc-1700-5719-ff00-4c1db1305796
 
     - step: patch-and-transform
       functionRef:

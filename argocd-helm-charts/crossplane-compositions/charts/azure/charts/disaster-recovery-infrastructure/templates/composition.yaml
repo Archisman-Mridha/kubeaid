@@ -37,10 +37,12 @@ spec:
             kind: RoleAssignment
             metadata:
               annotations:
-                {{`{{ setResourceNameAnnotation "velero-contributor-role-assignment" }}`}}
+                {{`{{ setResourceNameAnnotation "velero-uami-storage-blob-data-owner-role-assignment" }}`}}
+                crossplane.io/external-name: "/subscriptions/{{`{{ $xrSpec.subscriptionID }}`}}/providers/Microsoft.Authorization/roleAssignments/f8cbc552-059a-236c-b8db-ef70b1865a6c"
             spec:
               forProvider:
                 roleDefinitionName: StorageBlobDataOwner
+                name: f8cbc552-059a-236c-b8db-ef70b1865a6c
 
     - step: patch-and-transform
       functionRef:
@@ -116,7 +118,7 @@ spec:
                 fromFieldPath: status.atProvider.principalId
                 toFieldPath: status.veleroUAMIPrincipalId
 
-          - name: velero-contributor-role-assignment
+          - name: velero-uami-storage-blob-data-owner-role-assignment
             patches:
               - type: FromCompositeFieldPath
                 fromFieldPath: status.veleroUAMIPrincipalId
