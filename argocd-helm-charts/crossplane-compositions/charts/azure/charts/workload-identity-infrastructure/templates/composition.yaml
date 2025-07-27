@@ -190,15 +190,6 @@ spec:
                 combine:
                   variables:
                     - fromFieldPath: spec.subscriptionID
-                    - fromFieldPath: spec.clusterName
-                  strategy: string
-                  string:
-                    fmt: "/subscriptions/%s/resourceGroups/%s/providers/Microsoft.ManagedIdentity/userAssignedIdentities/capi"
-                toFieldPath: spec.forProvider.delegatedManagedIdentityResourceId
-              - type: CombineFromComposite
-                combine:
-                  variables:
-                    - fromFieldPath: spec.subscriptionID
                   strategy: string
                   string:
                     fmt: "/subscriptions/%s"
