@@ -36,6 +36,8 @@ spec:
             apiVersion: authorization.azure.upbound.io/v1beta1
             kind: RoleAssignment
             metadata:
+              labels:
+                uami: velero
               annotations:
                 {{`{{ setResourceNameAnnotation "velero-uami-storage-blob-data-owner-role-assignment" }}`}}
                 crossplane.io/external-name: "/subscriptions/{{`{{ $xrSpec.subscriptionID }}`}}/providers/Microsoft.Authorization/roleAssignments/8dc93d52-93be-40ea-bf77-64e9839b583b"

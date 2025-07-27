@@ -55,6 +55,8 @@ spec:
             apiVersion: authorization.azure.upbound.io/v1beta1
             kind: RoleAssignment
             metadata:
+              labels:
+                uami: capi
               annotations:
                 {{`{{ setResourceNameAnnotation "capi-uami-contributor-role-assignment" }}`}}
                 crossplane.io/external-name: "/subscriptions/{{`{{ $xrSpec.subscriptionID }}`}}/providers/Microsoft.Authorization/roleAssignments/4f33edbb-78b5-49c9-958a-0cc8105d0278"
