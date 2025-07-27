@@ -122,7 +122,7 @@ spec:
             patches:
               - type: FromCompositeFieldPath
                 fromFieldPath: status.veleroUAMIPrincipalId
-                toFieldPath: spec.forProvider.principalId
+                toFieldPath: spec.initProvider.principalId
               - type: CombineFromComposite
                 combine:
                   variables:
