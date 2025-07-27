@@ -38,11 +38,11 @@ spec:
             metadata:
               annotations:
                 {{`{{ setResourceNameAnnotation "velero-uami-storage-blob-data-owner-role-assignment" }}`}}
-                crossplane.io/external-name: "/subscriptions/{{`{{ $xrSpec.subscriptionID }}`}}/providers/Microsoft.Authorization/roleAssignments/f8cbc552-059a-236c-b8db-ef70b1865a6c"
+                crossplane.io/external-name: "/subscriptions/{{`{{ $xrSpec.subscriptionID }}`}}/providers/Microsoft.Authorization/roleAssignments/8dc93d52-93be-40ea-bf77-64e9839b583b"
             spec:
               forProvider:
                 roleDefinitionName: "Storage Blob Data Owner"
-                name: f8cbc552-059a-236c-b8db-ef70b1865a6c
+                name: 8dc93d52-93be-40ea-bf77-64e9839b583b
 
     - step: patch-and-transform
       functionRef:
