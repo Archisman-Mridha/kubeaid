@@ -1,4 +1,3 @@
-
 # Compositions are a template for creating multiple managed resources as a single object.
 
 apiVersion: apiextensions.crossplane.io/v1
@@ -36,6 +35,10 @@ spec:
                 principalType: ServicePrincipal
                 roleDefinitionName: Storage Blob Data Owner
                 name: 0004e602-0ddb-4a8d-8d89-2d6729cfc751
+              managementPolicies:
+                - Create
+                - Delete
+                - Observe
             ---
             apiVersion: managedidentity.azure.upbound.io/v1beta1
             kind: UserAssignedIdentity
@@ -183,6 +186,15 @@ spec:
               - type: FromCompositeFieldPath
                 fromFieldPath: status.capiUAMIPrincipalId
                 toFieldPath: spec.forProvider.principalId
+              - type: CombineFromComposite
+                combine:
+                  variables:
+                    - fromFieldPath: spec.subscriptionID
+                    - fromFieldPath: spec.clusterName
+                  strategy: string
+                  string:
+                    fmt: "/subscriptions/%s/resourceGroups/%s/providers/Microsoft.ManagedIdentity/userAssignedIdentities/capi"
+                toFieldPath: spec.forProvider.delegatedManagedIdentityResourceId
               - type: CombineFromComposite
                 combine:
                   variables:
