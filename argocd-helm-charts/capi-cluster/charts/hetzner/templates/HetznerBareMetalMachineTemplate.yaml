@@ -9,9 +9,9 @@ metadata:
     capi.syself.com/constant-bare-metal-hostname: "true"
 spec:
   template:
-    {{/* metadata: */}}
-    {{/*   labels: */}}
-    {{/*     node.cluster.x-k8s.io/cloud-provider: hetzner-bare-metal */}}
+    metadata:
+      labels:
+        node.cluster.x-k8s.io/cloud-provider: hetzner-bare-metal
     spec:
       hostSelector:
         matchLabels:
@@ -26,6 +26,9 @@ spec:
           - fileSystem: ext4
             mount: /boot
             size: 1024M
+          - fileSystem: ext4
+            mount: /
+            size: 30G
           # Logical Volume Group.
           - fileSystem: vg0
             mount: lvm
@@ -70,9 +73,9 @@ metadata:
     capi.syself.com/constant-bare-metal-hostname: "true"
 spec:
   template:
-    {{/* metadata: */}}
-    {{/*   labels: */}}
-    {{/*     node.cluster.x-k8s.io/cloud-provider: hetzner-bare-metal */}}
+    metadata:
+      labels:
+        node.cluster.x-k8s.io/cloud-provider: hetzner-bare-metal
     spec:
       hostSelector:
         matchLabels:
