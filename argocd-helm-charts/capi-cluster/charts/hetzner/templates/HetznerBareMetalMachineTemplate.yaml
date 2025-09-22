@@ -26,13 +26,18 @@ spec:
           - fileSystem: ext4
             mount: /boot
             size: 1024M
-          - fileSystem: ext4
-            mount: /
-            size: 30G
           # Logical Volume Group.
           - fileSystem: vg0
             mount: lvm
             size: 100G
+          # For ContainerD's OverlayFS.
+          - fileSystem: ext4
+            mount: /var/lib/containerd
+            size: 200G
+          # For OpenEBS
+          - fileSystem: ext4
+            mount: /var/openebs/local
+            size: 1400G
         logicalVolumeDefinitions:
           - vg: vg0
             name: root
@@ -94,6 +99,14 @@ spec:
           - fileSystem: vg0
             mount: lvm
             size: 100G
+          # For ContainerD's OverlayFS.
+          - fileSystem: ext4
+            mount: /var/lib/containerd
+            size: 200G
+          # For OpenEBS
+          - fileSystem: ext4
+            mount: /var/openebs/local
+            size: 1400G
         logicalVolumeDefinitions:
           - vg: vg0
             name: root
