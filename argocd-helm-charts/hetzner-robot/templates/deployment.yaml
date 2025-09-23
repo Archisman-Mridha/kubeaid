@@ -1,6 +1,6 @@
 ---
 {{- if .Values.failoverIP | trim | eq "" }}
-{{- fail "failoverIP must be provided" }}
+{{- fail "FailoverIP must be provided" }}
 {{- end }}
 
 apiVersion: apps/v1
