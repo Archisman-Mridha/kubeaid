@@ -44,6 +44,8 @@ spec:
             secretKeyRef:
               name: {{ .Values.cloudCredentialsSecretName }}
               key: hcloud
+        - name: CRON_TIME_INTERVAL
+          value: 5m
         livenessProbe:
           exec:
             command:
