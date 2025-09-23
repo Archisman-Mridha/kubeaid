@@ -52,10 +52,8 @@ spec:
           echo "network: { config: disabled }" > /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
           apt-get update && apt-get install -y cloud-init apparmor apparmor-utils
           cloud-init clean --logs
-        {{- if (default true (.Values.controlPlane.bareMetal.raid).enabled) }}
         swraid: 1
         swraidLevel: {{ (.Values.controlPlane.bareMetal.raid).level | default 1 }}
-        {{- end }}
       sshSpec:
         portAfterCloudInit: 22
         portAfterInstallImage: 22
@@ -123,10 +121,8 @@ spec:
           echo "network: { config: disabled }" > /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
           apt-get update && apt-get install -y cloud-init apparmor apparmor-utils
           cloud-init clean --logs
-        {{- if (default true ($nodeGroup.raid).enabled) }}
         swraid: 1
         swraidLevel: {{ ($nodeGroup.raid).level | default 1 }}
-        {{- end }}
       sshSpec:
         portAfterCloudInit: 22
         portAfterInstallImage: 22
