@@ -36,10 +36,6 @@ spec:
           - fileSystem: ext4
             mount: /var/lib/containerd
             size: 200G
-          # For OpenEBS
-          - fileSystem: ext4
-            mount: /var/openebs/local
-            size: 1400G
         logicalVolumeDefinitions:
           - vg: vg0
             name: root
@@ -105,10 +101,6 @@ spec:
           - fileSystem: ext4
             mount: /var/lib/containerd
             size: 200G
-          # For OpenEBS
-          - fileSystem: ext4
-            mount: /var/openebs/local
-            size: 1400G
         logicalVolumeDefinitions:
           - vg: vg0
             name: root
