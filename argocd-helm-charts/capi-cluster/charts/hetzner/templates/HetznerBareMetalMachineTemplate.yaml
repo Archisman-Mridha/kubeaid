@@ -35,7 +35,11 @@ spec:
           # For ContainerD's OverlayFS.
           - fileSystem: ext4
             mount: /var/lib/containerd
-            size: 200G
+            size: 100G
+          # For OpenEBS
+          - fileSystem: ext4
+            mount: /var/openebs/local
+            size: 100G
         logicalVolumeDefinitions:
           - vg: vg0
             name: root
@@ -100,7 +104,11 @@ spec:
           # For ContainerD's OverlayFS.
           - fileSystem: ext4
             mount: /var/lib/containerd
-            size: 200G
+            size: 100G
+          # For OpenEBS
+          - fileSystem: ext4
+            mount: /var/openebs/local
+            size: 100G
         logicalVolumeDefinitions:
           - vg: vg0
             name: root
