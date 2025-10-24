@@ -32,20 +32,13 @@ spec:
           - fileSystem: vg0
             mount: lvm
             size: 100G
-          # For ContainerD's OverlayFS.
-          - fileSystem: ext4
-            mount: /var/lib/containerd
-            size: 100G
-          # For OpenEBS
-          - fileSystem: ext4
-            mount: /var/openebs/local
-            size: 100G
         logicalVolumeDefinitions:
+          # The Operating System (OS).
           - vg: vg0
             name: root
             mount: /
             filesystem: ext4
-            size: 30G
+            size: 10G
         postInstallScript: |
           #!/bin/bash
           mkdir -p /etc/cloud/cloud.cfg.d && touch /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
@@ -101,20 +94,13 @@ spec:
           - fileSystem: vg0
             mount: lvm
             size: 100G
-          # For ContainerD's OverlayFS.
-          - fileSystem: ext4
-            mount: /var/lib/containerd
-            size: 100G
-          # For OpenEBS
-          - fileSystem: ext4
-            mount: /var/openebs/local
-            size: 100G
         logicalVolumeDefinitions:
+          # The Operating System (OS).
           - vg: vg0
             name: root
             mount: /
             filesystem: ext4
-            size: 30G
+            size: 10G
         postInstallScript: |
           #!/bin/bash
           mkdir -p /etc/cloud/cloud.cfg.d && touch /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
