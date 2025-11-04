@@ -31,26 +31,28 @@ spec:
           # Logical Volume Group.
           - fileSystem: vg0
             mount: lvm
-            size: 100G
-          # For ContainerD's OverlayFS.
-          - fileSystem: ext4
-            mount: /var/lib/containerd
-            size: 200G
-          # For OpenEBS
-          - fileSystem: ext4
-            mount: /var/openebs/local
-            size: 1400G
+            size: 50G
         logicalVolumeDefinitions:
+          # The Operating System (OS).
           - vg: vg0
             name: root
             mount: /
             filesystem: ext4
-            size: 30G
+            size: 10G
         postInstallScript: |
           #!/bin/bash
+
+          NETBOOT=$(efibootmgr -v | grep "Network Card" | sed 's/Boot\([0-9A-F]*\).*/\1/')
+          CURRENT_ORDER=$(efibootmgr | grep "BootOrder:" | cut -d' ' -f2)
+          NEW_ORDER=$(echo "$CURRENT_ORDER" | sed "s/$NETBOOT,\?//g" | sed "s/^/$NETBOOT,/" | sed 's/,$//')
+
+          efibootmgr -o $NEW_ORDER
+
           mkdir -p /etc/cloud/cloud.cfg.d && touch /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
           echo "network: { config: disabled }" > /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
+
           apt-get update && apt-get install -y cloud-init apparmor apparmor-utils
+
           cloud-init clean --logs
         swraid: 1
         swraidLevel: {{ (.Values.controlPlane.bareMetal.raid).level | default 1 }}
@@ -100,26 +102,28 @@ spec:
           # Logical Volume Group.
           - fileSystem: vg0
             mount: lvm
-            size: 100G
-          # For ContainerD's OverlayFS.
-          - fileSystem: ext4
-            mount: /var/lib/containerd
-            size: 200G
-          # For OpenEBS
-          - fileSystem: ext4
-            mount: /var/openebs/local
-            size: 1400G
+            size: 50G
         logicalVolumeDefinitions:
+          # The Operating System (OS).
           - vg: vg0
             name: root
             mount: /
             filesystem: ext4
-            size: 30G
+            size: 10G
         postInstallScript: |
           #!/bin/bash
+
+          NETBOOT=$(efibootmgr -v | grep "Network Card" | sed 's/Boot\([0-9A-F]*\).*/\1/')
+          CURRENT_ORDER=$(efibootmgr | grep "BootOrder:" | cut -d' ' -f2)
+          NEW_ORDER=$(echo "$CURRENT_ORDER" | sed "s/$NETBOOT,\?//g" | sed "s/^/$NETBOOT,/" | sed 's/,$//')
+
+          efibootmgr -o $NEW_ORDER
+
           mkdir -p /etc/cloud/cloud.cfg.d && touch /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
           echo "network: { config: disabled }" > /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
+
           apt-get update && apt-get install -y cloud-init apparmor apparmor-utils
+
           cloud-init clean --logs
         swraid: 1
         swraidLevel: {{ ($nodeGroup.raid).level | default 1 }}
