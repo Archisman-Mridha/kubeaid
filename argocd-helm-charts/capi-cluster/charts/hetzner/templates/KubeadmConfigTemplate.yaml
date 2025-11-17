@@ -266,43 +266,33 @@ spec:
       preKubeadmCommands:
       - set -x
 
+      {{/* Give highest priority to the Network Card entry in the boot order.
+           Otherwise, we cannot boot the servers into rescue mode, and need to reach out to the
+           Hetzner support team. */}}
       - |
         NETBOOT=$(efibootmgr -v | grep "Network Card" | sed 's/Boot\([0-9A-F]*\).*/\1/')
         CURRENT_ORDER=$(efibootmgr | grep "BootOrder:" | cut -d' ' -f2)
         NEW_ORDER=$(echo "$CURRENT_ORDER" | sed "s/$NETBOOT,\?//g" | sed "s/^/$NETBOOT,/" | sed 's/,$//')
         efibootmgr -o $NEW_ORDER
 
+      {{/*
+        User provided commands used to setup the disk layout.
+        We recommend the following :
+           
+          (1) If NVMe, then create a ZPool out of the available storage space.
+              That ZPool will be used by Kubernetes ephemeral volumes, pod logs and OpenEBS ZFS
+              LocalPV provisioner.
+               
+          (2) If HDD / regular SSD, then create a partition out of the available storage space,
+              allocating it to Rook Ceph.
+      */}}
+      {{- if $nodeGroup.diskSetupCommands }}
       - |
-        apt-get update -y
-        apt install zfsutils-linux -y
-
-        # Create the ZPool (in mirror mode) across the NVMe disks.
-        zpool create primary mirror /dev/nvme0n1 /dev/nvme1n1
-
-        # From that ZPool, set aside 100GB for ContainerD, by creating a ZVolume.
-        #
-        # A ZFS volume is a dataset that represents a block device. ZFS volumes are identified as
-        # devices in the /dev/zvol/{dsk,rdsk}/pool directory.
-        zfs create -V 100G primary/containerd
-        udevadm settle
-        mkfs.ext4 /dev/zvol/primary/containerd
-        mkdir -p /var/lib/containerd
-        echo "/dev/zvol/primary/containerd /var/lib/containerd ext4 defaults,nofail 0 0" | tee -a /etc/fstab
-        mount /dev/zvol/primary/containerd /var/lib/containerd
-
-        # From that ZPool, set aside 50GB for ephemeral volumes for pods, by creating a ZVolume.
-        zfs create -V 50G primary/pod-ephemeral-volumes
-        udevadm settle
-        mkfs.ext4 /dev/zvol/primary/pod-ephemeral-volumes
-        mkdir -p /var/lib/kubelet/pods
-        echo "/dev/zvol/primary/pod-ephemeral-volumes /var/lib/kubelet/pods ext4 defaults,nofail 0 0" | tee -a /etc/fstab
-        mount /dev/zvol/primary/pod-ephemeral-volumes /var/lib/kubelet/pods
-
-        # Create partition (without RAID) for Rook Ceph, which will take up the remaining of each HDD.
-        echo ",,83" | sfdisk -N 4 /dev/sda --force
-        partprobe /dev/sda
-        echo ",,83" | sfdisk -N 4 /dev/sdb --force
-        partprobe /dev/sdb
+        {{ $nodeGroup.diskSetupCommands | nindent 8 }}
+      {{- else if $.Values.bareMetal.diskSetupCommands }}
+      - |
+        {{ $.Values.bareMetal.diskSetupCommands | nindent 8 }}
+      {{- end }}
 
       - grep VERSION= /etc/os-release; uname -a
       - export CONTAINERD=1.7.25

@@ -31,21 +31,23 @@ spec:
           # Logical Volume Group.
           - fileSystem: vg0
             mount: lvm
-            size: 50G
+            size: {{ .Values.bareMetal.installImage.vg0.size }}
         logicalVolumeDefinitions:
           # The Operating System (OS).
           - vg: vg0
             name: root
             mount: /
             filesystem: ext4
-            size: 10G
+            size: {{ .Values.bareMetal.installImage.vg0.rootVolumeSize }}
         postInstallScript: |
           #!/bin/bash
 
+          {{/* Give highest priority to the Network Card entry in the boot order.
+               Otherwise, we cannot boot the servers into rescue mode, and need to reach out to the
+               Hetzner support team. */}}
           NETBOOT=$(efibootmgr -v | grep "Network Card" | sed 's/Boot\([0-9A-F]*\).*/\1/')
           CURRENT_ORDER=$(efibootmgr | grep "BootOrder:" | cut -d' ' -f2)
           NEW_ORDER=$(echo "$CURRENT_ORDER" | sed "s/$NETBOOT,\?//g" | sed "s/^/$NETBOOT,/" | sed 's/,$//')
-
           efibootmgr -o $NEW_ORDER
 
           mkdir -p /etc/cloud/cloud.cfg.d && touch /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
@@ -102,21 +104,23 @@ spec:
           # Logical Volume Group.
           - fileSystem: vg0
             mount: lvm
-            size: 50G
+            size: {{ $.Values.bareMetal.installImage.vg0.size }}
         logicalVolumeDefinitions:
           # The Operating System (OS).
           - vg: vg0
             name: root
             mount: /
             filesystem: ext4
-            size: 10G
+            size: {{ $.Values.bareMetal.installImage.vg0.rootVolumeSize }}
         postInstallScript: |
           #!/bin/bash
 
+          {{/* Give highest priority to the Network Card entry in the boot order.
+               Otherwise, we cannot boot the servers into rescue mode, and need to reach out to the
+               Hetzner support team. */}}
           NETBOOT=$(efibootmgr -v | grep "Network Card" | sed 's/Boot\([0-9A-F]*\).*/\1/')
           CURRENT_ORDER=$(efibootmgr | grep "BootOrder:" | cut -d' ' -f2)
           NEW_ORDER=$(echo "$CURRENT_ORDER" | sed "s/$NETBOOT,\?//g" | sed "s/^/$NETBOOT,/" | sed 's/,$//')
-
           efibootmgr -o $NEW_ORDER
 
           mkdir -p /etc/cloud/cloud.cfg.d && touch /etc/cloud/cloud.cfg.d/99-custom-networking.cfg
