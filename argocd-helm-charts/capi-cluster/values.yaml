@@ -2,7 +2,7 @@ global:
   kubernetes:
     version: v1.33.0
   clusterAPI:
-    version: v1.10.8
+    version: v1.8.10
   enableClusterAutoscaler: true
   capa:
     version: v2.9.2
