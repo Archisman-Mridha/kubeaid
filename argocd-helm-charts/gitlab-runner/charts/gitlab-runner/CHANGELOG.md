@@ -1,31 +1,73 @@
-## v0.77.3 (2025-06-11)
+## v0.83.3 (2025-11-28)
 
 ### New features
 
-- Update GitLab Runner version to v18.0.3
+- Update GitLab Runner version to v18.6.3
 
-## v0.77.2 (2025-05-22)
-
-### New features
-
-- Update GitLab Runner version to v18.0.2
-
-## v0.77.1 (2025-05-16)
+## v0.83.2 (2025-11-25)
 
 ### New features
 
-- Update GitLab Runner version to v18.0.1
+- Update GitLab Runner version to v18.6.2
 
-## v0.77.0 (2025-05-09)
+## v0.83.1 (2025-11-21)
 
 ### New features
 
-- Update GitLab Runner version to v18.0.0
-- implement configurable ServiceMonitor namespace [!503](https://gitlab.com/gitlab-org/charts/gitlab-runner/-/merge_requests/503) (Aleksandar Pesic @peske)
+- Update GitLab Runner version to v18.6.1
+
+## v0.83.0 (2025-11-20)
+
+### New features
+
+- Update GitLab Runner version to v18.6.0
+- feat: add native envFrom [!521](https://gitlab.com/gitlab-org/charts/gitlab-runner/-/merge_requests/521) (zadkiel @zadkiel)
+
+## v0.82.0 (2025-10-17)
+
+### New features
+
+- Update GitLab Runner version to v18.5.0
+
+## v0.81.0 (2025-09-18)
+
+### New features
+
+- Update GitLab Runner version to v18.4.0
 
 ### Maintenance
 
-- Remove registration token and deprecated property from values.yaml [!515](https://gitlab.com/gitlab-org/charts/gitlab-runner/-/merge_requests/515)
+- Chore(values): update ExternalSecret to v1 [!523](https://gitlab.com/gitlab-org/charts/gitlab-runner/-/merge_requests/523) (zadkiel @zadkiel)
+
+## v0.79.2 (2025-08-21)
+
+### New features
+
+- Update GitLab Runner version to v18.2.2
+
+## v0.79.1 (2025-07-28)
+
+### New features
+
+- Update GitLab Runner version to v18.2.1
+
+## v0.79.0 (2025-07-12)
+
+### New features
+
+- Update GitLab Runner version to v17.11.4
+
+## v0.76.3 (2025-06-11)
+
+### New features
+
+- Update GitLab Runner version to v17.11.3
+
+## v0.76.2 (2025-05-23)
+
+### New features
+
+- Update GitLab Runner version to v17.11.2
 
 ## v0.76.1 (2025-05-05)
 

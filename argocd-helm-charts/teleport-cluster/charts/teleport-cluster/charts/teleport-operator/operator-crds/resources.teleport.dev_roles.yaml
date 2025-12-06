@@ -270,6 +270,10 @@ spec:
                       Role grants access to.
                     items:
                       properties:
+                        api_group:
+                          description: APIGroup specifies the Kubernetes API group
+                            of the Kubernetes resource. It supports wildcards.
+                          type: string
                         kind:
                           description: Kind specifies the Kubernetes Resource type.
                           type: string
@@ -301,6 +305,21 @@ spec:
                       type: string
                     nullable: true
                     type: array
+                  mcp:
+                    description: MCPPermissions defines MCP servers related permissions.
+                    nullable: true
+                    properties:
+                      tools:
+                        description: Tools defines the list of tools allowed or denied
+                          for this role. Each entry can be a literal string, a glob
+                          pattern (e.g. "prefix_*"), or a regular expression (must
+                          start with '^' and end with '$'). If the list is empty,
+                          no tools are allowed.
+                        items:
+                          type: string
+                        nullable: true
+                        type: array
+                    type: object
                   node_labels:
                     additionalProperties:
                       x-kubernetes-preserve-unknown-fields: true
@@ -357,6 +376,10 @@ spec:
                           "kube_cluster" and enforce requesting any of its subresources.'
                         items:
                           properties:
+                            api_group:
+                              description: APIGroup specifies the Kubernetes Resource
+                                API group.
+                              type: string
                             kind:
                               description: kind specifies the Kubernetes Resource
                                 type.
@@ -381,6 +404,12 @@ spec:
                               is required for all Access Requests requesting roles
                               or resources allowed by this role. It applies only to
                               users who have this role assigned.
+                            type: string
+                          prompt:
+                            description: Prompt is a custom message prompted to the
+                              user for the requested roles or resources searchable
+                              as other roles. This is only applied to the requested
+                              roles and resources specifying the prompt.
                             type: string
                         type: object
                       roles:
@@ -858,6 +887,10 @@ spec:
                       Role grants access to.
                     items:
                       properties:
+                        api_group:
+                          description: APIGroup specifies the Kubernetes API group
+                            of the Kubernetes resource. It supports wildcards.
+                          type: string
                         kind:
                           description: Kind specifies the Kubernetes Resource type.
                           type: string
@@ -889,6 +922,21 @@ spec:
                       type: string
                     nullable: true
                     type: array
+                  mcp:
+                    description: MCPPermissions defines MCP servers related permissions.
+                    nullable: true
+                    properties:
+                      tools:
+                        description: Tools defines the list of tools allowed or denied
+                          for this role. Each entry can be a literal string, a glob
+                          pattern (e.g. "prefix_*"), or a regular expression (must
+                          start with '^' and end with '$'). If the list is empty,
+                          no tools are allowed.
+                        items:
+                          type: string
+                        nullable: true
+                        type: array
+                    type: object
                   node_labels:
                     additionalProperties:
                       x-kubernetes-preserve-unknown-fields: true
@@ -945,6 +993,10 @@ spec:
                           "kube_cluster" and enforce requesting any of its subresources.'
                         items:
                           properties:
+                            api_group:
+                              description: APIGroup specifies the Kubernetes Resource
+                                API group.
+                              type: string
                             kind:
                               description: kind specifies the Kubernetes Resource
                                 type.
@@ -969,6 +1021,12 @@ spec:
                               is required for all Access Requests requesting roles
                               or resources allowed by this role. It applies only to
                               users who have this role assigned.
+                            type: string
+                          prompt:
+                            description: Prompt is a custom message prompted to the
+                              user for the requested roles or resources searchable
+                              as other roles. This is only applied to the requested
+                              roles and resources specifying the prompt.
                             type: string
                         type: object
                       roles:
@@ -1743,6 +1801,10 @@ spec:
                       Role grants access to.
                     items:
                       properties:
+                        api_group:
+                          description: APIGroup specifies the Kubernetes API group
+                            of the Kubernetes resource. It supports wildcards.
+                          type: string
                         kind:
                           description: Kind specifies the Kubernetes Resource type.
                           type: string
@@ -1774,6 +1836,21 @@ spec:
                       type: string
                     nullable: true
                     type: array
+                  mcp:
+                    description: MCPPermissions defines MCP servers related permissions.
+                    nullable: true
+                    properties:
+                      tools:
+                        description: Tools defines the list of tools allowed or denied
+                          for this role. Each entry can be a literal string, a glob
+                          pattern (e.g. "prefix_*"), or a regular expression (must
+                          start with '^' and end with '$'). If the list is empty,
+                          no tools are allowed.
+                        items:
+                          type: string
+                        nullable: true
+                        type: array
+                    type: object
                   node_labels:
                     additionalProperties:
                       x-kubernetes-preserve-unknown-fields: true
@@ -1830,6 +1907,10 @@ spec:
                           "kube_cluster" and enforce requesting any of its subresources.'
                         items:
                           properties:
+                            api_group:
+                              description: APIGroup specifies the Kubernetes Resource
+                                API group.
+                              type: string
                             kind:
                               description: kind specifies the Kubernetes Resource
                                 type.
@@ -1854,6 +1935,12 @@ spec:
                               is required for all Access Requests requesting roles
                               or resources allowed by this role. It applies only to
                               users who have this role assigned.
+                            type: string
+                          prompt:
+                            description: Prompt is a custom message prompted to the
+                              user for the requested roles or resources searchable
+                              as other roles. This is only applied to the requested
+                              roles and resources specifying the prompt.
                             type: string
                         type: object
                       roles:
@@ -2331,6 +2418,10 @@ spec:
                       Role grants access to.
                     items:
                       properties:
+                        api_group:
+                          description: APIGroup specifies the Kubernetes API group
+                            of the Kubernetes resource. It supports wildcards.
+                          type: string
                         kind:
                           description: Kind specifies the Kubernetes Resource type.
                           type: string
@@ -2362,6 +2453,21 @@ spec:
                       type: string
                     nullable: true
                     type: array
+                  mcp:
+                    description: MCPPermissions defines MCP servers related permissions.
+                    nullable: true
+                    properties:
+                      tools:
+                        description: Tools defines the list of tools allowed or denied
+                          for this role. Each entry can be a literal string, a glob
+                          pattern (e.g. "prefix_*"), or a regular expression (must
+                          start with '^' and end with '$'). If the list is empty,
+                          no tools are allowed.
+                        items:
+                          type: string
+                        nullable: true
+                        type: array
+                    type: object
                   node_labels:
                     additionalProperties:
                       x-kubernetes-preserve-unknown-fields: true
@@ -2418,6 +2524,10 @@ spec:
                           "kube_cluster" and enforce requesting any of its subresources.'
                         items:
                           properties:
+                            api_group:
+                              description: APIGroup specifies the Kubernetes Resource
+                                API group.
+                              type: string
                             kind:
                               description: kind specifies the Kubernetes Resource
                                 type.
@@ -2442,6 +2552,12 @@ spec:
                               is required for all Access Requests requesting roles
                               or resources allowed by this role. It applies only to
                               users who have this role assigned.
+                            type: string
+                          prompt:
+                            description: Prompt is a custom message prompted to the
+                              user for the requested roles or resources searchable
+                              as other roles. This is only applied to the requested
+                              roles and resources specifying the prompt.
                             type: string
                         type: object
                       roles:

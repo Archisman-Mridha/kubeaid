@@ -53,6 +53,9 @@ spec:
       shareProcessNamespace: true
       {{- end }}
       serviceAccountName: {{ include "haproxy.serviceAccountName" . }}
+{{- if hasKey .Values.serviceAccount "automountServiceAccountToken" }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
+{{- end }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       {{- if $useHostNetwork }}
       hostNetwork: true
@@ -120,6 +123,9 @@ spec:
               {{- if and $useHostPort (index $hostPorts $key) }}
               hostPort: {{ index $hostPorts $key }}
               {{- end }}
+          {{- end }}
+          {{- with .Values.rawContainerPorts }}
+          {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:

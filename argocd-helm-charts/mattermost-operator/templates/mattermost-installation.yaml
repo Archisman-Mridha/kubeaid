@@ -1,0 +1,53 @@
+apiVersion: installation.mattermost.com/v1beta1
+kind: Mattermost
+metadata:
+  name: {{ .Values.mattermost.name | default "mattermost" }}
+spec:
+  image: {{ .Values.mattermost.image | default "mattermost/mattermost-enterprise-edition" }}
+  imagePullPolicy: {{ .Values.mattermost.imagePullPolicy | default "IfNotPresent" }}
+  version: {{ .Values.mattermost.version | default "10.9.4" }}
+  size: {{ .Values.mattermost.size | default "5000users" }}
+  podExtensions:
+    {{- if .Values.mattermost.extraPorts }}
+    containerPorts:
+      {{- range .Values.mattermost.extraPorts }}
+      - name: {{ .name }}
+        containerPort: {{ .containerPort }}
+        protocol: {{ .protocol | default "TCP" }}
+      {{- end }}
+    {{- end }}
+  scheduling:
+    resources:
+{{ toYaml .Values.mattermost.resources | indent 6 }}
+  useServiceLoadBalancer: {{ .Values.mattermost.useServiceLoadBalancer | default false }}
+  serviceAnnotations:
+    {{- if .Values.mattermost.serviceAnnotations }}
+{{ toYaml .Values.mattermost.serviceAnnotations | indent 4 }}
+    {{- else }}
+    {}
+    {{- end }}
+  ingress:
+    enabled: {{ .Values.mattermost.ingress.enabled | default true }}
+    {{- if .Values.mattermost.ingress.host }}
+    host: {{ .Values.mattermost.ingress.host }}
+    {{- end }}
+    {{- if .Values.mattermost.ingress.tlsSecret }}
+    tlsSecret: {{ .Values.mattermost.ingress.tlsSecret }}
+    {{- end }}
+    {{- if .Values.mattermost.ingress.annotations }}
+    annotations:
+{{ toYaml .Values.mattermost.ingress.annotations | indent 6 }}
+    {{- end }}
+  {{- if .Values.mattermost.mattermostEnv }}
+  mattermostEnv:
+{{ toYaml .Values.mattermost.mattermostEnv | indent 4 }}
+  {{- end }}
+  licenseSecret: {{ .Values.mattermost.licenseSecret | default "null" }}
+  database:
+    external:
+      secret: {{ .Values.mattermost.database.external.secret | default "db-credentials" }}
+  fileStore:
+    external:
+      url: {{ .Values.mattermost.fileStore.external.url | default "s3.obmondo.com" }}
+      bucket: {{ .Values.mattermost.fileStore.external.bucket | default "kbm-postgres-backups" }}
+      secret: {{ .Values.mattermost.fileStore.external.secret | default "mattermost-pgsql-filestore-creds" }}

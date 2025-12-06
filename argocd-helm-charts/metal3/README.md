@@ -94,96 +94,57 @@ Ensure your firewall allows the following traffic flows:
 
 **Note:** The BMC network is typically a separate management network and does not need the same ports as the provisioning network. The BMC only needs to be accessible via its management protocols (Redfish/IPMI) from the Metal3 Host. The BMC itself does not need to initiate connections to the Metal3 Host or Target Server, except for fetching Ironic Python Agent and other virtual media from `vmediaTLSPort`.
 
-## Network Setup
+## BareMetalHost Setup
 
-To set-up Ironic Python Agent networks you need to create a secret with the name `<baremetalhost>-network` which should look like:
+To setup the baremetal host we need deploy the baremetal host and other secrets like network data, preprovisionning-networkdata, userdata.
+The example templates for all these can be found [here](./examples/)
 
-```bash
-apiVersion: v1
-kind: Secret
-metadata:
-  name: host-0-network
-  namespace: metal3
-type: Opaque
-stringData:
-  networkData: |
-    interfaces:
-    - name: <interface name>
-      type: ethernet
-      state: up
-      mac-address: "<mac-address>"
-      ipv4:
-        address:
-        - ip: <network-interface-ip>
-          prefix-length: 24
-        enabled: true
-        dhcp: false
-    dns-resolver:
-      config:
-        server:
-        - <dns-server-ip>
-    routes:
-      config:
-      - destination: 0.0.0.0/0
-        next-hop-address: <gateway-ip>
-        next-hop-interface: <interface name>
-```
+To generate these templates correctly the values are provided in the values file [here](./values.yaml)
 
-To set-up the provisioned server network you should create a secret with the name `<baremetalhost>-networkdata` which should look like:
+### Detailed overview of bmh variables
 
-```bash
-{
-  "links": [
-    {
-      "id": "<interface name>",
-      "type": "phy",
-      "ethernet_mac_address": "<mac-address>"
-    }
-  ],
-  "networks": [
-    {
-      "id": "<interface name>",
-      "link": "<interface name>",
-      "type": "ipv4",
-      "routes":
-        {
-          "network": "<network-interface-ip>",
-          "netmask":  "255.255.255.0",
-          "gateway": "<gateway-ip>"
-        }
-    }
-  ],
-  "services": []
-}
-```
+| Variable  | Explanation |
+|-----------|----------------|
+| mac | MAC address |
+| network.interface | Server interface where you want to attach your ip address |
+| network.ipaddress | IP address of the server |
+| network.dnsserver | DNS server IP address |
+| network.gatewayIP | Gateway IP address |
+| network.netmask | Netmask IP address |
+| os.name | Name of the OS which you want to provision, right now we only support Ubuntu 24.04.2 and RHEL servers |
+| os.version | Version of the OS |
+| os.url | URL of the OS image which you want to install, right now its only valid for RHEL servers |
+| os.checksum | URL of the checksum, right now its only valid for RHEL servers|
+| bmc | BMC IP Address |
+| secretName | Secret name which stores your username and password to connect to BMC |
+| rootPassword | root password of the server |
+| rootDeviceSerialNumber | Serial number of the disk where you want your root to be mounted to |
+| createpartition | Where you want to create a partion or not |
+| partition.diskname | Disk name which you want to partition |
+| partition.size | Size of the parition |
+| partition.number | Partition number |
 
-## Userdata setup
 
-If we want to configure the partion or create users or anything in the server on the first boot - we need to create a secret `<baremetalhost>-userdata`
-The below one assigns the hostname to the server, creates a sudo user and make sure the `/` partition is 50G.
+For Ubuntu servers we right now only support ubuntu 24.04.2 and it by default takes the OS url and checksum since those are available directly and can be found [here](https://cloud-images.ubuntu.com)
+
+For RHEL servers, the download link is https://access.redhat.com/downloads/content/rhel. You need to pick the kvm.qcow2 image.
+What we have done is we downloaded the image on one of the server available over the private url, something like http://10.1.13.1:8080/rhel/8.10/rhel-8.10-x86_64-kvm.qcow2
+
+You can then create the checksum by running
 
 ```bash
-#cloud-config
-
-hostname: tdkcphsmn01
-
-users:
-  - name: test
-    groups: [sudo]
-    shell: /bin/bash
-    sudo: ['ALL=(ALL) NOPASSWD:ALL']
-    lock_passwd: false
-    passwd: $6$4Ku44dv4Gh4vE/l/$hvcWyIb6SyL2huyQ/cPVNjya0g30tcpryiYSPNWavIVAxGMOFp2l7RHB0mBgAe.I149w1SloBmGNnjwICIx1M/
-
-growpart:
-  mode: 'off'
-
-runcmd:
-  - echo yes | parted /dev/nvme2n1 ---pretend-input-tty resizepart 1 50GB
-  - resize2fs /dev/nvme2n1p1
+sha256sum rhel-8.10-x86_64-kvm.qcow2
 ```
 
-`/dev/nvme2n1` is the same disk where you have set the `rootDeviceHints` for.
+And can then provide the checksum url something like http://http://10.1.13.1:8080/rhel/8.10/rhel-8.10-x86_64-kvm/SHA256SUMS
+
+
+`secretName` is the Secret name which stores your username and password to connect to BMC. This needs to be present as a secret in your cluster
+
+```bash
+password: kwugfi
+username: abc
+```
 
 ## Further Resources
 

@@ -1,8 +1,14 @@
+fullnameOverride: ""
+namespaceOverride: ""
+
 prometheus:
-  version: v2.54.1
-  server: prometheus.obmondo.com
+  namespaceOverride: ""
+  version: v3.4.0
   ingress:
-    enable: false
+    enabled: false
+    annotations: {}
+    ingressClassName: ""
+    domain: ""
   storage:
     size: 30Gi
     className: rook-ceph-block
@@ -20,9 +26,17 @@ prometheus:
     failureThreshold: 240
   readinessProbe:
     failureThreshold: 240
+  externalUrl: /
+  routePrefix: /
+
 grafana:
-  server: graphs.obmondo.com
-  version: 11.1.4
+  version: 12.2.0
+  ingress:
+    enabled: false
+    annotations: {}
+    ingressClassName: ""
+    domain: ""
+
 prometheusRule:
   domain: true
   dns: true
@@ -57,8 +71,16 @@ prometheusRule:
   zfsExporter: true
   zfs: true
   smartmon: true
+  gitlab_runner: true
+
 alertmanager:
-  version: v0.27.0
+  enabled: true
+  version: v0.28.1
+  ingress:
+    enabled: false
+    annotations: {}
+    ingressClassName: ""
+    domain: ""
   config:
     global:
       resolve_timeout: 5m
@@ -91,34 +113,24 @@ alertmanager:
       group_wait: 10s
       group_interval: 10s
       repeat_interval: 1h
-      receiver: "obmondo"
+      receiver: Default
       routes:
-        - receiver: "obmondo"
-          matchers:
-            - "alertname = Watchdog"
-          repeat_interval: 5m
-        - receiver: "null"
-          matchers:
-            - "namespace =~ testing|obmondo-ci"
-        - receiver: "null"
-          matchers:
-            - "alertname = InfoInhibitor"
-        - receiver: obmondo
-          continue: true
+        - matchers:
+          - "alertname = Watchdog"
+          receiver: Watchdog
+        - matchers:
+          - "alertname = InfoInhibitor"
+          receiver: "null"
+        - matchers:
+          - "severity = critical"
+          receiver: "Critical"
 
     receivers:
+      - name: Default
+      - name: Watchdog
+      - name: Critical
       - name: "null"
-      - name: obmondo
-        webhook_configs:
-          - url: https://alerts.obmondo.com/hooks/alertmanager
-            send_resolved: true
-            max_alerts: 0
-            http_config:
-              tls_config:
-                server_name: alerts.obmondo.com
-                cert_file: /etc/alertmanager/secrets/puppet-agent-tls-auth/tls.crt
-                key_file: /etc/alertmanager/secrets/puppet-agent-tls-auth/tls.key
-                insecure_skip_verify: false
+
 middleware:
   jwt:
     enabled: false

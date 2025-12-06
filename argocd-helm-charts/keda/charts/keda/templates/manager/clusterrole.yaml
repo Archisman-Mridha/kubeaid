@@ -24,6 +24,14 @@ rules:
   - get
   - list
   - watch
+{{- if eq .Values.permissions.operator.restrict.allowAllServiceAccountTokenCreation true }}
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts/token
+  verbs:
+  - create
+{{- end }}
 - apiGroups:
   - ""
   resources:
@@ -31,6 +39,14 @@ rules:
   verbs:
   - create
   - patch
+- apiGroups:
+    - discovery.k8s.io
+  resources:
+    - endpointslices
+  verbs:
+    - get
+    - list
+    - watch
 {{- if not .Values.permissions.operator.restrict.secret }}
 - apiGroups:
   - ""

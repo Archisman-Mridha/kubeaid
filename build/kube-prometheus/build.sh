@@ -2,10 +2,11 @@
 #
 
 # This script requires path to cluster folder in clone of customers
-# kubernetes-config repo in arg $1 (which must be named clustername and contain
-# a clustername-var.jsonnet file) to generate the prometheus manifests for that
-# cluster. The manifests will be put in the cluster folder in a kube-prometheus
-# subdir.
+# kubernetes-config repo in arg $1. The folder should contain a
+# <cluster-name>-vars.jsonnet file. With CAPI, the folder name can be
+# different from the cluster name (e.g., folder: staging.local.example.com,
+# cluster name: staging, jsonnet file: staging-vars.jsonnet).
+# The manifests will be put in the cluster folder in a kube-prometheus subdir.
 # And it must be run from the root of the argocd-apps repo. Example:
 # ./build/kube-prometheus/build.sh ../kubernetes-config-enableit/k8s/kam.obmondo.com
 
@@ -87,11 +88,13 @@ if ! [[ "${cluster_dir}" ]]; then
   exit 2
 fi
 
-cluster=$(basename "$cluster_dir")
-cluster_jsonnet="${cluster_dir}/${cluster}-vars.jsonnet"
+# Find the vars.jsonnet file in the cluster directory
+# With CAPI, folder name can differ from cluster name
+cluster_jsonnet=$(find "${cluster_dir}" -maxdepth 1 -name "*-vars.jsonnet" -type f | head -n 1)
 
-if [ ! -e "${cluster_jsonnet}" ]; then
-  echo "No such variable file ${cluster_jsonnet}"
+if [ -z "${cluster_jsonnet}" ]; then
+  echo "No vars.jsonnet file found in ${cluster_dir}"
+  echo "Expected a file named <cluster-name>-vars.jsonnet"
   exit 2
 fi
 
@@ -146,7 +149,11 @@ function build_for_tag() {
   jb_install cert-manager-mixin "gitlab.com/uneeq-oss/cert-manager-mixin@master"
   jb_install opensearch-mixin "github.com/grafana/jsonnet-libs/opensearch-mixin@master"
   jb_install opencost-mixin "github.com/adinhodovic/opencost-mixin@main"
-  jb_install rabbitmq-mixin "github.com/grafana/jsonnet-libs/rabbitmq-mixin@master"
+  if [ "$kube_prometheus_release" == "v0.13.0" ]; then
+    jb_install rabbitmq-mixin "github.com/adinhodovic/rabbitmq-mixin@master"
+  else
+    jb_install rabbitmq-mixin "github.com/grafana/jsonnet-libs/rabbitmq-mixin@master"
+  fi
   jb_install mixin-utils "github.com/grafana/jsonnet-libs/mixin-utils@master"
 
   mkdir -p "${basedir}/libraries/${kube_prometheus_release_tag}"

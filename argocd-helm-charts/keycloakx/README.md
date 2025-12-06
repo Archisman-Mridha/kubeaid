@@ -1,13 +1,12 @@
 # Keycloak Server Setup
 
+Step 1) Generate keycloak admin password (fallback user).
+
 NOTE: Do not give admin password from the webUI, add the password via an ENV variable. 'KEYCLOAK_PASSWORD'
 
-* There are bunch of ways to do this, I have did it in this way.
 
 ```bash
-# Regular way
-kubectl create secret generic keycloak-admin --from-file=KEYCLOAK_PASSWORD=./keycloak_password -n keycloak
-
+openssl rand -base64 14 > ./keycloak_password
 # Sealed Secret way
 kubectl create secret generic keycloak-admin -n keycloak --dry-run=client --from-file=KEYCLOAK_PASSWORD=./keycloak_password -o json >mysecret.json
 kubeseal --controller-name sealed-secrets --controller-namespace system <mysecret.json >keycloak-admin.json
@@ -52,7 +51,7 @@ Details about setup if you are interested:
 
 ## Basic Keycloak setup
 
-* Log into the keycloak server as admin: <https://keycloak.ops.bw7.io/auth/admin/>
+* Log into the keycloak server as admin: <https://keycloak.example.com/auth/admin/>
   * The password can be extracted from the `keycloak-admin` secret.
 * Make sure that you are in the `Master` realm
 * Create a personal admin user account
@@ -104,8 +103,8 @@ Details about setup if you are interested:
       ![azure](static/2.png)
       - Save the Client ID and Client Secret from Azure AD. This information will be needed later in Keycloak.
   2. Obtain Client ID and Client Secret
-      - After the registration is complete, go to the app's overview page and copy the "Application (client) ID". 
-      - Navigate to "Certificates & secrets" and create a new client secret. Copy the value of the client 
+      - After the registration is complete, go to the app's overview page and copy the "Application (client) ID".
+      - Navigate to "Certificates & secrets" and create a new client secret. Copy the value of the client
         secret as it will not be shown again.
 
       ![azure](static/3.png)
@@ -199,7 +198,7 @@ we can make the login flow faster, by setting it as default:
 
 ## Add normal users to the Keycloak setup
 
-* Have the user access <https://keycloak.ops.bw7.io/auth/realms/<customer_name>/account/>
+* Have the user access <https://keycloak.example.com/auth/realms/<customer_name>/account/>
   * Click `Personal Info` link
   * The user is now done, and the basic user account has been created
 * Add the user to the group, that that describe their access needs
@@ -389,7 +388,7 @@ we can make the login flow faster, by setting it as default:
 * For more customizations refer [here](https://www.keycloak.org/docs/latest/server_development/index.html#creating-a-theme)
 * Build and push the image to any image registry.
 * In the value files add the following
-  
+
   ```yaml
           extraInitContainers: |
             - name: custom-theme-provider
@@ -404,13 +403,13 @@ we can make the login flow faster, by setting it as default:
                   cp -R /custom/* /theme
               volumeMounts:
                 - name: theme
-                  mountPath: /theme        
+                  mountPath: /theme
           extraVolumeMounts: |
             - name: theme
-              mountPath: /opt/keycloak/themes/bw7    
+              mountPath: /opt/keycloak/themes/bw7
           extraVolumes: |
             - name: theme
-              emptyDir: {} 
+              emptyDir: {}
   ```
 
 * Apply the changes and you should see the custom login page.
@@ -444,8 +443,36 @@ the keycloak app next it will use the same PVC/PV.
 
 Restoring itself to the point previously setup and configured to.
 
+## Migrating Keycloak from Zalando to CNPG
+
+Keycloak has its configuration in a pgsql database. Taking a backup of the `keycloak` database is sufficient to restore
+the state of an existing Keycloak.
+
+These steps will cause a downtime for your keycloak instance, please request appropriate service windows
+and have backups at hand to revert back to a stable version.
+
+Steps:
+
+1) Point the keycloak helm chart to a feature branch or the latest tag of Kubeaid repo from ArgoCD that enables the cnpg cluster resource.
+    Please remember that you might need to edit your values.yaml file to disable the zalando pgsql from getting created.
+2) Sync the `kind: Cluster` resource from the ArgoCD UI. This is the destination postgres db, and it will be completely clean.
+3) Don't sync the Keycloak StatefulSet for now.
+4) Take a shell into the existing zalando pgsql pod, and take a pgdump of `keycloak` database
+    ```
+    pg_dump -d keycloak -U keycloak -f keycloak_db.dump
+    ```
+5) Copy the dump from the zalando pgsql pod to your local machine.
+6) Copy the dump from the local machine to your destination cnpg pod.
+7) Take a shell into the cnpg pod and import the dump
+    ```
+    psql -d keycloak < keycloak_db.dump
+    ```
+8) Sync the Keycloak statefulset from ArgoCD UI and wait for a while for the migrations to be completed.
+9) Your keycloak instance will be migrated to the new pgsql db and should become healthy in a while.
+
 ## Good "Reads"
 
 * <https://medium.com/keycloak/github-as-identity-provider-in-keyclaok-dca95a9d80ca>
 * <https://www.youtube.com/watch?v=duawSV69LDI>
 * <https://medium.com/keycloak/keycloak-as-an-identity-broker-an-identity-provider-af1b150ea94>
+* <https://www.postgresql.org/docs/current/backup-dump.html#BACKUP-DUMP-RESTORE>

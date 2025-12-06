@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "gitlab-runner.fullname" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ default .Release.Namespace .Values.namespace | quote }}
   labels:
     app: {{ include "gitlab-runner.fullname" . }}
     chart: {{ include "gitlab-runner.chart" . }}
@@ -77,6 +77,9 @@ spec:
         {{- end }}
         env:
         {{- include "gitlab-runner.runner-env-vars" . | indent 8 }}
+        {{- if .Values.extraEnvFromRefs }}
+        envFrom: {{ toYaml .Values.extraEnvFromRefs | nindent 8 }}
+        {{- end }}
         livenessProbe:
           exec:
             command: ["/bin/bash", "/configmaps/check-live", "{{ default 4 .Values.probeTimeoutSeconds | add -1 | max 1 }}"]

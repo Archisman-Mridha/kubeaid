@@ -4,6 +4,9 @@ kind: ClusterIssuer
 metadata:
   name: {{ .Values.issuer.name }}
 spec:
+  {{- if .Values.issuer.selfSigned }}
+    selfSigned: {}
+  {{- else }}
   acme:
     email: {{ .Values.issuer.issuerEmail }}
     preferredChain: {{ .Values.issuer.preferredChain }}
@@ -11,6 +14,9 @@ spec:
       name: {{ .Values.issuer.secret }}
     {{- if .Values.issuer.production }}
     server: https://acme-v02.api.letsencrypt.org/directory
+    {{- else if .Values.issuer.stepCA }}
+    server: https://step-ca-step-certificates.step-ca.svc.cluster.local/acme/acme/directory
+    caBundle: {{ .Values.issuer.stepCA.caBundle }}
     {{- else }}
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     {{- end -}}
@@ -71,5 +77,6 @@ spec:
     {{- end }}
 {{- else }}
 {{- fail "Error: .Values.issuer.solvers should be of type slice (list)." }}
+{{- end }}
 {{- end }}
 {{- end }}

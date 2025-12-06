@@ -1,8 +1,9 @@
+{{- if .Values.alertmanager.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
   name: alertmanager-main
-  namespace: monitoring-{{ .Values.customerid }}
+  namespace: {{ template "prometheus-linuxaid.namespace" . }}
   labels:
     app.kubernetes.io/name: alertmanager
 spec:
@@ -17,3 +18,4 @@ spec:
   selector:
     app.kubernetes.io/name: alertmanager
   sessionAffinity: ClientIP
+{{- end }}

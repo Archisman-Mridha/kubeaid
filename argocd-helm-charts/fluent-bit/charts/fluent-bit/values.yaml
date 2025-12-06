@@ -31,6 +31,7 @@ serviceAccount:
   create: true
   annotations: {}
   name:
+  automountServiceAccountToken:
 
 rbac:
   create: true
@@ -243,6 +244,9 @@ autoscaling:
 
     # List of resources that the vertical pod autoscaler can control. Defaults to cpu and memory
     controlledResources: []
+
+    # Values that the vertical pod autoscaler can control. Allowed values are RequestsAndLimits and RequestsOnly. Default is RequestsAndLimits.
+    controlledValues:
 
     # Define the max allowed resources for the pod
     maxAllowed: {}
@@ -516,8 +520,18 @@ hotReload:
   enabled: false
   image:
     repository: ghcr.io/jimmidyson/configmap-reload
-    tag: v0.14.0
+    tag: v0.15.0
     digest:
     pullPolicy: IfNotPresent
   resources: {}
   extraWatchVolumes: []
+  securityContext:
+    privileged: false
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 65532
+    runAsGroup: 65532
+    capabilities:
+      drop:
+        - ALL

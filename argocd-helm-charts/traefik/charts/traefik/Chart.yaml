@@ -1,10 +1,11 @@
 annotations:
-  artifacthub.io/changes: "- \"fix(schema): \U0001F41B allow additional properties
-    on `global`\"\n- \"fix(chart): update icon link to track upstream master branch\"\n-
-    \"fix(Traefik Hub): add strict check on admission cert\"\n- \"feat(Traefik Hub):
-    add v3.17 version mapping\"\n- \"chore(release): \U0001F680 publish v36.1.0\"\n"
+  artifacthub.io/changes: "- \"feat: allow `publishedService` to be set without service
+    being enabled\"\n- \"feat: :rocket: add support of Nginx provider\"\n- \"feat(plugins):
+    support ConfigMap inline local plugins alongside hostPath\"\n- \"feat(deps): update
+    traefik docker tag to v3.6.2\"\n- \"feat(deps): update traefik docker tag to v3.6.1\"\n-
+    \"chore(release): \U0001F680 publish traefik 37.4.0\"\n"
 apiVersion: v2
-appVersion: v3.4.1
+appVersion: v3.6.2
 description: A Traefik based Kubernetes ingress controller
 home: https://traefik.io/
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
@@ -24,4 +25,4 @@ sources:
 - https://github.com/traefik/traefik-helm-chart
 - https://github.com/traefik/traefik
 type: application
-version: 36.1.0
+version: 37.4.0

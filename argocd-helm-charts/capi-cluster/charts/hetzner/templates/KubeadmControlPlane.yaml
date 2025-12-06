@@ -376,7 +376,7 @@ spec:
       - sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
       # Install Cilium.
-      - kubectl get namespace cilium 2>/dev/null || kubectl create namespace cilium
+      - kubectl create namespace cilium
       - API_SERVER_URL=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
       - API_SERVER_HOST=$(echo "$API_SERVER_URL" | awk -F[/:] '{print $4}')
       - API_SERVER_PORT=$(echo "$API_SERVER_URL" | awk -F[/:] '{print $5}')

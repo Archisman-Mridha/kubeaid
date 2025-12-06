@@ -2,6 +2,14 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+## This will override the name of the application.
+##
+nameOverride: ""
+
+## This will override the release name of the application using in all resources.
+##
+fullnameOverride: ""
+
 rbac:
   # Specifies whether RBAC resources should be created
   ##
@@ -12,11 +20,11 @@ rbac:
     - secrets
 
 serviceAccount:
-  # Specifies whether a ServiceAccount should be created
+  ## Specifies whether a ServiceAccount should be created
   ##
   create: true
-  # The name of the ServiceAccount to use.
-  # If not set and create is true, a name is generated using the fullname template
+  ## The name of the ServiceAccount to use.
+  ## If not set and create is true, a name is generated using the fullname template
   ##
   name:
 
@@ -25,9 +33,9 @@ serviceAccount:
   annotations: {}
 
 tags:
-  # If true, this chart will install opensearch from requirement dependencies
+  ## If true, this chart will install opensearch from requirement dependencies
   install-opensearch: true
-  # If true, this chart will install MongoDB replicaset from requirement dependencies
+  ## If true, this chart will install MongoDB replicaset from requirement dependencies
   install-mongodb: true
 
 ## Enable only if your current release was migrated from helm2 (using 2to3 plugin).
@@ -55,7 +63,7 @@ graylog:
   ##
   image:
     repository: "graylog/graylog"
-    tag: "6.2.2"
+    tag: "7.0.1"
     pullPolicy: "IfNotPresent"
 
   ## Graylog default Java option
@@ -81,7 +89,7 @@ graylog:
   ##       fieldPath: status.podIP
   ## - name: SERVICE_8000_NAME
   ##   value: servicename
-  envRaw: {}
+  envRaw: []
 
   ## Pod affinity
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
@@ -109,7 +117,7 @@ graylog:
 
   ## If specified, indicates the pod's priority.
   ##
-  # priorityClassName:
+  priorityClassName: ""
 
   ## Set security context for defining privilege and accessing control settings entire Pod
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
@@ -155,7 +163,7 @@ graylog:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    # storageClass: "ssd"
+    storageClass: ""
 
   ## Additional plugins you need to install on Graylog.
   ##
@@ -203,7 +211,11 @@ graylog:
     port: 9000
     ## Add additional ports for the service/statefulset to expose
     ##
-    ports: []
+    ports:
+      - name: gelf
+        port: 12201
+        targetPort: 12201
+        protocol: TCP
 
     headless:
       ## Add suffix to headless service name
@@ -239,7 +251,7 @@ graylog:
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-http-request
   ##
   livenessProbe:
-    initialDelaySeconds: 0
+    initialDelaySeconds: 30
     periodSeconds: 30
     failureThreshold: 3
     successThreshold: 1
@@ -249,7 +261,7 @@ graylog:
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-http-request
   ##
   readinessProbe:
-    initialDelaySeconds: 0
+    initialDelaySeconds: 30
     periodSeconds: 10
     failureThreshold: 3
     successThreshold: 1
@@ -416,7 +428,7 @@ graylog:
   ## Graylog root password
   ## Defaults to a random 16-character alphanumeric string if not set
   ##
-  # rootPassword: ""
+  rootPassword: ""
 
   ## Graylog root email
   ##
@@ -430,11 +442,11 @@ graylog:
   ##
   existingRootSecret: ""
 
-  opensearch:
-    ## Major version of the Elasticsearch version used.
-    ## It is required by Graylog 4. See https://docs.graylog.org/en/4.0/pages/configuration/elasticsearch.html#available-elasticsearch-configuration-tunables
-    # version: "7"
+  ## Enable CORS support
+  ##
+  httpEnableCors: false
 
+  opensearch:
     ## List of Elasticsearch hosts Graylog should connect to.
     ## Need to be specified as a comma-separated list of valid URIs for the http ports of your elasticsearch nodes.
     ## If one or more of your elasticsearch hosts require authentication, include the credentials in each node URI that
@@ -447,14 +459,21 @@ graylog:
     uriSecretName: ""
     uriSecretKey: ""
     uriSSL: false
+    # OpenSearch authentication
+    username: "admin"
 
   mongodb:
     ## MongoDB connection string
     ## See https://docs.mongodb.com/manual/reference/connection-string/ for details
+    ##
+    ## If you install MongoDB using this chart by set mongodb.community.install=true, you can leave this value blank
+    ## Chart will pick up the connection URL from mongodb community operator.
+    ## If you have your own MongoDB server, you need to set this value or set uriSecretName and uriSecretKey to fetch the
+    ## connection string from a k8s secret.
+    ##
     # uri: mongodb://user:pass@host1:27017,host2:27017,host3:27017/graylog?replicaSet=rs01
     uri: ""
     # Allow mongodb uri to be fetched from a k8s secret
-    # {{ graylog.fullname }}-headless will be used as uriSecretName if left empty
     uriSecretName: ""
     uriSecretKey: ""
 
@@ -482,12 +501,22 @@ graylog:
   ## You can find a complete list of graylog config from http://docs.graylog.org/en/3.0/pages/configuration/server.conf.html
   ## Graylog config is written in Java properites format. Make sure you write it correctly.
   ##
+  config: ""
   # config: |
   #   elasticsearch_connect_timeout = 10s
   #   elasticsearch_socket_timeout = 60s
   #   elasticsearch_idle_timeout = -1s
 
+  ## Configure the source IP address of the proxies to accept the Remote-User header from a proxy and enable successful authentication.
+  ## Ref: https://go2docs.graylog.org/current/setting_up_graylog/trusted_header_authentication.htm
+  ##
+  trustedProxies: ""
+
   journal:
+    ## Enable the disk-based message journal.
+    ##
+    enabled: true
+
     ## Sometime Graylog journal continually grow up or corrupt and cause Graylog unable to start.
     ## You need to clean up all journal files in order to run the Graylog.
     ## Change `graylog.journal.deleteBeforeStart` to `true` to delete all journal files before start
@@ -498,6 +527,20 @@ graylog:
     ## Maximum size of the graylog journal.
     ##
     maxSize: 5gb
+
+    ## The maximum time the journal holds messages before they are written to the search backend.
+    ## Works with message_journal_max_size so that message writes are triggered by whichever property is hit first.
+    ##
+    maxAge: 12h
+
+    ## Controls the period of time after which Graylog forces the log to roll
+    ## even if the segment file isn’t full to ensure that retention can delete or compact old data.
+    ##
+    segmentAge: 1h
+
+    ## Sets the size of the journal segment.
+    ##
+    segmentSize: 100mb
 
   init:
     ## Init Container image
@@ -594,7 +637,13 @@ opensearch:
       value: "false"
     - name: plugins.security.disabled
       value: "true"
+    - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+      value: "Graylog@2024"  # Strong password meeting requirements: uppercase, lowercase, number, special char, >8 chars
+  ## Set number of OpenSearch nodes
+  ##
+  replicas: 3
   ## Set default resource very low. This help reduce resources usage on GitHub Action when performing chart-testing.
+  ##
   opensearchJavaOpts: "-Xmx128M -Xms128M"
   resources:
     requests:
@@ -608,10 +657,78 @@ opensearch:
   #     requests:
   #       storage: 30Gi # default 30Gi
 
-# Specify Mongodb settings. Ignore this section if you install MongoDB manually.
+## Specify Mongodb settings. Ignore this section if you install MongoDB manually.
+##
 mongodb:
-  architecture: "replicaset"
-  useStatefulSet: true
-  replicaCount: 1
-  auth:
+  community:
+    ## If true, MongoDB Community will be installed
+    ##
+    install: true
+    replicas: 3
+    version: "7.0.25"
+    auth:
+      user: "graylog"
+      ## If empty, a random 20-character alphanumeric string will be generated
+      password: ""
+  ## Node labels for for MongoDB pod assignment
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}      
+
+  ## Pod affinity
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ##
+  affinity: {}
+
+  ## Node tolerations for scheduling to nodes with taints
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+  ##
+  tolerations:
+    []
+    # - key: "key"
+    #   operator: "Equal|Exists"
+    #   value: "value"
+    #   effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"
+  persistence:
+    size: "8Gi"
+
+  ## Configure MongoDB containers
+  containers: []
+  #  - name: mongod
+  #    resources:
+  #      limits:
+  #        cpu: "0.2"
+  #        memory: 250M
+  #      requests:
+  #        cpu: "0.2"
+  #        memory: 200M
+  #  - name: mongodb-agent
+  #    resources:
+  #      limits:
+  #        cpu: "0.2"
+  #        memory: 250M
+  #      requests:
+  #        cpu: "0.2"
+  #        memory: 200M
+
+
+  ## Configure MongoDB init containers
+  initContainers: []
+  #  - name: mongodb-agent-readinessprobe
+  #    resources:
+  #      limits:
+  #        cpu: "2"
+  #        memory: 200M
+  #      requests:
+  #        cpu: "0.5"
+  #        memory: 100M
+
+## IMPORTANT! Official MongoDB chart requires CRD to be installed first before installing the MongoDB replicaset.
+##
+community-operator:
+  community-operator-crds:
+    ## If true, MongoDB Community Operator CRDs will be installed.
+    ## It is strongly recommended to install the CRDs manually before installing the MongoDB replicaset.
+    ## Using dependencies is not order guaranteed and may cause the MongoDB replicaset installation to fail.
+    ##
     enabled: false

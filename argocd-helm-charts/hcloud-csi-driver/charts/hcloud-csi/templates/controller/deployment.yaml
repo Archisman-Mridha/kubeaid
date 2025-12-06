@@ -1,5 +1,4 @@
 {{ $enableLeaderElection := gt (int .Values.controller.replicaCount) 1 }}
-{{ $isKubeVersionBelow132 := semverCompare "<1.32-0" .Capabilities.KubeVersion.Version }}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -95,13 +94,8 @@ spec:
           {{- if .Values.controller.resources.csiResizer }}
           resources: {{- toYaml .Values.controller.resources.csiResizer | nindent 12 }}
           {{- end }}
-          {{- if or $isKubeVersionBelow132 $enableLeaderElection }}
-          args:
-          {{- end }}
-          {{- if $isKubeVersionBelow132 }}
-            - --feature-gates=RecoverVolumeExpansionFailure=false
-          {{- end }}
           {{- if $enableLeaderElection }}
+          args:
             - --leader-election
             - --leader-election-namespace={{ include "common.names.namespace" . }}
           {{- end}}
@@ -140,7 +134,8 @@ spec:
         - name: hcloud-csi-driver
           image: {{ include "common.images.image" (dict "value" .Values.controller.image.hcloudCSIDriver "context" .) }} # x-releaser-pleaser-version
           imagePullPolicy: {{ .Values.controller.image.hcloudCSIDriver.pullPolicy }}
-          command: [/bin/hcloud-csi-driver-controller]
+          args:
+            - -controller
           env:
             - name: CSI_ENDPOINT
               value: unix:///run/csi/socket

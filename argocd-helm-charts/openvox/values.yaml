@@ -1,0 +1,193 @@
+puppetserver:
+  global:
+    extraEnv:
+      OPENVOX_REPORTS: puppetdb,prometheus
+      OPENVOXSERVER_ENVIRONMENT_TIMEOUT: 0
+      AUTOSIGN: /etc/puppetlabs/puppet/autosign.conf
+      OPENVOXSERVER_ENC_PATH: /etc/puppetlabs/code/environments/master/linuxaid_enc.rb
+    postgresql:
+      auth:
+        existingSecret: puppetserver-pgsql-app
+        secretKeys:
+          usernameKey: username
+          userPasswordKey: password
+
+  puppetserver:
+    name: puppetserver
+    puppeturl: "https://github.com/Obmondo/LinuxAid.git"
+    masters:
+      fqdns:
+        alternateServerNames: ""
+      extraEnv:
+        OPENVOXSERVER_JAVA_ARGS: "-Xms512m -Xmx2500m -XX:+HeapDumpOnOutOfMemoryError"
+        OPENVOXSERVER_MAX_REQUESTS_PER_INSTANCE: 10000
+        OPENVOXSERVER_MAX_ACTIVE_INSTANCES: 4
+      resources:
+        requests:
+          memory: 3096Mi
+          cpu: 1000m
+        limits:
+          memory: 3096Mi
+      ingress:
+        enabled: false
+    customentrypoints:
+      enabled: true
+      configmaps:
+        configure_autosign.sh: |-
+          #!/bin/bash
+          set -e
+
+          # ALLOWED_CLIENT=*.myinternal.domain
+          if [[ -n "${ALLOWED_CLIENT}" ]]; then
+            cat <<EOL > "/etc/puppetlabs/puppet/autosign.conf"
+          *.${ALLOWED_CLIENT}
+          EOL
+          fi
+        configure_puppet_conf.sh: |-
+          #!/bin/bash
+          set -e
+
+          puppet config set hostprivkey /etc/puppetlabs/puppet/ssl/private_keys/puppet.pem
+          puppet config set hostcert /etc/puppetlabs/puppet/ssl/certs/puppet.pem
+          puppet config set hostpubkey /etc/puppetlabs/puppet/ssl/public_keys/puppet.pem
+
+        configure_prometheus_exporter.sh: |-
+          #!/bin/bash
+          set -e
+
+          puppetserver gem install fugit -v 1.9.0
+          puppetserver gem install tzinfo-data
+
+          cat <<EOL > "/etc/puppetlabs/puppet/prometheus.yaml"
+          ---
+          textfile_directory: /etc/puppetlabs/code/prometheus-dropzone
+          environments:
+            - master
+          stale_time: 30
+          EOL
+
+          mkdir -p /etc/puppetlabs/code/prometheus-dropzone
+          chown puppet:puppet /etc/puppetlabs/code/prometheus-dropzone
+        configure_external_nodes.sh: |-
+          #!/bin/bash
+          set -e
+
+          if test -n "${OPENVOXSERVER_ENC_PATH}" ; then
+            puppet config set external_nodes "$OPENVOXSERVER_ENC_PATH" --section server
+            puppet config set node_terminus "exec" --section server
+          fi
+    persistence:
+      code:
+        size: 8Gi
+  r10k:
+    enabled: false
+    asSidecar: false
+    hiera:
+      cronJob:
+        schedule: "*/2 * * * *"
+
+  hiera:
+    eyaml:
+      existingSecret: eyaml-keys
+    name: hiera
+    # Add your linuxaid-config git repo here
+    # hieradataurl: "https://github.com/Obmondo/linuxaid-config-template.git"
+
+  postgresql:
+    enabled: false
+
+  puppetdb:
+    enabled: true
+    name: puppetdb
+    persistence:
+      size: 1Gi
+    resources:
+      requests:
+        memory: 1024Mi
+        cpu: 250m
+      limits:
+        memory: 1024Mi
+    fqdns:
+      alternateServerNames:
+    extraEnv:
+      OPENVOXDB_POSTGRES_HOSTNAME: puppetserver-pgsql-rw
+      OPENVOXDB_POSTGRES_DATABASE: puppetdb
+      OPENVOXDB_JAVA_ARGS: "-Xms512m -Xmx2500m -XX:+HeapDumpOnOutOfMemoryError"
+
+  puppetboard:
+    enabled: true
+    tag: 6.0.1
+    name: puppetboard
+    extraEnv:
+      PUPPETBOARD_WORKERS: 2
+      DEFAULT_ENVIRONMENT: master
+
+  metrics:
+    prometheus:
+      disableAPICheck: true
+      puppetdb:
+        enabled: true
+      jmx:
+        enabled: false
+
+postgresql:
+  instance: 1
+  size: 2Gi
+  recover: false
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      memory: 256Mi
+      cpu: 100m
+
+puppetAgentExporter:
+  image: ghcr.io/obmondo/puppet-agent-exporter
+  tag: v0.0.1
+  imagePullPolicy: IfNotPresent
+  extraEnv:
+    METRICS_PATH: /etc/puppetlabs/code/prometheus-dropzone
+  resources:
+    limits:
+      memory: 50Mi
+    requests:
+      memory: 50Mi
+      cpu: 20m
+
+blackbox:
+  probe: true
+
+# Note: g10k is just a replacement of r10k
+# helm chart has not support to completely disable r10k
+# so adding a configmap for now
+g10k:
+  enabled: true
+  schedule: "*/2 * * * *"
+  podSecurityContext:
+    runAsNonRoot: true
+  image:
+    tag: v0.9.10
+    repository: ghcr.io/obmondo/g10k
+  code:
+    args:
+      - /etc/puppetlabs/puppet/r10k_code_entrypoint.sh;
+    viaSsh:
+      credentials:
+        ssh:
+          ## A multi-line string
+          value:  # |
+        known_hosts:
+          ## A multi-line string
+          value:  # |
+        existingSecret: ""
+  hiera:
+    extraRepository: {}
+    viaSsh:
+      credentials:
+        ssh:
+          ## A multi-line string
+          value:  # |
+        known_hosts:
+          ## A multi-line string
+          value:  # |
+        existingSecret: ""

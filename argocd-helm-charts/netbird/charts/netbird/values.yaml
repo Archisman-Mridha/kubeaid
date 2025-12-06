@@ -28,7 +28,7 @@ management:
       - --log-file=console
       - --log-level=info
       - --disable-anonymous-metrics=false
-      - --single-account-mode-domain=netbird.example.com
+      - --single-account-mode-domain=netbird.selfhosted
       - --dns-domain=netbird.selfhosted
 
   configmap: |- # Placeholder for ConfigMap data
@@ -130,32 +130,46 @@ management:
     ##
     type: ClusterIP
 
-
     ## @param management.service.port Port for the management service.
     ##
     port: 80
 
-    ## @param management.service.name Name for the management service.
+    ## @param management.service.name Name for the management service port.
     ##
     name: http
+
+    ## @param management.service.externalIPs External IPs for the management service.
+    ##
+    externalIPs: []
+
+    ## @param management.service.annotations Annotations for the management service.
+    ##
+    annotations: {}
 
   ## @param management.grpcContainerPort Container port for the management service.
   ##
   grpcContainerPort: 33073
 
   serviceGrpc:
-    ## @param management.serviceGrpc.type Service type for the management component.
+    ## @param management.serviceGrpc.type Service type for the management GRPC component.
     ##
     type: ClusterIP
 
-
-    ## @param management.serviceGrpc.port Port for the management service.
+    ## @param management.serviceGrpc.port Port for the management GRPC service.
     ##
     port: 33073
 
-    ## @param management.serviceGrpc.name Name for the management service.
+    ## @param management.serviceGrpc.name Name for the management GRPC service port.
     ##
     name: grpc
+
+    ## @param management.serviceGrpc.externalIPs External IPs for the management GRPC service.
+    ##
+    externalIPs: []
+
+    ## @param management.serviceGrpc.annotations Annotations for the management service.
+    ##
+    annotations: {}
 
   ingress:
     ## @param management.ingress.enabled Enable or disable ingress for the management component.
@@ -262,10 +276,6 @@ management:
     ##
     existingPVName: ""
 
-  ## @param management.dnsDomain DNS domain for the management component.
-  ##
-  dnsDomain: netbird.selfhosted
-
   ## @param management.livenessProbe for the management component.
   ##
   livenessProbe:
@@ -285,6 +295,16 @@ management:
     timeoutSeconds: 3
     tcpSocket:
       port: http
+
+  ## @param management.volumeMounts Volume mounts for the management pod.
+  volumeMounts: []
+  # - name: tmp
+  #   mountPath: /tmp
+
+  ## @param management.volumes volumes for the management pod.
+  volumes: []
+  # - name: tmp
+  #   emptyDir: {}
 
 ## @section NetBird Signal
 
@@ -355,6 +375,7 @@ signal:
     ## @param signal.metrics.enabled enables/disables metrics
     ##
     enabled: false
+
     ## @param signal.metrics.port target metrics port
     ##
     port: 9090
@@ -367,10 +388,22 @@ signal:
     ## @param signal.service.type Service type for the signal component.
     ##
     type: ClusterIP
-    name: grpc
+
     ## @param signal.service.port Port for the signal service.
     ##
     port: 80
+
+    ## @param signal.service.name Name for the signal service port.
+    ##
+    name: grpc
+
+    ## @param signal.service.externalIPs External IPs for the signal service.
+    ##
+    externalIPs: []
+
+    ## @param signal.service.annotations Annotations for the signal service.
+    ##
+    annotations: {}
 
   ingress:
     ## @param signal.ingress.enabled Enable or disable ingress for the signal component.
@@ -424,7 +457,7 @@ signal:
   ##
   affinity: {}
 
-  ## @param management.livenessProbe for the signal component.
+  ## @param signal.livenessProbe for the signal component.
   ##
 
   livenessProbe:
@@ -433,13 +466,23 @@ signal:
     tcpSocket:
       port: grpc
 
-  ## @param dashboard.readinessProbe for the signal component.
+  ## @param signal.readinessProbe for the signal component.
   ##
   readinessProbe:
     initialDelaySeconds: 5
     periodSeconds: 5
     tcpSocket:
       port: grpc
+
+  ## @param signal.volumeMounts Volume mounts for the signal pod.
+  volumeMounts: []
+  # - name: tmp
+  #   mountPath: /tmp
+
+  ## @param signal.volumes volumes for the signal pod.
+  volumes: []
+  # - name: tmp
+  #   emptyDir: {}
 
 ## @section NetBird Relay Parameters
 
@@ -539,14 +582,21 @@ relay:
     ##
     type: ClusterIP
 
-
     ## @param relay.service.port Port for the relay service.
     ##
     port: 33080
 
-    ## @param relay.service.name Name for the relay service.
+    ## @param relay.service.name Name for the relay service port.
     ##
     name: http
+
+    ## @param relay.service.externalIPs External IPs for the relay service.
+    ##
+    externalIPs: []
+
+    ## @param relay.service.annotations Annotations for the relay service.
+    ##
+    annotations: {}
 
   ingress:
     ## @param relay.ingress.enabled Enable or disable ingress for the relay component.
@@ -599,7 +649,7 @@ relay:
   ##
   affinity: {}
 
-  ## @param management.livenessProbe for the relay component.
+  ## @param relay.livenessProbe for the relay component.
   ##
   livenessProbe:
     initialDelaySeconds: 5
@@ -607,13 +657,23 @@ relay:
     tcpSocket:
       port: http
 
-  ## @param dashboard.readinessProbe for the relay component.
+  ## @param relay.readinessProbe for the relay component.
   ##
   readinessProbe:
     initialDelaySeconds: 5
     periodSeconds: 5
     tcpSocket:
       port: http
+
+  ## @param relay.volumeMounts Volume mounts for the relay pod.
+  volumeMounts: []
+  # - name: tmp
+  #   mountPath: /tmp
+
+  ## @param relay.volumes volumes for the relay pod.
+  volumes: []
+  # - name: tmp
+  #   emptyDir: {}
 
 dashboard:
   ## @param dashboard.enabled Enable or disable the NetBird dashboard component.
@@ -637,7 +697,7 @@ dashboard:
     pullPolicy: IfNotPresent
 
     ## @param image.tag image tag (immutable tags are recommended)
-    tag: "v2.9.0"
+    tag: "v2.13.1"
 
   ## @param imagePullSecrets image pull secrets
   imagePullSecrets: []
@@ -683,15 +743,25 @@ dashboard:
   containerPort: 80
 
   service:
-    ## @param dashboard.service.type
+    ## @param dashboard.service.type Service type for the dashboard component.
+    ##
     type: ClusterIP
 
-
-    ## @param dashboard.service.port
+    ## @param dashboard.service.port Port for the dashboard service.
+    ##
     port: 80
 
-    ## @param dashboard.service.name
+    ## @param dashboard.service.name Name for the dashboard service port.
+    ##
     name: http
+
+    ## @param dashboard.service.externalIPs External IPs for the dashboard service.
+    ##
+    externalIPs: []
+    
+    ## @param dashboard.service.annotations Annotations for the dashboard service.
+    ##
+    annotations: {}
 
   ingress:
     ## @param dashboard.ingress.enabled
@@ -753,7 +823,7 @@ dashboard:
 
   lifecycle: {} # Define lifecycle hooks (preStop, postStart) if needed.
 
-  ## @param dashboard.livenessProbe for the management component.
+  ## @param dashboard.livenessProbe for the dashboard component.
   ##
   livenessProbe:
     periodSeconds: 5
@@ -761,7 +831,7 @@ dashboard:
       path: /
       port: http
 
-  ## @param dashboard.readinessProbe for the management component.
+  ## @param dashboard.readinessProbe for the dashboard component.
   ##
   readinessProbe:
     initialDelaySeconds: 5
@@ -770,6 +840,15 @@ dashboard:
       path: /
       port: http
 
+  ## @param dashboard.volumeMounts Volume mounts for the dashboard pod.
+  volumeMounts: []
+  # - name: tmp
+  #   mountPath: /tmp
+
+  ## @param dashboard.volumes volumes for the dashboard pod.
+  volumes: []
+  # - name: tmp
+  #   emptyDir: {}
 ## @section NetBird Extra Manifests to be included in the chart
 
 extraManifests: {}

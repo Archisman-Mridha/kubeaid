@@ -1,0 +1,16 @@
+---
+apiVersion: certmanager.step.sm/v1beta1
+kind: StepClusterIssuer
+metadata:
+  name: step-cluster-issuer
+  namespace: {{ .Release.Namespace }}
+spec:
+  url: https://step-ca-step-certificates.{{ .Release.Namespace }}.svc.cluster.local
+  caBundle: {{ .Values.stepClusterIssuer.root_ca }}
+  provisioner:
+    name: admin
+    kid: {{ .Values.stepClusterIssuer.kid }}
+    passwordRef:
+      name: step-ca-step-certificates-provisioner-password
+      key: password
+      namespace: {{ .Release.Namespace }}

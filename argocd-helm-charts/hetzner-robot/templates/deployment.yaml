@@ -1,6 +1,6 @@
 ---
 {{- if .Values.failoverIP | trim | eq "" }}
-{{- fail "FailoverIP must be provided" }}
+{{- fail "failoverIP must be provided" }}
 {{- end }}
 
 apiVersion: apps/v1
@@ -25,7 +25,7 @@ spec:
         env:
         - name: FAILOVER_IP
           value: {{ .Values.failoverIP }}
-        - name: NODE_IP
+        - name: SERVER_IP
           valueFrom:
             fieldRef:
               fieldPath: status.hostIP
@@ -44,8 +44,6 @@ spec:
             secretKeyRef:
               name: {{ .Values.cloudCredentialsSecretName }}
               key: hcloud
-        - name: CRON_TIME_INTERVAL
-          value: 5m
         livenessProbe:
           exec:
             command:

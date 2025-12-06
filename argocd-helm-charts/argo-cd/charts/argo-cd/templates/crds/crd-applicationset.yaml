@@ -282,12 +282,16 @@ spec:
                                           type: boolean
                                         forceCommonLabels:
                                           type: boolean
+                                        ignoreMissingComponents:
+                                          type: boolean
                                         images:
                                           items:
                                             type: string
                                           type: array
                                         kubeVersion:
                                           type: string
+                                        labelIncludeTemplates:
+                                          type: boolean
                                         labelWithoutSelector:
                                           type: boolean
                                         namePrefix:
@@ -416,6 +420,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -554,12 +560,16 @@ spec:
                                             type: boolean
                                           forceCommonLabels:
                                             type: boolean
+                                          ignoreMissingComponents:
+                                            type: boolean
                                           images:
                                             items:
                                               type: string
                                             type: array
                                           kubeVersion:
                                             type: string
+                                          labelIncludeTemplates:
+                                            type: boolean
                                           labelWithoutSelector:
                                             type: boolean
                                           namePrefix:
@@ -670,6 +680,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -701,6 +713,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -954,12 +968,16 @@ spec:
                                           type: boolean
                                         forceCommonLabels:
                                           type: boolean
+                                        ignoreMissingComponents:
+                                          type: boolean
                                         images:
                                           items:
                                             type: string
                                           type: array
                                         kubeVersion:
                                           type: string
+                                        labelIncludeTemplates:
+                                          type: boolean
                                         labelWithoutSelector:
                                           type: boolean
                                         namePrefix:
@@ -1088,6 +1106,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -1226,12 +1246,16 @@ spec:
                                             type: boolean
                                           forceCommonLabels:
                                             type: boolean
+                                          ignoreMissingComponents:
+                                            type: boolean
                                           images:
                                             items:
                                               type: string
                                             type: array
                                           kubeVersion:
                                             type: string
+                                          labelIncludeTemplates:
+                                            type: boolean
                                           labelWithoutSelector:
                                             type: boolean
                                           namePrefix:
@@ -1342,6 +1366,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -1373,6 +1399,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -1408,6 +1436,8 @@ spec:
                         files:
                           items:
                             properties:
+                              exclude:
+                                type: boolean
                               path:
                                 type: string
                             required:
@@ -1625,12 +1655,16 @@ spec:
                                           type: boolean
                                         forceCommonLabels:
                                           type: boolean
+                                        ignoreMissingComponents:
+                                          type: boolean
                                         images:
                                           items:
                                             type: string
                                           type: array
                                         kubeVersion:
                                           type: string
+                                        labelIncludeTemplates:
+                                          type: boolean
                                         labelWithoutSelector:
                                           type: boolean
                                         namePrefix:
@@ -1759,6 +1793,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -1897,12 +1933,16 @@ spec:
                                             type: boolean
                                           forceCommonLabels:
                                             type: boolean
+                                          ignoreMissingComponents:
+                                            type: boolean
                                           images:
                                             items:
                                               type: string
                                             type: array
                                           kubeVersion:
                                             type: string
+                                          labelIncludeTemplates:
+                                            type: boolean
                                           labelWithoutSelector:
                                             type: boolean
                                           namePrefix:
@@ -2013,6 +2053,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -2044,6 +2086,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -2276,12 +2320,16 @@ spec:
                                           type: boolean
                                         forceCommonLabels:
                                           type: boolean
+                                        ignoreMissingComponents:
+                                          type: boolean
                                         images:
                                           items:
                                             type: string
                                           type: array
                                         kubeVersion:
                                           type: string
+                                        labelIncludeTemplates:
+                                          type: boolean
                                         labelWithoutSelector:
                                           type: boolean
                                         namePrefix:
@@ -2410,6 +2458,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -2548,12 +2598,16 @@ spec:
                                             type: boolean
                                           forceCommonLabels:
                                             type: boolean
+                                          ignoreMissingComponents:
+                                            type: boolean
                                           images:
                                             items:
                                               type: string
                                             type: array
                                           kubeVersion:
                                             type: string
+                                          labelIncludeTemplates:
+                                            type: boolean
                                           labelWithoutSelector:
                                             type: boolean
                                           namePrefix:
@@ -2664,6 +2718,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -2695,6 +2751,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -2952,12 +3010,16 @@ spec:
                                                     type: boolean
                                                   forceCommonLabels:
                                                     type: boolean
+                                                  ignoreMissingComponents:
+                                                    type: boolean
                                                   images:
                                                     items:
                                                       type: string
                                                     type: array
                                                   kubeVersion:
                                                     type: string
+                                                  labelIncludeTemplates:
+                                                    type: boolean
                                                   labelWithoutSelector:
                                                     type: boolean
                                                   namePrefix:
@@ -3086,6 +3148,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -3224,12 +3288,16 @@ spec:
                                                       type: boolean
                                                     forceCommonLabels:
                                                       type: boolean
+                                                    ignoreMissingComponents:
+                                                      type: boolean
                                                     images:
                                                       items:
                                                         type: string
                                                       type: array
                                                     kubeVersion:
                                                       type: string
+                                                    labelIncludeTemplates:
+                                                      type: boolean
                                                     labelWithoutSelector:
                                                       type: boolean
                                                     namePrefix:
@@ -3340,6 +3408,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -3371,6 +3441,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -3624,12 +3696,16 @@ spec:
                                                     type: boolean
                                                   forceCommonLabels:
                                                     type: boolean
+                                                  ignoreMissingComponents:
+                                                    type: boolean
                                                   images:
                                                     items:
                                                       type: string
                                                     type: array
                                                   kubeVersion:
                                                     type: string
+                                                  labelIncludeTemplates:
+                                                    type: boolean
                                                   labelWithoutSelector:
                                                     type: boolean
                                                   namePrefix:
@@ -3758,6 +3834,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -3896,12 +3974,16 @@ spec:
                                                       type: boolean
                                                     forceCommonLabels:
                                                       type: boolean
+                                                    ignoreMissingComponents:
+                                                      type: boolean
                                                     images:
                                                       items:
                                                         type: string
                                                       type: array
                                                     kubeVersion:
                                                       type: string
+                                                    labelIncludeTemplates:
+                                                      type: boolean
                                                     labelWithoutSelector:
                                                       type: boolean
                                                     namePrefix:
@@ -4012,6 +4094,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -4043,6 +4127,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -4078,6 +4164,8 @@ spec:
                                   files:
                                     items:
                                       properties:
+                                        exclude:
+                                          type: boolean
                                         path:
                                           type: string
                                       required:
@@ -4295,12 +4383,16 @@ spec:
                                                     type: boolean
                                                   forceCommonLabels:
                                                     type: boolean
+                                                  ignoreMissingComponents:
+                                                    type: boolean
                                                   images:
                                                     items:
                                                       type: string
                                                     type: array
                                                   kubeVersion:
                                                     type: string
+                                                  labelIncludeTemplates:
+                                                    type: boolean
                                                   labelWithoutSelector:
                                                     type: boolean
                                                   namePrefix:
@@ -4429,6 +4521,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -4567,12 +4661,16 @@ spec:
                                                       type: boolean
                                                     forceCommonLabels:
                                                       type: boolean
+                                                    ignoreMissingComponents:
+                                                      type: boolean
                                                     images:
                                                       items:
                                                         type: string
                                                       type: array
                                                     kubeVersion:
                                                       type: string
+                                                    labelIncludeTemplates:
+                                                      type: boolean
                                                     labelWithoutSelector:
                                                       type: boolean
                                                     namePrefix:
@@ -4683,6 +4781,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -4714,6 +4814,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -4946,12 +5048,16 @@ spec:
                                                     type: boolean
                                                   forceCommonLabels:
                                                     type: boolean
+                                                  ignoreMissingComponents:
+                                                    type: boolean
                                                   images:
                                                     items:
                                                       type: string
                                                     type: array
                                                   kubeVersion:
                                                     type: string
+                                                  labelIncludeTemplates:
+                                                    type: boolean
                                                   labelWithoutSelector:
                                                     type: boolean
                                                   namePrefix:
@@ -5080,6 +5186,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -5218,12 +5326,16 @@ spec:
                                                       type: boolean
                                                     forceCommonLabels:
                                                       type: boolean
+                                                    ignoreMissingComponents:
+                                                      type: boolean
                                                     images:
                                                       items:
                                                         type: string
                                                       type: array
                                                     kubeVersion:
                                                       type: string
+                                                    labelIncludeTemplates:
+                                                      type: boolean
                                                     labelWithoutSelector:
                                                       type: boolean
                                                     namePrefix:
@@ -5334,6 +5446,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -5365,6 +5479,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -5605,12 +5721,16 @@ spec:
                                                     type: boolean
                                                   forceCommonLabels:
                                                     type: boolean
+                                                  ignoreMissingComponents:
+                                                    type: boolean
                                                   images:
                                                     items:
                                                       type: string
                                                     type: array
                                                   kubeVersion:
                                                     type: string
+                                                  labelIncludeTemplates:
+                                                    type: boolean
                                                   labelWithoutSelector:
                                                     type: boolean
                                                   namePrefix:
@@ -5739,6 +5859,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -5877,12 +5999,16 @@ spec:
                                                       type: boolean
                                                     forceCommonLabels:
                                                       type: boolean
+                                                    ignoreMissingComponents:
+                                                      type: boolean
                                                     images:
                                                       items:
                                                         type: string
                                                       type: array
                                                     kubeVersion:
                                                       type: string
+                                                    labelIncludeTemplates:
+                                                      type: boolean
                                                     labelWithoutSelector:
                                                       type: boolean
                                                     namePrefix:
@@ -5993,6 +6119,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -6024,6 +6152,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -6179,12 +6309,16 @@ spec:
                                     - project
                                     - repo
                                     type: object
+                                  continueOnRepoNotFoundError:
+                                    type: boolean
                                   filters:
                                     items:
                                       properties:
                                         branchMatch:
                                           type: string
                                         targetBranchMatch:
+                                          type: string
+                                        titleMatch:
                                           type: string
                                       type: object
                                     type: array
@@ -6194,6 +6328,10 @@ spec:
                                         type: string
                                       insecure:
                                         type: boolean
+                                      labels:
+                                        items:
+                                          type: string
+                                        type: array
                                       owner:
                                         type: string
                                       repo:
@@ -6483,12 +6621,16 @@ spec:
                                                     type: boolean
                                                   forceCommonLabels:
                                                     type: boolean
+                                                  ignoreMissingComponents:
+                                                    type: boolean
                                                   images:
                                                     items:
                                                       type: string
                                                     type: array
                                                   kubeVersion:
                                                     type: string
+                                                  labelIncludeTemplates:
+                                                    type: boolean
                                                   labelWithoutSelector:
                                                     type: boolean
                                                   namePrefix:
@@ -6617,6 +6759,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -6755,12 +6899,16 @@ spec:
                                                       type: boolean
                                                     forceCommonLabels:
                                                       type: boolean
+                                                    ignoreMissingComponents:
+                                                      type: boolean
                                                     images:
                                                       items:
                                                         type: string
                                                       type: array
                                                     kubeVersion:
                                                       type: string
+                                                    labelIncludeTemplates:
+                                                      type: boolean
                                                     labelWithoutSelector:
                                                       type: boolean
                                                     namePrefix:
@@ -6871,6 +7019,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -6902,6 +7052,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -6915,6 +7067,10 @@ spec:
                                     required:
                                     - metadata
                                     - spec
+                                    type: object
+                                  values:
+                                    additionalProperties:
+                                      type: string
                                     type: object
                                 type: object
                               scmProvider:
@@ -7356,12 +7512,16 @@ spec:
                                                     type: boolean
                                                   forceCommonLabels:
                                                     type: boolean
+                                                  ignoreMissingComponents:
+                                                    type: boolean
                                                   images:
                                                     items:
                                                       type: string
                                                     type: array
                                                   kubeVersion:
                                                     type: string
+                                                  labelIncludeTemplates:
+                                                    type: boolean
                                                   labelWithoutSelector:
                                                     type: boolean
                                                   namePrefix:
@@ -7490,6 +7650,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -7628,12 +7790,16 @@ spec:
                                                       type: boolean
                                                     forceCommonLabels:
                                                       type: boolean
+                                                    ignoreMissingComponents:
+                                                      type: boolean
                                                     images:
                                                       items:
                                                         type: string
                                                       type: array
                                                     kubeVersion:
                                                       type: string
+                                                    labelIncludeTemplates:
+                                                      type: boolean
                                                     labelWithoutSelector:
                                                       type: boolean
                                                     namePrefix:
@@ -7744,6 +7910,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -7775,6 +7943,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -8024,12 +8194,16 @@ spec:
                                           type: boolean
                                         forceCommonLabels:
                                           type: boolean
+                                        ignoreMissingComponents:
+                                          type: boolean
                                         images:
                                           items:
                                             type: string
                                           type: array
                                         kubeVersion:
                                           type: string
+                                        labelIncludeTemplates:
+                                          type: boolean
                                         labelWithoutSelector:
                                           type: boolean
                                         namePrefix:
@@ -8158,6 +8332,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -8296,12 +8472,16 @@ spec:
                                             type: boolean
                                           forceCommonLabels:
                                             type: boolean
+                                          ignoreMissingComponents:
+                                            type: boolean
                                           images:
                                             items:
                                               type: string
                                             type: array
                                           kubeVersion:
                                             type: string
+                                          labelIncludeTemplates:
+                                            type: boolean
                                           labelWithoutSelector:
                                             type: boolean
                                           namePrefix:
@@ -8412,6 +8592,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -8443,6 +8625,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -8702,12 +8886,16 @@ spec:
                                                     type: boolean
                                                   forceCommonLabels:
                                                     type: boolean
+                                                  ignoreMissingComponents:
+                                                    type: boolean
                                                   images:
                                                     items:
                                                       type: string
                                                     type: array
                                                   kubeVersion:
                                                     type: string
+                                                  labelIncludeTemplates:
+                                                    type: boolean
                                                   labelWithoutSelector:
                                                     type: boolean
                                                   namePrefix:
@@ -8836,6 +9024,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -8974,12 +9164,16 @@ spec:
                                                       type: boolean
                                                     forceCommonLabels:
                                                       type: boolean
+                                                    ignoreMissingComponents:
+                                                      type: boolean
                                                     images:
                                                       items:
                                                         type: string
                                                       type: array
                                                     kubeVersion:
                                                       type: string
+                                                    labelIncludeTemplates:
+                                                      type: boolean
                                                     labelWithoutSelector:
                                                       type: boolean
                                                     namePrefix:
@@ -9090,6 +9284,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -9121,6 +9317,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -9374,12 +9572,16 @@ spec:
                                                     type: boolean
                                                   forceCommonLabels:
                                                     type: boolean
+                                                  ignoreMissingComponents:
+                                                    type: boolean
                                                   images:
                                                     items:
                                                       type: string
                                                     type: array
                                                   kubeVersion:
                                                     type: string
+                                                  labelIncludeTemplates:
+                                                    type: boolean
                                                   labelWithoutSelector:
                                                     type: boolean
                                                   namePrefix:
@@ -9508,6 +9710,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -9646,12 +9850,16 @@ spec:
                                                       type: boolean
                                                     forceCommonLabels:
                                                       type: boolean
+                                                    ignoreMissingComponents:
+                                                      type: boolean
                                                     images:
                                                       items:
                                                         type: string
                                                       type: array
                                                     kubeVersion:
                                                       type: string
+                                                    labelIncludeTemplates:
+                                                      type: boolean
                                                     labelWithoutSelector:
                                                       type: boolean
                                                     namePrefix:
@@ -9762,6 +9970,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -9793,6 +10003,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -9828,6 +10040,8 @@ spec:
                                   files:
                                     items:
                                       properties:
+                                        exclude:
+                                          type: boolean
                                         path:
                                           type: string
                                       required:
@@ -10045,12 +10259,16 @@ spec:
                                                     type: boolean
                                                   forceCommonLabels:
                                                     type: boolean
+                                                  ignoreMissingComponents:
+                                                    type: boolean
                                                   images:
                                                     items:
                                                       type: string
                                                     type: array
                                                   kubeVersion:
                                                     type: string
+                                                  labelIncludeTemplates:
+                                                    type: boolean
                                                   labelWithoutSelector:
                                                     type: boolean
                                                   namePrefix:
@@ -10179,6 +10397,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -10317,12 +10537,16 @@ spec:
                                                       type: boolean
                                                     forceCommonLabels:
                                                       type: boolean
+                                                    ignoreMissingComponents:
+                                                      type: boolean
                                                     images:
                                                       items:
                                                         type: string
                                                       type: array
                                                     kubeVersion:
                                                       type: string
+                                                    labelIncludeTemplates:
+                                                      type: boolean
                                                     labelWithoutSelector:
                                                       type: boolean
                                                     namePrefix:
@@ -10433,6 +10657,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -10464,6 +10690,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -10696,12 +10924,16 @@ spec:
                                                     type: boolean
                                                   forceCommonLabels:
                                                     type: boolean
+                                                  ignoreMissingComponents:
+                                                    type: boolean
                                                   images:
                                                     items:
                                                       type: string
                                                     type: array
                                                   kubeVersion:
                                                     type: string
+                                                  labelIncludeTemplates:
+                                                    type: boolean
                                                   labelWithoutSelector:
                                                     type: boolean
                                                   namePrefix:
@@ -10830,6 +11062,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -10968,12 +11202,16 @@ spec:
                                                       type: boolean
                                                     forceCommonLabels:
                                                       type: boolean
+                                                    ignoreMissingComponents:
+                                                      type: boolean
                                                     images:
                                                       items:
                                                         type: string
                                                       type: array
                                                     kubeVersion:
                                                       type: string
+                                                    labelIncludeTemplates:
+                                                      type: boolean
                                                     labelWithoutSelector:
                                                       type: boolean
                                                     namePrefix:
@@ -11084,6 +11322,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -11115,6 +11355,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -11355,12 +11597,16 @@ spec:
                                                     type: boolean
                                                   forceCommonLabels:
                                                     type: boolean
+                                                  ignoreMissingComponents:
+                                                    type: boolean
                                                   images:
                                                     items:
                                                       type: string
                                                     type: array
                                                   kubeVersion:
                                                     type: string
+                                                  labelIncludeTemplates:
+                                                    type: boolean
                                                   labelWithoutSelector:
                                                     type: boolean
                                                   namePrefix:
@@ -11489,6 +11735,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -11627,12 +11875,16 @@ spec:
                                                       type: boolean
                                                     forceCommonLabels:
                                                       type: boolean
+                                                    ignoreMissingComponents:
+                                                      type: boolean
                                                     images:
                                                       items:
                                                         type: string
                                                       type: array
                                                     kubeVersion:
                                                       type: string
+                                                    labelIncludeTemplates:
+                                                      type: boolean
                                                     labelWithoutSelector:
                                                       type: boolean
                                                     namePrefix:
@@ -11743,6 +11995,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -11774,6 +12028,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -11929,12 +12185,16 @@ spec:
                                     - project
                                     - repo
                                     type: object
+                                  continueOnRepoNotFoundError:
+                                    type: boolean
                                   filters:
                                     items:
                                       properties:
                                         branchMatch:
                                           type: string
                                         targetBranchMatch:
+                                          type: string
+                                        titleMatch:
                                           type: string
                                       type: object
                                     type: array
@@ -11944,6 +12204,10 @@ spec:
                                         type: string
                                       insecure:
                                         type: boolean
+                                      labels:
+                                        items:
+                                          type: string
+                                        type: array
                                       owner:
                                         type: string
                                       repo:
@@ -12233,12 +12497,16 @@ spec:
                                                     type: boolean
                                                   forceCommonLabels:
                                                     type: boolean
+                                                  ignoreMissingComponents:
+                                                    type: boolean
                                                   images:
                                                     items:
                                                       type: string
                                                     type: array
                                                   kubeVersion:
                                                     type: string
+                                                  labelIncludeTemplates:
+                                                    type: boolean
                                                   labelWithoutSelector:
                                                     type: boolean
                                                   namePrefix:
@@ -12367,6 +12635,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -12505,12 +12775,16 @@ spec:
                                                       type: boolean
                                                     forceCommonLabels:
                                                       type: boolean
+                                                    ignoreMissingComponents:
+                                                      type: boolean
                                                     images:
                                                       items:
                                                         type: string
                                                       type: array
                                                     kubeVersion:
                                                       type: string
+                                                    labelIncludeTemplates:
+                                                      type: boolean
                                                     labelWithoutSelector:
                                                       type: boolean
                                                     namePrefix:
@@ -12621,6 +12895,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -12652,6 +12928,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -12665,6 +12943,10 @@ spec:
                                     required:
                                     - metadata
                                     - spec
+                                    type: object
+                                  values:
+                                    additionalProperties:
+                                      type: string
                                     type: object
                                 type: object
                               scmProvider:
@@ -13106,12 +13388,16 @@ spec:
                                                     type: boolean
                                                   forceCommonLabels:
                                                     type: boolean
+                                                  ignoreMissingComponents:
+                                                    type: boolean
                                                   images:
                                                     items:
                                                       type: string
                                                     type: array
                                                   kubeVersion:
                                                     type: string
+                                                  labelIncludeTemplates:
+                                                    type: boolean
                                                   labelWithoutSelector:
                                                     type: boolean
                                                   namePrefix:
@@ -13240,6 +13526,8 @@ spec:
                                               syncSource:
                                                 properties:
                                                   path:
+                                                    minLength: 1
+                                                    pattern: ^.{2,}|[^./]$
                                                     type: string
                                                   targetBranch:
                                                     type: string
@@ -13378,12 +13666,16 @@ spec:
                                                       type: boolean
                                                     forceCommonLabels:
                                                       type: boolean
+                                                    ignoreMissingComponents:
+                                                      type: boolean
                                                     images:
                                                       items:
                                                         type: string
                                                       type: array
                                                     kubeVersion:
                                                       type: string
+                                                    labelIncludeTemplates:
+                                                      type: boolean
                                                     labelWithoutSelector:
                                                       type: boolean
                                                     namePrefix:
@@ -13494,6 +13786,8 @@ spec:
                                                 properties:
                                                   allowEmpty:
                                                     type: boolean
+                                                  enabled:
+                                                    type: boolean
                                                   prune:
                                                     type: boolean
                                                   selfHeal:
@@ -13525,6 +13819,8 @@ spec:
                                                   limit:
                                                     format: int64
                                                     type: integer
+                                                  refresh:
+                                                    type: boolean
                                                 type: object
                                               syncOptions:
                                                 items:
@@ -13778,12 +14074,16 @@ spec:
                                           type: boolean
                                         forceCommonLabels:
                                           type: boolean
+                                        ignoreMissingComponents:
+                                          type: boolean
                                         images:
                                           items:
                                             type: string
                                           type: array
                                         kubeVersion:
                                           type: string
+                                        labelIncludeTemplates:
+                                          type: boolean
                                         labelWithoutSelector:
                                           type: boolean
                                         namePrefix:
@@ -13912,6 +14212,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -14050,12 +14352,16 @@ spec:
                                             type: boolean
                                           forceCommonLabels:
                                             type: boolean
+                                          ignoreMissingComponents:
+                                            type: boolean
                                           images:
                                             items:
                                               type: string
                                             type: array
                                           kubeVersion:
                                             type: string
+                                          labelIncludeTemplates:
+                                            type: boolean
                                           labelWithoutSelector:
                                             type: boolean
                                           namePrefix:
@@ -14166,6 +14472,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -14197,6 +14505,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -14436,12 +14746,16 @@ spec:
                                           type: boolean
                                         forceCommonLabels:
                                           type: boolean
+                                        ignoreMissingComponents:
+                                          type: boolean
                                         images:
                                           items:
                                             type: string
                                           type: array
                                         kubeVersion:
                                           type: string
+                                        labelIncludeTemplates:
+                                          type: boolean
                                         labelWithoutSelector:
                                           type: boolean
                                         namePrefix:
@@ -14570,6 +14884,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -14708,12 +15024,16 @@ spec:
                                             type: boolean
                                           forceCommonLabels:
                                             type: boolean
+                                          ignoreMissingComponents:
+                                            type: boolean
                                           images:
                                             items:
                                               type: string
                                             type: array
                                           kubeVersion:
                                             type: string
+                                          labelIncludeTemplates:
+                                            type: boolean
                                           labelWithoutSelector:
                                             type: boolean
                                           namePrefix:
@@ -14824,6 +15144,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -14855,6 +15177,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -15010,12 +15334,16 @@ spec:
                           - project
                           - repo
                           type: object
+                        continueOnRepoNotFoundError:
+                          type: boolean
                         filters:
                           items:
                             properties:
                               branchMatch:
                                 type: string
                               targetBranchMatch:
+                                type: string
+                              titleMatch:
                                 type: string
                             type: object
                           type: array
@@ -15025,6 +15353,10 @@ spec:
                               type: string
                             insecure:
                               type: boolean
+                            labels:
+                              items:
+                                type: string
+                              type: array
                             owner:
                               type: string
                             repo:
@@ -15314,12 +15646,16 @@ spec:
                                           type: boolean
                                         forceCommonLabels:
                                           type: boolean
+                                        ignoreMissingComponents:
+                                          type: boolean
                                         images:
                                           items:
                                             type: string
                                           type: array
                                         kubeVersion:
                                           type: string
+                                        labelIncludeTemplates:
+                                          type: boolean
                                         labelWithoutSelector:
                                           type: boolean
                                         namePrefix:
@@ -15448,6 +15784,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -15586,12 +15924,16 @@ spec:
                                             type: boolean
                                           forceCommonLabels:
                                             type: boolean
+                                          ignoreMissingComponents:
+                                            type: boolean
                                           images:
                                             items:
                                               type: string
                                             type: array
                                           kubeVersion:
                                             type: string
+                                          labelIncludeTemplates:
+                                            type: boolean
                                           labelWithoutSelector:
                                             type: boolean
                                           namePrefix:
@@ -15702,6 +16044,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -15733,6 +16077,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -15746,6 +16092,10 @@ spec:
                           required:
                           - metadata
                           - spec
+                          type: object
+                        values:
+                          additionalProperties:
+                            type: string
                           type: object
                       type: object
                     scmProvider:
@@ -16187,12 +16537,16 @@ spec:
                                           type: boolean
                                         forceCommonLabels:
                                           type: boolean
+                                        ignoreMissingComponents:
+                                          type: boolean
                                         images:
                                           items:
                                             type: string
                                           type: array
                                         kubeVersion:
                                           type: string
+                                        labelIncludeTemplates:
+                                          type: boolean
                                         labelWithoutSelector:
                                           type: boolean
                                         namePrefix:
@@ -16321,6 +16675,8 @@ spec:
                                     syncSource:
                                       properties:
                                         path:
+                                          minLength: 1
+                                          pattern: ^.{2,}|[^./]$
                                           type: string
                                         targetBranch:
                                           type: string
@@ -16459,12 +16815,16 @@ spec:
                                             type: boolean
                                           forceCommonLabels:
                                             type: boolean
+                                          ignoreMissingComponents:
+                                            type: boolean
                                           images:
                                             items:
                                               type: string
                                             type: array
                                           kubeVersion:
                                             type: string
+                                          labelIncludeTemplates:
+                                            type: boolean
                                           labelWithoutSelector:
                                             type: boolean
                                           namePrefix:
@@ -16575,6 +16935,8 @@ spec:
                                       properties:
                                         allowEmpty:
                                           type: boolean
+                                        enabled:
+                                          type: boolean
                                         prune:
                                           type: boolean
                                         selfHeal:
@@ -16606,6 +16968,8 @@ spec:
                                         limit:
                                           format: int64
                                           type: integer
+                                        refresh:
+                                          type: boolean
                                       type: object
                                     syncOptions:
                                       items:
@@ -16687,6 +17051,8 @@ spec:
                 type: object
               strategy:
                 properties:
+                  deletionOrder:
+                    type: string
                   rollingSync:
                     properties:
                       steps:
@@ -16930,12 +17296,16 @@ spec:
                                 type: boolean
                               forceCommonLabels:
                                 type: boolean
+                              ignoreMissingComponents:
+                                type: boolean
                               images:
                                 items:
                                   type: string
                                 type: array
                               kubeVersion:
                                 type: string
+                              labelIncludeTemplates:
+                                type: boolean
                               labelWithoutSelector:
                                 type: boolean
                               namePrefix:
@@ -17064,6 +17434,8 @@ spec:
                           syncSource:
                             properties:
                               path:
+                                minLength: 1
+                                pattern: ^.{2,}|[^./]$
                                 type: string
                               targetBranch:
                                 type: string
@@ -17202,12 +17574,16 @@ spec:
                                   type: boolean
                                 forceCommonLabels:
                                   type: boolean
+                                ignoreMissingComponents:
+                                  type: boolean
                                 images:
                                   items:
                                     type: string
                                   type: array
                                 kubeVersion:
                                   type: string
+                                labelIncludeTemplates:
+                                  type: boolean
                                 labelWithoutSelector:
                                   type: boolean
                                 namePrefix:
@@ -17318,6 +17694,8 @@ spec:
                             properties:
                               allowEmpty:
                                 type: boolean
+                              enabled:
+                                type: boolean
                               prune:
                                 type: boolean
                               selfHeal:
@@ -17349,6 +17727,8 @@ spec:
                               limit:
                                 format: int64
                                 type: integer
+                              refresh:
+                                type: boolean
                             type: object
                           syncOptions:
                             items:
@@ -17454,6 +17834,9 @@ spec:
                       type: string
                   type: object
                 type: array
+              resourcesCount:
+                format: int64
+                type: integer
             type: object
         required:
         - metadata

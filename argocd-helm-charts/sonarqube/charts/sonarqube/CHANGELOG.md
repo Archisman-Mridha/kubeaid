@@ -1,6 +1,25 @@
 # SonarQube Chart Changelog
 All changes to this chart will be documented in this file.
 
+## [2025.5.0]
+* Upgrade SonarQube Server to to 2025.5.0
+* Update Chart's version to 2025.5.0
+* Upgrade SonarQube Community Build to 25.9.0.112764
+* Update the image and readinessProbe used by postgresql after they migrated to a legacy repository
+* Support Kubernetes v1.34.0
+
+## [2025.4.0]
+* Update Chart's version to 2025.4.0
+* Upgrade SonarQube Server to to 2025.4.0
+* Upgrade SonarQube Community Build to 25.7.0.110598
+* Upgrade nginx subchart to 4.12.3
+* Support Kubernetes v1.32
+* Add the possibility of to save the data with hostpath
+
+## [2025.3.1]
+* Update Chart's version to 2025.3.1
+* Upgrade SonarQube Server to 2025.3.1
+
 ## [2025.3.0]
 * Update Chart's version to 2025.3.0
 * Upgrade SonarQube Community Build to 25.5.0.107428
