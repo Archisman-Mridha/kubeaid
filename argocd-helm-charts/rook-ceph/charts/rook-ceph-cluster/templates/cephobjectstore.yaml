@@ -1,35 +1,35 @@
 {{- $root := . -}}
-{{- range $objectstore := .Values.cephObjectStores }}
+{{- range $objectstore := .Values.cephObjectStores -}}
 ---
-kind: CephObjectStore
 apiVersion: ceph.rook.io/v1
+kind: CephObjectStore
 metadata:
   name: {{ $objectstore.name }}
   namespace: {{ $root.Release.Namespace }} # namespace:cluster
 spec:
-  {{- $objectstore.spec | toYaml | nindent 2 }}
-{{- if $objectstore.storageClass.enabled }}
+{{ toYaml $objectstore.spec | indent 2 }}
 ---
-kind: StorageClass
+{{- if default false $objectstore.storageClass.enabled }}
 apiVersion: storage.k8s.io/v1
+kind: StorageClass
 metadata:
   name: {{ $objectstore.storageClass.name }}
-  {{- with $objectstore.storageClass.labels }}
+{{- if $objectstore.storageClass.labels }}
   labels:
-    {{- . | toYaml | nindent 4 }}
-  {{- end }}
-  {{- with $objectstore.storageClass.annotations }}
+{{ toYaml $objectstore.storageClass.labels | indent 4 }}
+{{- end }}
+{{- if $objectstore.storageClass.annotations }}
   annotations:
-    {{- . | toYaml | nindent 4 }}
-  {{- end }}
+{{ toYaml $objectstore.storageClass.annotations | indent 4 }}
+{{- end }}
 provisioner: {{ $root.Release.Namespace }}.ceph.rook.io/bucket
-reclaimPolicy: {{ $objectstore.storageClass.reclaimPolicy | default "Delete" }}
-volumeBindingMode: {{ $objectstore.storageClass.volumeBindingMode | default "Immediate" }}
+reclaimPolicy: {{ default "Delete" $objectstore.storageClass.reclaimPolicy }}
+volumeBindingMode: {{ default "Immediate" $objectstore.storageClass.volumeBindingMode }}
 parameters:
   objectStoreName: {{ $objectstore.name }}
   objectStoreNamespace: {{ $root.Release.Namespace }}
-  {{- with $objectstore.storageClass.parameters }}
-  {{- . | toYaml | nindent 2 }}
-  {{- end }}
-{{- end }}
-{{- end }}
+{{ with $objectstore.storageClass.parameters }}
+{{ toYaml . | indent 2 }}
+{{ end }}
+{{ end }}
+{{ end }}

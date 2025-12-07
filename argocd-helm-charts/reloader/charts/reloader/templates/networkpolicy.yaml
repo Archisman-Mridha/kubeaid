@@ -14,7 +14,8 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-{{ include "reloader-match-labels.chart" . | indent 6 }}
+      app: {{ template "reloader-fullname" . }}
+      release: {{ .Release.Name | quote }}
 {{- if .Values.reloader.matchLabels }}
 {{ tpl (toYaml .Values.reloader.matchLabels) . | indent 6 }}
 {{- end }}

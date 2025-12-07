@@ -5,7 +5,6 @@ metadata:
   labels:
     {{- include "media.labels" . | nindent 4 }}
 spec:
-  ipFamilyPolicy: PreferDualStack
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}

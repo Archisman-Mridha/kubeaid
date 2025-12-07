@@ -121,7 +121,7 @@ authentication:
   connectorName: ""
 
   # Enable/disable local authentication by setting `authentication.local_auth` in `teleport.yaml`.
-  # Disabling local auth is required for FedRAMP / FIPS; see https://goteleport.com/docs/zero-trust-access/compliance-frameworks/fedramp/#configure-the-teleport-auth-service
+  # Disabling local auth is required for FedRAMP / FIPS; see https://gravitational.com/teleport/docs/enterprise/ssh-kubernetes-fedramp/.
   localAuth: true
 
   # Controls the locking mode: in case of network split should Teleport guarantee availability or integrity ?
@@ -347,7 +347,7 @@ createProxyToken: true
 # This CRD is managed by the prometheus-operator and allows workload to
 # get monitored. To use this value, you need to run a `prometheus-operator`
 # in the cluster for this value to take effect.
-# See https://prometheus-operator.dev/docs/getting-started/introduction/
+# See https://prometheus-operator.dev/docs/prologue/introduction/
 podMonitor:
   # Whether the chart should deploy a PodMonitor.
   # Disabled by default as it requires the PodMonitor CRD to be installed.
@@ -824,18 +824,6 @@ resources: {}
 #    memory: "2Gi"
 #  limits:
 #    memory: "2Gi"
-
-# goMemLimitRatio configures the GOMEMLIMIT env var set by the chart.
-# GOMEMLIMIT instructs the go garbage collector to try to keep allocated memory
-# below a given threshold. This is a best-effort attempt, but this helps
-# to prevent OOMs in case of bursts.
-#
-# When the memory limits are set and goMemLimitRatio is non-zero,
-# the chart sets the GOMEMLIMIT to `resources.memory.limits * goMemLimitRatio`.
-# The value must be between 0 and 1.
-# Set to 0 to unset GOMEMLIMIT.
-# This has no effect if GOMEMLIMIT is already set through `extraEnv`.
-goMemLimitRatio: 0.9
 
 # Pod security context for any pods created by the chart
 podSecurityContext: {}

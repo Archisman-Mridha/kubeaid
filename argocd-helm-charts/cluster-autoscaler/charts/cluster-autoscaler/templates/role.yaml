@@ -83,8 +83,5 @@ rules:
     verbs:
     - get
     - update
-{{- if .Values.rbac.additionalRules }}
-{{ toYaml .Values.rbac.additionalRules | indent 2}}
-{{- end }}
 {{- end }}
 {{- end -}}

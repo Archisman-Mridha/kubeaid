@@ -1,20 +1,20 @@
-{{- if .Values.toolbox.enabled -}}
+{{- if .Values.toolbox.enabled }}
 ---
-kind: Deployment
 apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: rook-ceph-tools
   namespace: {{ .Release.Namespace }} # namespace:cluster
   labels:
     app: rook-ceph-tools
-    {{- with .Values.toolbox.labels }}
-    {{- . | toYaml | nindent 4 }}
+    {{- if .Values.toolbox.labels }}
+    {{- toYaml .Values.toolbox.labels | nindent 4 }}
     {{- end }}
 spec:
   replicas: 1
-  {{- if not (typeIs "<nil>" .Values.revisionHistoryLimit) }}
+{{- if .Values.revisionHistoryLimit }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
-  {{- end }}
+{{- end }}
   selector:
     matchLabels:
       app: rook-ceph-tools
@@ -22,21 +22,21 @@ spec:
     metadata:
       labels:
         app: rook-ceph-tools
-        {{- with .Values.toolbox.labels }}
-        {{- . | toYaml | nindent 8 }}
+        {{- if .Values.toolbox.labels }}
+        {{- toYaml .Values.toolbox.labels | nindent 8 }}
         {{- end }}
     spec:
       dnsPolicy: ClusterFirstWithHostNet
-      {{- $network := .Values.cephClusterSpec.network | default dict }}
-      {{- if ($network.provider | default "") | eq "host" }}
+{{- $network := .Values.cephClusterSpec.network | default dict -}}
+{{- if ($network.provider | default "") | eq "host" }}
       hostNetwork: true
-      {{- end }}
-      {{- with .Values.toolbox.priorityClassName }}
-      priorityClassName: {{ . | quote }}
-      {{- end }}
+{{- end }}
+{{- if .Values.toolbox.priorityClassName }}
+      priorityClassName: {{ .Values.toolbox.priorityClassName }}
+{{- end }}
       containers:
         - name: rook-ceph-tools
-          image: {{ .Values.toolbox.image | default .Values.cephClusterSpec.cephVersion.image }}
+          image: {{ default .Values.cephClusterSpec.cephVersion.image .Values.toolbox.image }}
           command:
             - /bin/bash
             - -c
@@ -105,18 +105,17 @@ spec:
               watch_endpoints
           imagePullPolicy: IfNotPresent
           tty: true
-          securityContext:
-            {{- .Values.toolbox.containerSecurityContext | toYaml | nindent 12 }}
+          securityContext: {{- .Values.toolbox.containerSecurityContext | toYaml | nindent 12 }}
           env:
             - name: ROOK_CEPH_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: rook-ceph-mon
                   key: ceph-username
-          {{- with .Values.toolbox.resources }}
+{{- if .Values.toolbox.resources }}
           resources:
-            {{- . | toYaml | nindent 12 }}
-          {{- end }}
+{{- toYaml .Values.toolbox.resources | nindent 12 }}
+{{- end }}
           volumeMounts:
             - mountPath: /etc/ceph
               name: ceph-config
@@ -131,14 +130,14 @@ spec:
             secretName: rook-ceph-mon
             optional: false
             items:
-              - key: ceph-secret
-                path: secret.keyring
+            - key: ceph-secret
+              path: secret.keyring
         - name: mon-endpoint-volume
           configMap:
             name: rook-ceph-mon-endpoints
             items:
-              - key: data
-                path: mon-endpoints
+            - key: data
+              path: mon-endpoints
         - name: ceph-config
           emptyDir: {}
       tolerations:
@@ -146,11 +145,11 @@ spec:
           operator: "Exists"
           effect: "NoExecute"
           tolerationSeconds: 5
-        {{- with .Values.toolbox.tolerations }}
-        {{- . | toYaml | nindent 8 }}
-        {{- end }}
-      {{- with .Values.toolbox.affinity }}
+{{- if .Values.toolbox.tolerations }}
+{{ toYaml .Values.toolbox.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.toolbox.affinity }}
       affinity:
-        {{- . | toYaml | nindent 8 }}
-      {{- end }}
+{{ toYaml .Values.toolbox.affinity | indent 8 }}
+{{- end }}
 {{- end }}

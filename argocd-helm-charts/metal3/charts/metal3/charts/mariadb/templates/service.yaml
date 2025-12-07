@@ -5,7 +5,6 @@ metadata:
   labels:
     {{- include "mariadb.labels" . | nindent 4 }}
 spec:
-  ipFamilyPolicy: PreferDualStack
   type: {{ .Values.service.type }}
   selector:
     {{- include "mariadb.selectorLabels" . | nindent 4 }}

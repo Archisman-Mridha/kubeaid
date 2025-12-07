@@ -2,8 +2,10 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
+  labels:
+    prometheus: {{ .Values.customerid }}
   name: btrfs-rules
-  namespace: {{ template "prometheus-linuxaid.namespace" . }}
+  namespace: monitoring-{{ .Values.customerid }}
 spec:
   {{- $.Files.Get "rules/btrfs.yaml" | nindent 4 }}
 {{- end }}

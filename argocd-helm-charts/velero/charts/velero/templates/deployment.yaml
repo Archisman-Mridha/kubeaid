@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: velero
+  name: {{ include "velero.fullname" . }}
   namespace: {{ .Release.Namespace }}
   {{- with .Values.annotations }}
   annotations:
@@ -21,7 +21,7 @@ metadata:
     {{- end }}
 spec:
   replicas: 1
-  {{- if hasKey .Values "revisionHistoryLimit" }}
+  {{- if .Values.revisionHistoryLimit }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   {{- end }}
   strategy:
@@ -180,9 +180,24 @@ spec:
             - --namespace={{ . }}
             {{- end }}
             {{- with .repositoryMaintenanceJob }}
-            {{- if and .repositoryConfigData (or .repositoryConfigData.global .repositoryConfigData.repositories) }}
-            - --repo-maintenance-job-configmap={{ default "velero-repo-maintenance" .repositoryConfigData.name }}
-            {{- else }}
+            {{- with .requests }}
+            {{- with .cpu }}
+            - --maintenance-job-cpu-request={{ . }}
+            {{- end }}
+            {{- with .memory }}
+            - --maintenance-job-mem-request={{ . }}
+            {{- end }}
+            {{- end }}
+            {{- with .limits }}
+            {{- with .cpu }}
+            - --maintenance-job-cpu-limit={{ . }}
+            {{- end }}
+            {{- with .memory }}
+            - --maintenance-job-mem-limit={{ . }}
+            {{- end }}
+            {{- end }}
+            {{- with .latestJobsCount }}
+            - --keep-latest-maintenance-jobs={{ . }}
             {{- end }}
             {{- end }}
             {{- with .extraArgs }}
@@ -192,10 +207,6 @@ spec:
           {{- end }}
           {{- with .Values.resources }}
           resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.resizePolicy }}
-          resizePolicy:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- if .Values.metrics.enabled }}

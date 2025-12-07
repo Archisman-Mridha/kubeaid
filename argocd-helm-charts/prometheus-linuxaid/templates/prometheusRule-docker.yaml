@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: docker-rules
-  namespace: {{ template "prometheus-linuxaid.namespace" . }}
+  namespace: monitoring-{{ .Values.customerid }}
 spec:
   {{- $.Files.Get "rules/docker.yaml" | nindent 4 }}
 {{- end }}

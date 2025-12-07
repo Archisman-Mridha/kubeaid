@@ -10,84 +10,34 @@ This chart requires the following charts before install Graylog
 1. MongoDB
 2. Opensearch
 
-Since chart version 2.5.0, we replaced Bitnami MongoDB with the official MongoDB image. You must manually install the MongoDB Operator CRD before installing the Graylog chart with dependencies.
-
-Install MongoDB CRDs only first installation. You can skip CRD step when upgrade.
-
-```bash
-helm install --create-namespace --namespace graylog community-operator-crds mongodb/community-operator-crds
-```
-
 To install the Graylog Chart with all dependencies
 
 ```bash
-helm install --create-namespace --namespace graylog graylog kongz/graylog
+kubectl create namespace graylog
+
+helm install --namespace "graylog" graylog kongz/graylog
 ```
 
 ## Manually Install Dependencies
 
 This method is _recommended_ when you want to expand the availability, scalability, and security of the services. You need to install MongoDB replicaset and Opensearch with proper settings before install Graylog.
 
-### To install MongoDB, run
+To install MongoDB, run
 
 ```bash
-helm install --create-namespace --namespace graylog community-operator-crds mongodb/community-operator-crds
+helm install --namespace "graylog" mongodb bitnami/mongodb
 ```
 
-And then apply the following MongoDBCommunity manifest.
+Note: There are many alternative MongoDB available on [artifacthub.io](https://artifacthub.io/packages/search?page=1&ts_query_web=mongodb). If you found the `bitnami/mongodb` is not suitable, you can use another MongoDB chart. Modify `graylog.mongodb.uri` to match your MongoDB endpoint.
+
+To install Opensearch, run
 
 ```bash
-kubectl apply -f <graylog-mongodb.yaml>
+helm install --namespace "graylog" opensearch elastic/opensearch
 ```
 
-The sample configuration for MongoDB setup for Graylog.
-
-```yaml
-apiVersion: mongodbcommunity.mongodb.com/v1
-kind: MongoDBCommunity
-metadata:
-  name: graylog-mongodb
-spec:
-  members: 3
-  security:
-    authentication:
-      modes:
-        - SCRAM
-  type: ReplicaSet
-  users:
-    - db: graylog
-      name: graylog
-      passwordSecretRef:
-        name: graylog-mongodb
-      roles:
-      - db: graylog
-        name: readWrite
-      - db: admin
-        name: clusterMonitor
-      scramCredentialsSecretName: graylog
-  version: 6.0.25
-```
-
-For complete MongoDB Operator installation separately, see [mongodb-kubernetes-operator](https://github.com/mongodb/mongodb-kubernetes-operator)
-
-Note: There are many alternative MongoDB available on [artifacthub.io](https://artifacthub.io/packages/search?page=1&ts_query_web=mongodb). If you found the `mongodb community operator` is not suitable, you can use another MongoDB chart. Modify `graylog.mongodb.uri` to match your MongoDB endpoint.
-
-You can specify how Graylog picks the MongoDB connection in this order:
-
-* If `graylog.mongodb.uri` is specified, it will use this value.
-* If `graylog.mongodb.uriSecretKey` is specified, it will use the secret `graylog.mongodb.uriSecretName`.
-* If `mongodb.community.install` is `true` and neither `graylog.mongodb.uri` nor `graylog.mongodb.uriSecretKey` is used, it will use the secret generated from the MongoDB Operator.
-
-### To install Opensearch, run
-
-```bash
-helm repo add opensearch https://opensearch-project.github.io/helm-charts/
-
-helm install --namespace "graylog" opensearch opensearch/opensearch
-```
-
-The Opensearch installation command above will install all Opensearch nodes types in single node.
-It is strongly recommend to follow the Opensearch [guide](https://docs.opensearch.org/latest/install-and-configure/install-opensearch/helm/) to install dedicated node on production.
+The Opensearch installation command above will install all Opensearch
+nodes types in single node. It is strongly recommend to follow the Opensearch [guide](https://github.com/elastic/helm-charts/tree/main/epensearch#how-to-deploy-dedicated-nodes-types) to install dedicated node on production.
 
 Note: There are many alternative Opensearch available on [artifacthub.io](https://artifacthub.io/packages/search?page=1&ts_query_web=Opensearch). If you found the `stable/opensearch` is not suitable, you can search other charts from GitHub repositories.
 
@@ -101,6 +51,7 @@ helm install --namespace "graylog" graylog kongz/graylog \
   --set tags.install-opensearch=false\
   --set graylog.mongodb.uri=mongodb://mongodb-mongodb-replicaset-0.mongodb-mongodb-replicaset.graylog.svc.cluster.local:27017/graylog?replicaSet=rs0 \
   --set graylog.opensearch.hosts=http://opensearch-cluster-master-headless.graylog.svc.cluster.local:9200
+  --set graylog.opensearch.version=7
 ```
 
 After installation succeeds, you can get a status of Chart
@@ -224,7 +175,6 @@ The following table lists the configurable parameters of the Graylog chart and t
 | `graylog.rootEmail`                               | Graylog root email.                                                                                                                             |                                   |
 | `graylog.existingRootSecret`                      | Graylog existing root secret                                                                                                                    |                                   |
 | `graylog.rootTimezone`                            | Graylog root timezone.                                                                                                                          | `UTC`                             |
-| `graylog.httpEnableCors`                          | Enable CORS support                                                                                                                             | `false`                           |
 | `graylog.opensearch.version`                      | Graylog opensearch version. You need to specify a value 6 or 7. It is required for Graylog >4.0.2                                               | `6`                               |
 | `graylog.opensearch.hosts`                        | Graylog opensearch host name. You need to specific where data will be stored.                                                                   |                                   |
 | `graylog.opensearch.uriSecretName`                | K8s secret name where opensearch hosts will be set from.                                                                                        | `{{ graylog.fullname }}-es`       |
@@ -246,12 +196,8 @@ The following table lists the configurable parameters of the Graylog chart and t
 | `graylog.config`                                  | Add additional server configuration to `graylog.conf` file.                                                                                     |                                   |
 | `graylog.serverFiles`                             | Add additional server files on /etc/graylog/server. This is useful for enable TLS on input                                                      | `{}`                              |
 | `graylog.logInJson`                               | If true, Graylog pods will be configured to log in JSON (one event per line                                                                     | `false`                           |
-| `graylog.journal.enabled`                         | Enable the disk-based message journal.                                                                                                          | `true`                            |
 | `graylog.journal.deleteBeforeStart`               | Delete all journal files before start Graylog                                                                                                   | `false`                           |
 | `graylog.journal.maxSize`                         | Maximum size of message_journal_max_size in Graylog Config                                                                                      | `5gb`                             |
-| `graylog.journal.maxAge`                          | The maximum time the journal holds messages before they are written to the search backend. Works with message_journal_max_size so that message writes are triggered by whichever property is hit first.                                                      | `12h`                             |
-| `graylog.journal.segmentAge`                      | Controls the period of time after which Graylog forces the log to roll even if the segment file isn’t full to ensure that retention can delete or compact old data.                                                       | `1h`                              |
-| `graylog.journal.segmentSize`                     | Sets the size of the journal segment.                                                                                                           | `100mb`                           |
 | `graylog.init.image.repository`                   | Configure init container image                                                                                                                  | `busybox`                         |
 | `graylog.init.image.pullPolicy`                   | Configure init container image pull policy                                                                                                      | `{}`                              |
 | `graylog.init.kubectlLocation`                    | Set kubectl location to download and use on init-container.                                                                                     |                                   |
@@ -389,10 +335,22 @@ certificates can be added to `graylog.serverFiles` and you can configure the `gr
 Each Graylog node coordinates with each other through the DNS entry exposed via the headless service, so when generating
 the certificates, be sure to include a SAN entry for `*.graylog[-<suffix>].<namespace>.cluster.local` (or your configured FQDN).
 
-## Graylog Master Node
+## Get Graylog status
 
-Since Graylog 6, the Graylog image hard-codes the image suffix `-0` as the master node.
-Dynamic master node selection is no longer necessary. You can always assume `graylog-0` as the master node or refer to the service `graylog-master.<namespace>.svc.cluster.local`
+You can get your Graylog status by running the command
+
+```bash
+kubectl get po -L graylog-role
+```
+
+Output
+
+```output
+NAME                        READY     STATUS    RESTARTS   AGE       graylog-ROLE
+graylog-0                   1/1       Running     0          1d        master
+graylog-1                   1/1       Running     0          1d        coordinating
+graylog-2                   1/1       Running     0          1m        coordinating
+```
 
 ## Troubleshooting
 
@@ -402,13 +360,6 @@ You can do this automatically by setting `graylog.journal.deleteBeforeStart` to 
 The chart will delete all journal files before starting Graylog.
 
 Note: All uncommitted logs will be permanently DELETED when this value is true
-
----
-
-If you are encounter "Failed to decrypt values from MongoDB. 
-This means that your password_secret has been changed or there are some nodes in your cluster that are using a different password_secret to the one configured on this node. 
-Secrets have to be configured to the same value on every node and can't be changed afterwards.", this mean that you may use password in Secret has been changed from previous deployment.
-
 
 [1]: https://www.graylog.org/
 [2]: https://kubernetes-sigs.github.io/aws-alb-ingress-controller/guide/ingress/annotation/#actions

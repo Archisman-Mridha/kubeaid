@@ -22,15 +22,11 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    {{- if .Values.ingressController.service.insecureNodePort }}
     nodePort: {{ .Values.ingressController.service.insecureNodePort }}
-    {{- end }}
   - name: https
     port: 443
     protocol: TCP
-    {{- if .Values.ingressController.service.secureNodePort }}
     nodePort: {{ .Values.ingressController.service.secureNodePort }}
-    {{- end }}
   {{- if .Values.ingressController.hostNetwork.enabled }}
   type: ClusterIP
   {{- else }}
@@ -45,7 +41,7 @@ spec:
   {{- if .Values.ingressController.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.ingressController.service.loadBalancerIP }}
   {{- end }}
-  {{- if and .Values.ingressController.service.externalTrafficPolicy (not .Values.ingressController.hostNetwork.enabled) }}
+  {{- if .Values.ingressController.service.externalTrafficPolicy }}
   externalTrafficPolicy: {{ .Values.ingressController.service.externalTrafficPolicy }}
   {{- end }}
 ---

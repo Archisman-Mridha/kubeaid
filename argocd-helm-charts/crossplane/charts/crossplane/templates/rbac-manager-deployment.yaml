@@ -52,16 +52,12 @@ spec:
       runtimeClassName: {{ .Values.runtimeClassName | quote }}
       {{- end }}
       initContainers:
-      - name: {{ .Chart.Name }}-init
-        {{- if .Values.image.ignoreTag }}
-        image: "{{ .Values.image.repository }}"
-        {{- else }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default (printf "v%s" .Chart.AppVersion) }}"
-        {{- end }}
+      - image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default (printf "v%s" .Chart.AppVersion) }}"
         args:
         - rbac
         - init
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        name: {{ .Chart.Name }}-init
         resources:
           {{- toYaml .Values.resourcesRBACManager | nindent 12 }}
         {{- with .Values.securityContextRBACManager }}
@@ -82,12 +78,7 @@ spec:
                 resource: limits.memory
                 divisor: "1"
       containers:
-      - name: {{ .Chart.Name }}
-        {{- if .Values.image.ignoreTag }}
-        image: "{{ .Values.image.repository }}"
-        {{- else }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default (printf "v%s" .Chart.AppVersion) }}"
-        {{- end }}
+      - image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default (printf "v%s" .Chart.AppVersion) }}"
         args:
         - rbac
         - start
@@ -96,6 +87,7 @@ spec:
         {{- end }}
         - --provider-clusterrole={{ template "crossplane.name" . }}:allowed-provider-permissions
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        name: {{ .Chart.Name }}
         resources:
           {{- toYaml .Values.resourcesRBACManager | nindent 12 }}
         {{- if .Values.metrics.enabled }}

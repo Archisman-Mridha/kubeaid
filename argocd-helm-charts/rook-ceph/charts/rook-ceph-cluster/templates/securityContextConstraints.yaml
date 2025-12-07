@@ -1,7 +1,6 @@
-{{- if .Capabilities.APIVersions.Has "security.openshift.io/v1" -}}
----
 # scc for the Rook and Ceph daemons
 # for creating cluster in openshift
+{{- if .Capabilities.APIVersions.Has "security.openshift.io/v1" }}
 kind: SecurityContextConstraints
 apiVersion: security.openshift.io/v1
 metadata:
@@ -9,13 +8,10 @@ metadata:
 allowPrivilegedContainer: true
 allowHostDirVolumePlugin: true
 allowHostPID: false
-{{- if eq .Values.cephClusterSpec.network.provider "host" }}
-allowHostNetwork: true
-allowHostPorts: true
-{{- else }}
+# set to true if running rook with host networking enabled
 allowHostNetwork: false
+# set to true if running rook with the provider as host
 allowHostPorts: false
-{{- end }}
 priority:
 allowedCapabilities: ["MKNOD"]
 allowHostIPC: true

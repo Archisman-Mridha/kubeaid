@@ -1,34 +1,36 @@
 annotations:
   artifacthub.io/changes: |
     - kind: fixed
-      description: use bitnamilegacy images (#962)
+      description: add `srCheckPassword` param to support new postgresql-ha stream replication check requirements (#894)
     - kind: changed
-      description: update dependency helm-unittest/helm-unittest to v1.0.2 (#960)
+      description: update workflow dependencies (minor & patch) (#892)
     - kind: changed
-      description: update commitlint/commitlint docker tag to v20 (#957)
+      description: update subcharts (minor & patch) (#891)
     - kind: changed
-      description: update lockfiles (#956)
+      description: update dependency go-gitea/gitea to v1.24.2 (#890)
     - kind: changed
-      description: update alpine/helm docker tag to v3.19.0 (#954)
+      description: update bats testing framework (#889)
+    - kind: changed
+      description: update dependency go-gitea/gitea to v1.24.1 (#887)
 apiVersion: v2
-appVersion: 1.24.6
+appVersion: 1.24.2
 dependencies:
 - condition: postgresql.enabled
   name: postgresql
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 16.7.27
+  version: 16.7.13
 - condition: postgresql-ha.enabled
   name: postgresql-ha
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 16.3.2
+  version: 16.0.14
 - condition: valkey-cluster.enabled
   name: valkey-cluster
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 3.0.24
+  version: 3.0.14
 - condition: valkey.enabled
   name: valkey
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 3.0.31
+  version: 3.0.15
 description: Gitea Helm chart for Kubernetes
 icon: https://gitea.com/assets/img/logo.svg
 keywords:
@@ -39,18 +41,22 @@ keywords:
 - gitea
 - gogs
 maintainers:
-- email: ross@golder.org
-  name: Ross Golder
-- email: markus.pesch+apps@cryptic.systems
-  name: Markus Pesch
-- email: dselen@nerthus.nl
-  name: Daan Selen
-- email: christopher.homberger@web.de
-  name: Christopher Homberger
+- email: charlie@charliedrage.com
+  name: Charlie Drage
+- email: maintainers@gitea.io
+  name: Gitea Authors
+- email: konrad.lother@novum-rgi.de
+  name: Konrad Lother
+- email: lucas.hahn@novum-rgi.de
+  name: Lucas Hahn
+- email: sk.bunsenbrenner@gmail.com
+  name: Steven Kriegler
+- email: patrick.schratz@gmail.com
+  name: Patrick Schratz
 name: gitea
 sources:
 - https://gitea.com/gitea/helm-gitea
 - https://github.com/go-gitea/gitea
 - https://docker.gitea.com/gitea
 type: application
-version: 12.4.0
+version: 12.1.1

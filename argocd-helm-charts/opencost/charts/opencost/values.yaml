@@ -116,49 +116,10 @@ service:
 rbac:
   enabled: true
 
-# PodDisruptionBudget for high availability
-pdb:
-  enabled: false
-  # -- Minimum number of pods that must be available after the eviction
-  minAvailable: ~
-  # -- Maximum number of pods that can be unavailable after the eviction
-  maxUnavailable: ~
-
 opencost:
   # -- <SECRET_NAME> for the secret containing the Cloud Costs cloud-integration.json https://www.opencost.io/docs/configuration/#cloud-costs
   # -- kubectl create secret generic <SECRET_NAME> --from-file=cloud-integration.json -n opencost
   cloudIntegrationSecret: ""
-
-  # -- MCP (Model Context Protocol) Server Configuration
-  # The MCP server provides AI agents with access to cost allocation and asset data
-  mcp:
-    # -- Enable MCP server for AI agent integration (default: true)
-    # Set to false to disable MCP server completely
-    enabled: true
-    # -- HTTP port for MCP server (default: 8081)
-    # Change this if port 8081 conflicts with other services
-    port: 8081
-    ingress:
-      # -- Ingress for MCP server
-      enabled: false
-      # -- Ingress controller which implements the resource
-      ingressClassName: ""
-      # -- Annotations for Ingress resource
-      annotations: {}
-        # kubernetes.io/tls-acme: "true"
-      # -- A list of host rules used to configure the Ingress
-      # @default -- See [values.yaml](values.yaml)
-      hosts:
-      - host: example.local
-        paths:
-        - path: /
-          pathType: Prefix
-      # -- Ingress TLS configuration
-      tls: []
-        #  - secretName: chart-example-tls
-        #    hosts:
-        #      - chart-example.local
-
   exporter:
     # API_PORT for the cost-model to listen on
     apiPort: 9003
@@ -167,24 +128,19 @@ opencost:
     cloudProviderApiKey: ""
     # -- Default cluster ID to use if cluster_id is not set in Prometheus metrics.
     defaultClusterId: 'default-cluster'
-    # -- If clusterIdConfigmap is defined, use user-generated ConfigMap with key CLUSTER_ID as default cluster ID.
-    # -- This overrides the above defaultClusterId. Ensure the ConfigMap exists and contains the required CLUSTER_ID key.
-    # clusterIdConfigmap: cluster-id-configmap
     image:
       # -- Exporter container image registry
       registry: ghcr.io
       # -- Exporter container image name
       repository: opencost/opencost
       # -- Exporter container image tag
-      tag: "1.118.0@sha256:c1a08767fe3c3b2964a75885c145bae0cba32225c0b4c1e0382a77566aef93e9"
+      tag: "1.115.0@sha256:fb6468a1ef45dbd4a9e521122c8d306f882bb33d1657d28d21aeaef79412e9e1"
       # -- Exporter container image pull policy
       pullPolicy: IfNotPresent
       # -- Override the full image name for development purposes
       fullImageName: null
     # -- List of extra arguments for the command, e.g.: log-format=json
     extraArgs: []
-    # -- Optional command to override the default container command
-    command: []
     # -- Number of OpenCost replicas to run
     replicas: 1
     resources:
@@ -243,10 +199,6 @@ opencost:
     # Path of CSV file
     csv_path: ""
 
-    prometheusDataSource:
-      # Set the resolution in second that prometheus queries will be performed at
-      queryResolutionSeconds: 300
-
     # Collector DataSource collects cluster data without a dependency on Prometheus
     # It is recommended that persistence is enabled alongside it to preserve the state
     # between pod restarts
@@ -257,11 +209,11 @@ opencost:
       # -- The port at which network pods are open to egress
       networkPort: 3001
       # -- The number of 10m intervals the Collector DataSource should maintain
-      retention10m: 36
+      retentionResolution10m: 36
       # -- The number of 1h intervals the Collector DataSource should maintain
-      retention1h: 49
+      retentionResolution1h: 49
       # -- The number of 1d intervals the Collector DataSource should maintain
-      retention1d: 15
+      retentionResolution1d: 15
 
     # Persistent volume claim for storing the data. eg: csv file
     persistence:
@@ -302,10 +254,10 @@ opencost:
       # -- A list of host rules used to configure the Ingress
       # @default -- See [values.yaml](values.yaml)
       hosts:
-      - host: example.local
-        paths:
-        - path: /
-          pathType: Prefix
+        - host: example.local
+          paths:
+            - path: /
+              pathType: Prefix
       # -- Redirect ingress to an extraPort defined on the service such as oauth-proxy
       servicePort: http
       # servicePort: oauth-proxy
@@ -338,8 +290,8 @@ opencost:
       regionNetworkEgress: 0.01
       internetNetworkEgress: 0.12
 
-  retention1d: 15
-  retention1h: 49
+  dataRetention:
+    dailyResolutionDays: 15
 
   carbonCost:
     # -- Enable carbon cost exposed in the API
@@ -356,6 +308,7 @@ opencost:
     monthToDateInterval: 6
     # -- The max number of days that any single query will be made to construct Cloud Costs
     queryWindowDays: 7
+
 
   metrics:
     kubeStateMetrics:
@@ -426,8 +379,6 @@ opencost:
     bearer_token_key: DB_BEARER_TOKEN
     # -- If true, opencost will use kube-rbac-proxy to authenticate with in cluster Prometheus for openshift
     kubeRBACProxy: false
-    # -- Whether to disable SSL certificate verification
-    insecureSkipVerify: false
     external:
       # -- Use external Prometheus (eg. Grafana Cloud)
       enabled: false
@@ -442,13 +393,11 @@ opencost:
       namespaceName: prometheus-system
       # -- Service port of in-cluster Prometheus
       port: 80
-      # -- Path to access the Prometheus API, this is neccesary if the Prometheus server is behind a reverse proxy(mimir) or has a different path.
-      path: ""
       # -- Scheme to use for in-cluster Prometheus
       scheme: http
     amp:
       # -- Use Amazon Managed Service for Prometheus (AMP)
-      enabled: false # If true, opencost will be configured to remote_write and query from Amazon Managed Service for Prometheus.
+      enabled: false  # If true, opencost will be configured to remote_write and query from Amazon Managed Service for Prometheus.
       # -- Workspace ID for AMP
       workspaceId: ""
     thanos:
@@ -475,7 +424,7 @@ opencost:
       repository: opencost/opencost-ui
       # -- UI container image tag
       # @default -- `""` (use appVersion in Chart.yaml)
-      tag: "1.118.0@sha256:571f87e528ea563a5071b380df624a383968b5e20360e45dc1a2939c0024d073"
+      tag: "1.115.0@sha256:d544b2f16b76540606acb3d25e029e368611feb2751b86cb5903b0212b75a71e"
       # -- UI container image pull policy
       pullPolicy: IfNotPresent
       # -- Override the full image name for development purposes
@@ -491,9 +440,6 @@ opencost:
     # used in the default.nginx.conf if you want to switch for using with Docker
     # apiServer: 0.0.0.0
     uiPort: 9090
-    # Base path for serving the UI.
-    # Requires building a custom image using the build argument "ui_path".
-    uiPath: /
     # Set to true to use IPv6
     useIPv6: true
     # Liveness probe configuration
@@ -552,9 +498,9 @@ opencost:
       # -- A list of host rules used to configure the Ingress
       # @default -- See [values.yaml](values.yaml)
       hosts:
-      - host: example.local
-        paths:
-        - /
+        - host: example.local
+          paths:
+            - /
       # -- Redirect ingress to an extraPort defined on the service such as oauth-proxy
       servicePort: http-ui
       # servicePort: oauth-proxy
@@ -633,21 +579,6 @@ opencost:
     #       containerPort: 8082
     #       protocol: TCP
     #   resources: {}
-
-  updateCaTrust:
-    enabled: false
-    ## Security context settings for the init container.
-    securityContext:
-      runAsUser: 0
-      runAsGroup: 0
-      runAsNonRoot: false
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
-      seccompProfile:
-        type: RuntimeDefault
-    caCertsSecret: ca-certs-secret # The name of the Secret containing custom CA certificates to mount to the opencost container.
-    # caCertsConfig: ca-certs-config  # The name of the ConfigMap containing the CA trust configuration.
-    resources: {}
 
   platforms:
     openshift:

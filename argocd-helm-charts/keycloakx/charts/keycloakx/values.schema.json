@@ -76,9 +76,6 @@
     "extraVolumes": {
       "type": "string"
     },
-    "volumeClaimTemplates": {
-      "type": "string"
-    },
     "fullnameOverride": {
       "type": "string"
     },
@@ -418,9 +415,6 @@
         "properties": {
           "annotations": {
             "type": "object"
-          },
-          "extraPorts": {
-            "type": "array"
           }
         }
       },

@@ -88,14 +88,11 @@ spec:
             {{- with .Values.controller.httpEndpoint }}
             - --http-endpoint={{ . }}
             {{- end }}
-            {{- if or .Values.controller.sdkDebugLog .Values.debugLogs }}
+            {{- if .Values.controller.sdkDebugLog }}
             - --aws-sdk-debug-log=true
             {{- end}}
             {{- if .Values.controller.batching }}
             - --batching=true
-            {{- end}}
-            {{- if .Values.controller.enableNodeLocalVolumes }}
-            - --enable-node-local-volumes=true
             {{- end}}
             {{- with .Values.controller.loggingFormat }}
             - --logging-format={{ . }}
@@ -106,11 +103,7 @@ spec:
             {{- if .Values.controller.otelTracing }}
             - --enable-otel-tracing=true
             {{- end}}
-            {{- if .Values.debugLogs }}
-            - --v=7
-            {{- else }}
             - --v={{ .Values.controller.logLevel }}
-            {{- end }}
             {{- range .Values.controller.additionalArgs }}
             - {{ . }}
             {{- end }}
@@ -140,12 +133,6 @@ spec:
                 configMapKeyRef:
                   name: aws-meta
                   key: endpoint
-                  optional: true
-            - name: AWS_SAGEMAKER_ENDPOINT
-              valueFrom:
-                configMapKeyRef:
-                  name: aws-meta
-                  key: sagemaker_endpoint
                   optional: true
             {{- with .Values.controller.region }}
             - name: AWS_REGION
@@ -191,15 +178,15 @@ spec:
               path: /healthz
               port: healthz
             initialDelaySeconds: 10
-            timeoutSeconds: 60
+            timeoutSeconds: 3
             periodSeconds: 10
-            failureThreshold: 10
+            failureThreshold: 5
           readinessProbe:
             httpGet:
               path: /healthz
               port: healthz
             initialDelaySeconds: 10
-            timeoutSeconds: 60
+            timeoutSeconds: 3
             periodSeconds: 10
             failureThreshold: 5
           {{- with .Values.controller.resources }}
@@ -210,7 +197,6 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          terminationMessagePolicy: FallbackToLogsOnError
         - name: csi-provisioner
           image: {{ printf "%s%s:%s" (default "" .Values.image.containerRegistry) .Values.sidecars.provisioner.image.repository .Values.sidecars.provisioner.image.tag }}
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.sidecars.provisioner.image.pullPolicy }}
@@ -219,11 +205,7 @@ spec:
             - --timeout=60s
             {{- end }}
             - --csi-address=$(ADDRESS)
-            {{- if .Values.debugLogs }}
-            - --v=7
-            {{- else }}
             - --v={{ .Values.sidecars.provisioner.logLevel }}
-            {{- end }}
             - --feature-gates=Topology=true
             {{- if .Values.controller.extraCreateMetadata }}
             - --extra-create-metadata
@@ -252,9 +234,6 @@ spec:
             {{- if .Capabilities.APIVersions.Has "storage.k8s.io/v1beta1/VolumeAttributesClass" }}
             - --feature-gates=VolumeAttributesClass=true
             {{- end }}
-            {{- if and (.Values.controller.enableMetrics) (not (regexMatch "(-http-endpoint)" (join " " .Values.sidecars.provisioner.additionalArgs))) }}
-            - --http-endpoint=0.0.0.0:3302
-            {{- end}}
             {{- range .Values.sidecars.provisioner.additionalArgs }}
             - {{ . }}
             {{- end }}
@@ -274,12 +253,6 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /var/lib/csi/sockets/pluginproxy/
-          {{- if .Values.controller.enableMetrics }}
-          ports:
-            - name: metrics
-              containerPort: 3302
-              protocol: TCP
-          {{- end }}
           {{- with default .Values.controller.resources .Values.sidecars.provisioner.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -288,20 +261,15 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          terminationMessagePolicy: FallbackToLogsOnError
         - name: csi-attacher
           image: {{ printf "%s%s:%s" (default "" .Values.image.containerRegistry) .Values.sidecars.attacher.image.repository .Values.sidecars.attacher.image.tag }}
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.sidecars.attacher.image.pullPolicy }}
           args:
             {{- if not (regexMatch "(-timeout)" (join " " .Values.sidecars.attacher.additionalArgs)) }}
-            - --timeout=6m
+            - --timeout=60s
             {{- end }}
             - --csi-address=$(ADDRESS)
-            {{- if .Values.debugLogs }}
-            - --v=7
-            {{- else }}
             - --v={{ .Values.sidecars.attacher.logLevel }}
-            {{- end }}
             - --leader-election={{ .Values.sidecars.attacher.leaderElection.enabled | required "leader election state for csi-attacher is required, must be set to true || false." }}
             {{- if .Values.sidecars.attacher.leaderElection.enabled }}
             {{- if .Values.sidecars.attacher.leaderElection.leaseDuration }}
@@ -322,9 +290,6 @@ spec:
             {{- if not (regexMatch "(-retry-interval-max)" (join " " .Values.sidecars.attacher.additionalArgs)) }}
             - --retry-interval-max=5m
             {{- end }}
-            {{- if and (.Values.controller.enableMetrics) (not (regexMatch "(-http-endpoint)" (join " " .Values.sidecars.attacher.additionalArgs))) }}
-            - --http-endpoint=0.0.0.0:3303
-            {{- end}}
             {{- range .Values.sidecars.attacher.additionalArgs }}
             - {{ . }}
             {{- end }}
@@ -344,12 +309,6 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /var/lib/csi/sockets/pluginproxy/
-          {{- if .Values.controller.enableMetrics }}
-          ports:
-            - name: metrics
-              containerPort: 3303
-              protocol: TCP
-          {{- end }}
           {{- with default .Values.controller.resources .Values.sidecars.attacher.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -358,7 +317,6 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          terminationMessagePolicy: FallbackToLogsOnError
         {{- if or .Values.sidecars.snapshotter.forceEnable (.Capabilities.APIVersions.Has "snapshot.storage.k8s.io/v1beta1") (.Capabilities.APIVersions.Has "snapshot.storage.k8s.io/v1") }}
         - name: csi-snapshotter
           image: {{ printf "%s%s:%s" (default "" .Values.image.containerRegistry) .Values.sidecars.snapshotter.image.repository .Values.sidecars.snapshotter.image.tag }}
@@ -366,11 +324,7 @@ spec:
           args:
             - --csi-address=$(ADDRESS)
             - --leader-election=true
-            {{- if .Values.debugLogs }}
-            - --v=7
-            {{- else }}
             - --v={{ .Values.sidecars.snapshotter.logLevel }}
-            {{- end }}
             {{- if .Values.controller.extraCreateMetadata }}
             - --extra-create-metadata
             {{- end}}
@@ -382,9 +336,6 @@ spec:
             {{- if not (regexMatch "(-retry-interval-max)" (join " " .Values.sidecars.snapshotter.additionalArgs)) }}
             - --retry-interval-max=30m
             {{- end }}
-            {{- if and (.Values.controller.enableMetrics) (not (regexMatch "(-http-endpoint)" (join " " .Values.sidecars.snapshotter.additionalArgs))) }}
-            - --http-endpoint=0.0.0.0:3306
-            {{- end}}
             {{- range .Values.sidecars.snapshotter.additionalArgs }}
             - {{ . }}
             {{- end }}
@@ -404,12 +355,6 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /var/lib/csi/sockets/pluginproxy/
-          {{- if .Values.controller.enableMetrics }}
-          ports:
-            - name: metrics
-              containerPort: 3306
-              protocol: TCP
-          {{- end }}
           {{- with default .Values.controller.resources .Values.sidecars.snapshotter.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -418,7 +363,6 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          terminationMessagePolicy: FallbackToLogsOnError
         {{- end }}
         {{- if (.Values.controller.volumeModificationFeature).enabled }}
         - name: volumemodifier
@@ -429,11 +373,7 @@ spec:
             - --timeout=60s
             {{- end }}
             - --csi-address=$(ADDRESS)
-            {{- if .Values.debugLogs }}
-            - --v=7
-            {{- else }}
             - --v={{ .Values.sidecars.volumemodifier.logLevel }}
-            {{- end }}
             - --leader-election={{ .Values.sidecars.volumemodifier.leaderElection.enabled | required "leader election state for csi-volumemodifier is required, must be set to true || false." }}
             {{- if .Values.sidecars.volumemodifier.leaderElection.enabled }}
             {{- if .Values.sidecars.volumemodifier.leaderElection.leaseDuration }}
@@ -446,9 +386,6 @@ spec:
             - --leader-election-retry-period={{ .Values.sidecars.volumemodifier.leaderElection.retryPeriod }}
             {{- end }}
             {{- end }}
-            {{- if and (.Values.controller.enableMetrics) (not (regexMatch "(-http-endpoint)" (join " " .Values.sidecars.volumemodifier.additionalArgs))) }}
-            - --http-endpoint=0.0.0.0:3307
-            {{- end}}
             {{- range .Values.sidecars.volumemodifier.additionalArgs }}
             - {{ . }}
             {{- end }}
@@ -476,52 +413,11 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /var/lib/csi/sockets/pluginproxy/
-          {{- if .Values.controller.enableMetrics }}
-          ports:
-            - name: metrics
-              containerPort: 3307
-              protocol: TCP
-          {{- end }}
           {{- with default .Values.controller.resources .Values.sidecars.volumemodifier.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.sidecars.volumemodifier.securityContext }}
-          securityContext:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          terminationMessagePolicy: FallbackToLogsOnError
-        {{- end }}
-        {{- if .Values.sidecars.metadataLabeler.enabled }}
-        - name: metadata-labeler
-          image: {{ include "aws-ebs-csi-driver.fullImagePath" $ }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          args:
-            - metadataLabeler
-            - --v={{ .Values.sidecars.metadataLabeler.logLevel }}
-            {{- range .Values.sidecars.metadataLabeler.additionalArgs }}
-            - {{ . }}
-            {{- end }}
-          env:
-            - name: CSI_NODE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
-            {{- if .Values.proxy.http_proxy }}
-            {{- include "aws-ebs-csi-driver.http-proxy" . | nindent 12 }}
-            {{- end }}
-            {{- with .Values.sidecars.metadataLabeler.env }}
-            {{- . | toYaml | nindent 12 }}
-            {{- end }}
-          {{- with .Values.controller.envFrom }}
-          envFrom:
-            {{- . | toYaml | nindent 12 }}
-          {{- end }}
-          {{- with default .Values.controller.resources .Values.sidecars.metadataLabeler.resources }}
-          resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.sidecars.metadataLabeler.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
@@ -537,11 +433,7 @@ spec:
             - --extra-modify-metadata
             {{- end}}
             - --csi-address=$(ADDRESS)
-            {{- if .Values.debugLogs }}
-            - --v=7
-            {{- else }}
             - --v={{ .Values.sidecars.resizer.logLevel }}
-            {{- end }}
             - --handle-volume-inuse-error=false
             {{- with .Values.sidecars.resizer.leaderElection }}
             - --leader-election={{ .enabled | default true }}
@@ -566,9 +458,6 @@ spec:
             {{- if .Capabilities.APIVersions.Has "storage.k8s.io/v1beta1/VolumeAttributesClass" }}
             - --feature-gates=VolumeAttributesClass=true
             {{- end }}
-            {{- if and (.Values.controller.enableMetrics) (not (regexMatch "(-http-endpoint)" (join " " .Values.sidecars.resizer.additionalArgs))) }}
-            - --http-endpoint=0.0.0.0:3304
-            {{- end}}
             {{- range .Values.sidecars.resizer.additionalArgs }}
             - {{ . }}
             {{- end }}
@@ -588,12 +477,6 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /var/lib/csi/sockets/pluginproxy/
-          {{- if .Values.controller.enableMetrics }}
-          ports:
-            - name: metrics
-              containerPort: 3304
-              protocol: TCP
-          {{- end }}
           {{- with default .Values.controller.resources .Values.sidecars.resizer.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -602,16 +485,11 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          terminationMessagePolicy: FallbackToLogsOnError
         - name: liveness-probe
           image: {{ printf "%s%s:%s" (default "" .Values.image.containerRegistry) .Values.sidecars.livenessProbe.image.repository .Values.sidecars.livenessProbe.image.tag }}
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.sidecars.livenessProbe.image.pullPolicy }}
           args:
             - --csi-address=/csi/csi.sock
-            - --probe-timeout=60s
-            {{- if and (.Values.controller.enableMetrics) (not (regexMatch "(-metrics-address)" (join " " .Values.sidecars.livenessProbe.additionalArgs))) }}
-            - --metrics-address=0.0.0.0:3305
-            {{- end}}
             {{- range .Values.sidecars.livenessProbe.additionalArgs }}
             - {{ . }}
             {{- end }}
@@ -622,12 +500,6 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /csi
-          {{- if .Values.controller.enableMetrics }}
-          ports:
-            - name: metrics
-              containerPort: 3305
-              protocol: TCP
-          {{- end }}
           {{- with default .Values.controller.resources .Values.sidecars.livenessProbe.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -636,7 +508,6 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          terminationMessagePolicy: FallbackToLogsOnError
       {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
       {{- range .Values.imagePullSecrets }}

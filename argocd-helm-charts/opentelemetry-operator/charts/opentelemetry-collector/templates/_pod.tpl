@@ -145,7 +145,7 @@ containers:
       - mountPath: /conf
         name: {{ include "opentelemetry-collector.lowercase_chartname" . }}-configmap
       {{- end }}
-      {{- if or .Values.presets.logsCollection.enabled .Values.presets.annotationDiscovery.logs.enabled }}
+      {{- if .Values.presets.logsCollection.enabled }}
       - name: varlogpods
         mountPath: /var/log/pods
         readOnly: true
@@ -176,9 +176,6 @@ initContainers:
 {{- if .Values.priorityClassName }}
 priorityClassName: {{ .Values.priorityClassName | quote }}
 {{- end }}
-{{- if .Values.runtimeClassName }}
-runtimeClassName: {{ .Values.runtimeClassName | quote }}
-{{- end }}
 volumes:
   {{- if or .Values.configMap.create .Values.configMap.existingName }}
   - name: {{ include "opentelemetry-collector.lowercase_chartname" . }}-configmap
@@ -188,7 +185,7 @@ volumes:
         - key: relay
           path: relay.yaml
   {{- end }}
-  {{- if or .Values.presets.logsCollection.enabled .Values.presets.annotationDiscovery.logs.enabled }}
+  {{- if .Values.presets.logsCollection.enabled }}
   - name: varlogpods
     hostPath:
       path: /var/log/pods

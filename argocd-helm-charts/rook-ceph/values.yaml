@@ -17,6 +17,7 @@ rook-ceph-cluster:
     enabled: true
     resources:
       limits:
+        cpu: null
         memory: "100Mi"
       requests:
         cpu: "100m"
@@ -40,6 +41,7 @@ rook-ceph-cluster:
           memory: "200Mi"
       osd:
         limits:
+          cpu: null
           memory: "1500Mi"
         requests:
           cpu: "500m"
@@ -108,6 +110,7 @@ rook-ceph-cluster:
           activeStandby: true
           resources:
             limits:
+              cpu: null
               memory: "700Mi"
             requests:
               cpu: "200m"
@@ -156,6 +159,7 @@ rook-ceph-cluster:
           port: 80
           resources:
             limits:
+              cpu: null
               memory: "300Mi"
             requests:
               cpu: "200m"

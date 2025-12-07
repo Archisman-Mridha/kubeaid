@@ -16,7 +16,6 @@ metadata:
   namespace: {{ include "k8s-prometheus-adapter.namespace" . }}
 spec:
   replicas: {{ .Values.replicas }}
-  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   strategy: {{ toYaml .Values.strategy | nindent 4 }}
   selector:
     matchLabels:

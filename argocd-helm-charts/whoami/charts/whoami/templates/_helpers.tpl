@@ -34,9 +34,9 @@ Create chart name and version as used by the chart label.
 {{/*
 Common labels
 */}}
-{{- define "whoami.commonLabels" -}}
+{{- define "whoami.labels" -}}
 helm.sh/chart: {{ include "whoami.chart" . }}
-{{ include "whoami.commonSelectorLabels" . }}
+{{ include "whoami.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -44,34 +44,11 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
-Common selector labels
-*/}}
-{{- define "whoami.commonSelectorLabels" -}}
-app.kubernetes.io/name: {{ include "whoami.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
-
-{{/*
-Component labels
-*/}}
-{{- define "whoami.componentLabels" -}}
-app.kubernetes.io/component: whoami
-{{- end -}}
-
-{{/*
-Labels
-*/}}
-{{- define "whoami.labels" -}}
-{{ include "whoami.commonLabels" . }}
-{{ include "whoami.componentLabels" . }}
-{{- end -}}
-
-{{/*
 Selector labels
 */}}
 {{- define "whoami.selectorLabels" -}}
-{{ include "whoami.commonSelectorLabels" . }}
-{{ include "whoami.componentLabels" . }}
+app.kubernetes.io/name: {{ include "whoami.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*

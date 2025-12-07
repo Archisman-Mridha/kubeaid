@@ -10,7 +10,6 @@ metadata:
   {{- end }}
 spec:
   type: {{ .Values.service.type }}
-  ipFamilyPolicy: PreferDualStack
   ports:
   {{- $enableTLS := .Values.global.enable_tls }}
   {{- $enableVMediaTLS := .Values.global.enable_vmedia_tls }}

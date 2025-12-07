@@ -186,12 +186,6 @@ spec:
                 name: argocd-cmd-params-cm
                 key: controller.self.heal.backoff.cooldown.seconds
                 optional: true
-          - name: ARGOCD_SYNC_WAVE_DELAY
-            valueFrom:
-              configMapKeyRef:
-                name: argocd-cmd-params-cm
-                key: controller.sync.wave.delay.seconds
-                optional: true
           - name: ARGOCD_APPLICATION_CONTROLLER_SYNC_TIMEOUT
             valueFrom:
               configMapKeyRef:
@@ -435,13 +429,8 @@ spec:
         {{- else }}
         emptyDir: {}
         {{- end }}
-      - name: argocd-application-controller-tmp
-        {{- if .Values.controller.emptyDir.sizeLimit }}
-        emptyDir:
-          sizeLimit: {{ .Values.controller.emptyDir.sizeLimit }}
-        {{- else }}
-        emptyDir: {}
-        {{- end }}
+      - emptyDir: {}
+        name: argocd-application-controller-tmp
       - name: argocd-repo-server-tls
         secret:
           secretName: argocd-repo-server-tls

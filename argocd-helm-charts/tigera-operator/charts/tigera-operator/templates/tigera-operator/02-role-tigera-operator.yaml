@@ -119,13 +119,6 @@ rules:
       # We need this for Typha autoscaling
       - watch
   - apiGroups:
-      - authentication.k8s.io
-    resources:
-      # The operator creates a token review to learn its identity.
-      - tokenreviews
-    verbs:
-      - create
-  - apiGroups:
       - rbac.authorization.k8s.io
     resources:
       - clusterroles
@@ -174,6 +167,7 @@ rules:
       - apiservers/status
       - gatewayapis
       - gatewayapis/finalizers
+      - gatewayapis/status
       - goldmanes
       - goldmanes/finalizers
       - goldmanes/status
@@ -215,9 +209,9 @@ rules:
     verbs:
       - delete
   - apiGroups:
-      - networking.k8s.io
+    - networking.k8s.io
     resources:
-      - networkpolicies
+    - networkpolicies
     verbs:
       - create
       - update
@@ -226,47 +220,46 @@ rules:
       - list
       - watch
   - apiGroups:
-      - crd.projectcalico.org
+    - crd.projectcalico.org
     resources:
-      - felixconfigurations
-      - ippools
+    - felixconfigurations
+    - ippools
     verbs:
-      - create
-      - patch
-      - list
-      - get
-      - watch
+    - create
+    - patch
+    - list
+    - get
+    - watch
   - apiGroups:
-      - crd.projectcalico.org
+    - crd.projectcalico.org
     resources:
-      - kubecontrollersconfigurations
-      - bgpconfigurations
-      - clusterinformations
+    - kubecontrollersconfigurations
+    - bgpconfigurations
+    - clusterinformations
     verbs:
-      - get
-      - list
-      - watch
+    - get
+    - list
+    - watch
   - apiGroups:
-      - projectcalico.org
+    - projectcalico.org
     resources:
-      - ippools
+    - ippools
     verbs:
-      - create
-      - update
-      - delete
-      - patch
-      - get
-      - list
-      - watch
+    - create
+    - update
+    - delete
+    - patch
+    - get
+    - list
+    - watch
   - apiGroups:
-      - projectcalico.org
+    - projectcalico.org
     resources:
-      - ipamconfigurations
-      - clusterinformations
+    - ipamconfigurations
     verbs:
-      - get
-      - list
-      - watch
+    - get
+    - list
+    - watch
   - apiGroups:
       - scheduling.k8s.io
     resources:
@@ -299,31 +292,11 @@ rules:
       - create
       - update
   - apiGroups:
-      - discovery.k8s.io
-    resources:
-      - endpointslices
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
       - admissionregistration.k8s.io
     resources:
       - mutatingwebhookconfigurations
     verbs:
-      - create
       - delete
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - admissionregistration.k8s.io
-    resources:
-      - mutatingwebhookconfigurations
-    resourceNames:
-      - envoy-gateway-topology-injector.tigera-gateway
-    verbs:
-      - update
   # Needed for operator lock
   - apiGroups:
       - coordination.k8s.io
@@ -416,7 +389,7 @@ rules:
     verbs:
       - create
   - apiGroups:
-      - crd.projectcalico.org
+     - crd.projectcalico.org
     resources:
       - ipamblocks
     verbs:
@@ -509,8 +482,6 @@ rules:
       - tcproutes.gateway.networking.k8s.io
       - tlsroutes.gateway.networking.k8s.io
       - udproutes.gateway.networking.k8s.io
-      - xbackendtrafficpolicies.gateway.networking.x-k8s.io
-      - xlistenersets.gateway.networking.x-k8s.io
       - backends.gateway.envoyproxy.io
       - backendtrafficpolicies.gateway.envoyproxy.io
       - clienttrafficpolicies.gateway.envoyproxy.io

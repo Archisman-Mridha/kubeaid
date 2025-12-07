@@ -56,6 +56,17 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - endpoints
+  - endpoints/restricted
+  verbs:
+  - create
+  - get
+  - list
+  - patch
+  - watch
+- apiGroups:
+  - ""
+  resources:
   - events
   - secrets
   - serviceaccounts
@@ -71,7 +82,6 @@ rules:
   - persistentvolumeclaims
   verbs:
   - create
-  - delete
   - deletecollection
   - list
   - patch
@@ -140,7 +150,6 @@ rules:
   verbs:
   - create
   - delete
-  - get
   - list
   - patch
   - watch
@@ -154,17 +163,6 @@ rules:
   - patch
   - watch
 - apiGroups:
-  - discovery.k8s.io
-  resources:
-  - endpointslices
-  - endpointslices/restricted
-  verbs:
-  - create
-  - get
-  - list
-  - patch
-  - watch
-- apiGroups:
   - k8s.mariadb.com
   resources:
   - backups
@@ -172,9 +170,7 @@ rules:
   - databases
   - grants
   - mariadbs
-  - externalmariadbs
   - maxscales
-  - physicalbackups
   - restores
   - sqljobs
   - users
@@ -194,9 +190,7 @@ rules:
   - databases/finalizers
   - grants/finalizers
   - mariadbs/finalizers
-  - externalmariadbs/finalizers
   - maxscales/finalizers
-  - physicalbackups/finalizers
   - restores/finalizers
   - sqljobs/finalizers
   - users/finalizers
@@ -210,9 +204,7 @@ rules:
   - databases/status
   - grants/status
   - mariadbs/status
-  - externalmariadbs/status
   - maxscales/status
-  - physicalbackups/status
   - restores/status
   - sqljobs/status
   - users/status
@@ -255,17 +247,6 @@ rules:
   - roles
   verbs:
   - create
-  - list
-  - patch
-  - watch
-- apiGroups:
-  - snapshot.storage.k8s.io
-  resources:
-  - volumesnapshots
-  verbs:
-  - create
-  - delete
-  - get
   - list
   - patch
   - watch

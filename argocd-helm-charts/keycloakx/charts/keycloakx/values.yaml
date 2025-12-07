@@ -11,7 +11,7 @@ image:
   # The Keycloak image repository
   repository: quay.io/keycloak/keycloak
   # Overrides the Keycloak image tag whose default is the chart appVersion
-  tag: "26.4.5"
+  tag: "26.0.7"
   # Overrides the Keycloak image tag with a specific digest
   digest: ""
   # The Keycloak image pull policy
@@ -203,17 +203,6 @@ resources: {}
 # Add additional volumes, e. g. for custom themes
 extraVolumes: ""
 
-# Add volume claim templates to the StatefulSet, e. g. for dynamic provisioning
-volumeClaimTemplates: ""
-  # - metadata:
-  #     name: themes
-  #   spec:
-  #     accessModes: [ "ReadWriteOncePod" ]
-  #     storageClassName: "my-storage-class"
-  #     resources:
-  #       requests:
-  #         storage: 1Gi
-
 # Add additional volumes mounts, e. g. for custom themes
 extraVolumeMounts: ""
 
@@ -277,8 +266,6 @@ service:
 serviceHeadless:
   # Annotations for headless service
   annotations: {}
-  # Add additional ports to the headless service, e. g. for admin console or exposing JGroups ports
-  extraPorts: []
 
 ingress:
   # If `true`, an Ingress is created
@@ -305,10 +292,10 @@ ingress:
         - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
           pathType: Prefix
   # TLS configuration
-  tls: []
-  #  - hosts:
-  #      - keycloak.example.com
-  #    secretName: ""
+  tls:
+    - hosts:
+        - keycloak.example.com
+      secretName: ""
 
   # ingress for console only (/auth/admin)
   console:
@@ -319,8 +306,6 @@ ingress:
     # Ingress annotations for console ingress only
     # Useful to set nginx.ingress.kubernetes.io/whitelist-source-range particularly
     annotations: {}
-    # Additional Ingress labels for console path only
-    labels: {}
     rules:
       -
         # Ingress host
@@ -332,9 +317,9 @@ ingress:
 
     # Console TLS configuration
     tls: []
-    # - hosts:
-    #     - console.keycloak.example.com
-    #   secretName: ""
+#      - hosts:
+#          - console.keycloak.example.com
+#        secretName: ""
 
 ## Network policy configuration
 # https://kubernetes.io/docs/concepts/services-networking/network-policies/
@@ -455,10 +440,6 @@ serviceMonitor:
   interval: 10s
   # Timeout for scraping
   scrapeTimeout: 10s
-  # Relabelings for the Servicemonitor
-  relabelings: []
-  # metricRelabelings for the Servicemonitor
-  metricRelabelings: []
   # The path at which metrics are served
   path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/metrics'
   # The Service port at which metrics are served
@@ -479,10 +460,6 @@ extraServiceMonitor:
   interval: 10s
   # Timeout for scraping
   scrapeTimeout: 10s
-  # Relabelings for the Servicemonitor
-  relabelings: []
-  # metricRelabelings for the Servicemonitor
-  metricRelabelings: []
   # The path at which metrics are served
   path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/metrics'
   # The Service port at which metrics are served

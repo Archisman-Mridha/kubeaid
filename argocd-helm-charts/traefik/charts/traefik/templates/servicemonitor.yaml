@@ -5,7 +5,7 @@
       {{- fail "ERROR: You have to deploy monitoring.coreos.com/v1 first" }}
     {{- end }}
   {{- end }}
-apiVersion: {{ .Values.metrics.prometheus.serviceMonitor.apiVersion | default "monitoring.coreos.com/v1" }}
+apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ template "traefik.fullname" . }}

@@ -10,7 +10,12 @@ local ext_vars = std.extVar('vars');
 
 local default_vars = {
   prometheus_scrape_namespaces+: [],
-
+  prometheus_scrape_default_namespaces+: [
+    'argocd',
+    'system',
+    'cert-manager',
+    'traefik',
+  ],
   // Custom kubeaid or non kubeaid apps that need AutoSync
   kubeaid_users_apps+: [],
   kubeaid_apps+: [
@@ -149,9 +154,6 @@ local default_vars = {
   prometheus_ingress_annotations: {
     'cert-manager.io/cluster-issuer': 'letsencrypt',
   },
-  alertmanager_ingress_annotations: {
-    'cert-manager.io/cluster-issuer': 'letsencrypt',
-  },
   addMixins: {
     ceph: false,
     'argo-cd': true,
@@ -172,7 +174,6 @@ local default_vars = {
     smartmon: false,
     mdraid: true,
     opencost: false,
-    'kubelet-cert-expiry': false,
   },
   mixin_configs: {
     // Example:
@@ -186,7 +187,7 @@ local default_vars = {
   grafana_dashboards+: {},
 };
 
-local vars = default_vars + ext_vars;
+local vars = std.mergePatch(default_vars, ext_vars);
 
 local mixins = remove_nulls([
   addMixin(
@@ -242,20 +243,10 @@ local mixins = remove_nulls([
     (import 'github.com/grafana/jsonnet-libs/opensearch-mixin/mixin.libsonnet'),
     vars,
   ),
-  (
-    if std.objectHas(vars, 'kube_prometheus_version') && vars.kube_prometheus_version == 'v0.13.0' then (
-      addMixin(
-        'rabbitmq',
-        (import 'github.com/adinhodovic/rabbitmq-mixin/mixin.libsonnet'),
-        vars,
-      )
-    ) else (
-      addMixin(
-        'rabbitmq',
-        (import 'github.com/grafana/jsonnet-libs/rabbitmq-mixin/mixin.libsonnet'),
-        vars,
-      )
-    )
+  addMixin(
+    'rabbitmq',
+    (import 'github.com/grafana/jsonnet-libs/rabbitmq-mixin/mixin.libsonnet'),
+    vars,
   ),
   addMixin(
     'smartmon',
@@ -277,23 +268,12 @@ local mixins = remove_nulls([
     (import 'github.com/adinhodovic/opencost-mixin/mixin.libsonnet'),
     vars,
   ),
-  addMixin(
-    'kubelet-cert-expiry',
-    (import 'mixins/kubelet-cert-expiry/mixin.libsonnet'),
-    vars,
-  ),
 ]);
 
 local scrape_namespaces = std.uniq(std.sort(std.flattenArrays(
   [
     vars.prometheus_scrape_namespaces,
-  ] + [
-    ['argocd'],
-    ['system'],
-    ['sealed-secrets'],
-    ['cert-manager'],
-    ['traefik'],
-    ['monitoring'],
+    vars.prometheus_scrape_default_namespaces,
   ] + (
     if std.objectHas(vars, 'connect_obmondo') && vars.connect_obmondo then
       [
@@ -383,7 +363,7 @@ local kp =
           externalUrl: if std.objectHas(vars, 'prometheus_ingress_host') then (
             'https://' + vars.prometheus_ingress_host
           ) else '',
-          replicas: if std.objectHas(vars.prometheus, 'replicas') then vars.prometheus.replicas else 1,
+          replicas: 1,
           resources: vars.prometheus_resources,
           retention: vars.prometheus.retention,
           storage: {
@@ -398,39 +378,8 @@ local kp =
               ) else {},
             },
           },
-          ruleNamespaceSelector+: {
-            matchExpressions:
-              [{
-                key: 'kubernetes.io/metadata.name',
-                operator: 'In',
-                values: scrape_namespaces,
-              }],
-          },
-        } + if std.objectHas(vars.prometheus, 'remoteWrite') then (
-          {
-            remoteWrite+: [
-              {
-                url: remoteWrite.url,
-                queueConfig: {
-                  maxSamplesPerSend: 10000,
-                },
-                basicAuth: {
-                  username: {
-                    name: remoteWrite.basicAuth.secret,
-                    // Field for username in secret
-                    key: 'username',
-                  },
-                  password: {
-                    name: remoteWrite.basicAuth.secret,
-                    // Field for password in secret
-                    key: 'password',
-                  },
-                },
-              }
-              for remoteWrite in vars.prometheus.remoteWrite
-            ],
-          }
-        ) else {},
+          ruleNamespaceSelector: {},
+        },
       },
       networkPolicy+: {
         spec+: {
@@ -552,7 +501,7 @@ local kp =
             endpoints: [{
               port: 'https-metrics',
               interval: '30s',
-              scheme: 'https',
+              scheme: 'http',
               bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
               tlsConfig: { insecureSkipVerify: true },
             }],
@@ -563,7 +512,7 @@ local kp =
             endpoints: [{
               port: 'https-metrics',
               interval: '30s',
-              scheme: 'https',
+              scheme: 'http',
               bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
               tlsConfig: {
                 insecureSkipVerify: true,
@@ -633,10 +582,9 @@ local kp =
         plugins: vars.grafana_plugins,
         resources: vars.grafana_resources,
         dashboards+: {
-          [mixin.name + '-' + dashboard]: mixin.grafanaDashboards[dashboard]
+          [mixin.name]: mixin.grafanaDashboards
           for mixin in mixins
           if mixin.grafanaDashboards != null
-          for dashboard in std.objectFields(mixin.grafanaDashboards)
         },
         folderDashboards+:: vars.grafana_dashboards,
         analytics+: {
@@ -714,42 +662,6 @@ local kp =
               'alertmanager-main',
             ] else []
           ),
-          storage+: {
-            volumeClaimTemplate: {
-              spec: {
-                accessModes: ['ReadWriteOnce'],
-                resources: {
-                  requests: {
-                    storage: '1Gi',  // <-- set desired size here
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-      networkPolicy+: {
-        spec+: {
-          ingress+: [
-            {
-              from: [{
-                namespaceSelector: {
-                  matchLabels: {
-                    'kubernetes.io/metadata.name': 'traefik',
-                  },
-                },
-                podSelector: {
-                  matchLabels: {
-                    'app.kubernetes.io/name': 'traefik',
-                  },
-                },
-              }],
-              ports: [{
-                port: 9093,
-                protocol: 'TCP',
-              }],
-            },
-          ],
         },
       },
     } + (
@@ -788,40 +700,6 @@ local kp =
               ],
             }],
             vars.grafana_ingress_annotations,
-          ),
-        },
-      } else {}
-  ) + (
-    if std.objectHas(vars, 'alertmanager_ingress_host') then
-      {
-        ingress+:: {
-          alertmanager: utils.ingress(
-            'alertmanager',
-            $.values.common.namespace,
-            [{
-              host: vars.alertmanager_ingress_host,
-              http: {
-                paths: [{
-                  path: '/',
-                  pathType: 'Prefix',
-                  backend: {
-                    service: {
-                      name: 'alertmanager-main',
-                      port: {
-                        name: 'web',
-                      },
-                    },
-                  },
-                }],
-              },
-            }],
-            [{
-              secretName: 'kube-prometheus-alertmanager-tls',
-              hosts: [
-                vars.alertmanager_ingress_host,
-              ],
-            }],
-            vars.alertmanager_ingress_annotations,
           ),
         },
       } else {}

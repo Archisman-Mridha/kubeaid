@@ -1,0 +1,96 @@
+puppetserver:
+  puppetserver:
+    name: puppetserver
+    puppeturl: "https://github.com/Obmondo/LinuxAid.git"
+    image: ghcr.io/voxpupuli/container-puppetserver
+    tag: 7.17.0-v1.5.0
+    masters:
+      resources:
+        requests:
+          memory: 2048Mi
+          cpu: 500m
+        limits:
+          memory: 2048Mi
+
+      ingress:
+        enabled: false
+      extraEnv:
+        PUPPETDB_JAVA_ARGS: "-Xms256m -Xmx256m -XX:+HeapDumpOnOutOfMemoryError"
+        PUPPETSERVER_MAX_ACTIVE_INSTANCES: 3
+        PUPPETSERVER_MAX_REQUESTS_PER_INSTANCE: 10000
+
+  r10k:
+    asSidecar: false
+
+  hiera:
+    name: hiera
+    hieradataurl: "https://github.com/Obmondo/linuxaid-config-template.git"
+
+  postgresql:
+    enabled: false
+
+  puppetdb:
+    enabled: true
+    name: puppetdb
+    image: ghcr.io/voxpupuli/container-puppetdb
+    tag: 7.18.0-v1.5.0
+    resources:
+      requests:
+        memory: 1024Mi
+        cpu: 250m
+      limits:
+        memory: 1024Mi
+    extraEnv:
+      PUPPETDB_POSTGRES_HOSTNAME: puppetserver-pgsql-rw
+      PUPPETDB_JAVA_ARGS: "-Xms256m -Xmx256m -XX:+HeapDumpOnOutOfMemoryError"
+
+  puppetboard:
+    enabled: true
+    name: puppetboard
+    image: ghcr.io/voxpupuli/puppetboard
+    tag: 6.0.1
+    extraEnv:
+      PUPPETBOARD_WORKERS: 2
+
+  metrics:
+    prometheus:
+      disableAPICheck: true
+      puppetdb:
+        enabled: true
+      jmx:
+        enabled: false
+
+  global:
+    postgresql:
+      auth:
+        existingSecret: puppetserver-pgsql-app
+        secretKeys:
+          usernameKey: username
+          userPasswordKey: password
+
+postgresql:
+  instance: 1
+  size: 2Gi
+  recover: false
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      memory: 256Mi
+      cpu: 100m
+
+puppetAgentExporter:
+  image: harbor.obmondo.com/obmondo/dockerfiles/puppet-agent-exporter
+  tag: v0.0.1
+  imagePullPolicy: IfNotPresent
+  extraEnv:
+    METRICS_PATH: /etc/puppetlabs/code/prometheus-dropzone
+  resources:
+    limits:
+      memory: 50Mi
+    requests:
+      memory: 50Mi
+      cpu: 20m
+
+blackbox:
+  probe: true

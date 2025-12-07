@@ -139,9 +139,7 @@ spec:
     {{- end }}
   {{- if and .Values.persistence.enabled (not $database.existingClaim) }}
   volumeClaimTemplates:
-  - apiVersion: v1	
-    kind: PersistentVolumeClaim
-    metadata:
+  - metadata:
       name: "database-data"
       labels:
 {{ include "harbor.legacy.labels" . | indent 8 }}

@@ -1,15 +1,12 @@
-{{- /*
-  Roles needed for running a Rook CephCluster
+{{/*
+Roles needed for running a Rook CephCluster
 */}}
-{{- define "library.cluster.roles" -}}
----
+{{- define "library.cluster.roles" }}
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: rook-ceph-osd
   namespace: {{ .Release.Namespace }} # namespace:cluster
-  labels:
-    {{- include "library.rook-ceph.labels" . | nindent 4 }}
 rules:
   # this is needed for rook's "key-management" CLI to fetch the vault token from the secret when
   # validating the connection details and for key rotation operations.
@@ -29,8 +26,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: rook-ceph-mgr
   namespace: {{ .Release.Namespace }} # namespace:cluster
-  labels:
-    {{- include "library.rook-ceph.labels" . | nindent 4 }}
 rules:
   - apiGroups:
       - ""
@@ -104,8 +99,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: rook-ceph-cmd-reporter
   namespace: {{ .Release.Namespace }} # namespace:cluster
-  labels:
-    {{- include "library.rook-ceph.labels" . | nindent 4 }}
 rules:
   - apiGroups:
       - ""
@@ -126,8 +119,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: rook-ceph-purge-osd
   namespace: {{ .Release.Namespace }} # namespace:cluster
-  labels:
-    {{- include "library.rook-ceph.labels" . | nindent 4 }}
 rules:
   - apiGroups: [""]
     resources: ["configmaps"]

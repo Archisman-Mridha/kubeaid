@@ -67,6 +67,15 @@ rbac:
   customMetrics:
     resources: ["*"]
 
+psp:
+  # Specifies whether PSP resources should be created
+  create: false
+  # Annotations added to the pod security policy
+  annotations: {}
+  ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#apparmor
+  ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#seccomp
+  ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#sysctl
+
 # If false then the user will opt out of automounting API credentials.
 automountServiceAccountToken: true
 
@@ -283,8 +292,6 @@ podDisruptionBudget:
   enabled: false
   minAvailable:
   maxUnavailable: 1
-  # See https://kubernetes.io/docs/tasks/run-application/configure-pdb/#unhealthy-pod-eviction-policy for possible values
-  unhealthyPodEvictionPolicy:
 
 certManager:
   enabled: false
@@ -305,6 +312,3 @@ extraManifests: []
   #     name: prometheus-extra
   #   data:
   #     extra-data: "value"
-
-# Optional: set revisionHistoryLimit for the Deployment
-revisionHistoryLimit: 10

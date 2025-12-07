@@ -54,7 +54,7 @@ OpenShift:
 # Set the chart to use the latest released SonarQube Community Build
 community:
   enabled: false
-  buildNumber: "25.9.0.112764"
+  buildNumber: "25.5.0.107428"
 
 image:
   repository: sonarqube
@@ -489,13 +489,6 @@ persistence:
   ## Specify extra mounts. Refer to ".spec.containers.volumeMounts" specification : https://kubernetes.io/fr/docs/concepts/storage/volumes/
   mounts: []
 
-  # In case you want to specify hostPath for to storage into the host.
-  # hostPath:
-  #   # Path where the data will be stored.
-  #   path: /data/sonarqube/
-  #   # Type of volume. Must be one of: DirectoryOrCreate, Directory, FileOrCreate, File, Socket, CharDevice, BlockDevice.
-  #   type: DirectoryOrCreate
-
 # In case you want to specify different resources for emptyDir than {}
 emptyDir: {}
   # Example of resouces that might be used:
@@ -551,32 +544,8 @@ postgresql:
   #   imageRegistry: ''
   #   imagePullSecrets: ''
   ## bitnami/postgres image tag
-  image:
-    repository: "bitnamilegacy/postgresql"
-    tag: 11.14.0
-  # Set the readiness probe to avoid that the initialization scripts' are not completed before marking the pod as ready.
-  readinessProbe:
-    enabled: false
-  customReadinessProbe:
-    exec:
-      command:
-        - /bin/sh
-        - -c
-        - -e
-        - |
-          {{- if (include "postgresql.database" .) }}
-          exec pg_isready -U {{ include "postgresql.username" . | quote }} -d "dbname={{ include "postgresql.database" . }} {{- if .Values.tls.enabled }} sslcert={{ include "postgresql.tlsCert" . }} sslkey={{ include "postgresql.tlsCertKey" . }}{{- end }}" -h 127.0.0.1 -p {{ .Values.containerPorts.postgresql }}
-          {{- else }}
-          exec pg_isready -U {{ include "postgresql.username" . | quote }} {{- if .Values.tls.enabled }} -d "sslcert={{ include "postgresql.tlsCert" . }} sslkey={{ include "postgresql.tlsCertKey" . }}"{{- end }} -h 127.0.0.1 -p {{ .Values.containerPorts.postgresql }}
-          {{- end }}
-          {{- if contains "bitnamilegacy/" .Values.image.repository }}
-          [ -f /opt/bitnami/postgresql/tmp/.initialized ] || [ -f /bitnami/postgresql/.initialized ]
-          {{- end }}
-    failureThreshold: 6
-    initialDelaySeconds: 5
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 5
+  # image:
+  #   tag: 11.7.0-debian-10-r9
   # existingSecret Name of existing secret to use for PostgreSQL passwords
   # The secret has to contain the keys postgresql-password which is the password for postgresqlUsername when it is
   # different of postgres, postgresql-postgres-password which will override postgresqlPassword,
@@ -702,6 +671,7 @@ extraConfig:
 #      memory: 128Mi
 #  image:
 #  annotations: {}
+
 
 # (DEPRECATED) please use setAdminPassword instead
 # account:

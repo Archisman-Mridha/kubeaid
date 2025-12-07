@@ -1,26 +1,14 @@
-# redis
+# Redis Operator Helm Chart
+
+## Introduction
 
 This Helm chart deploys the redis-operator into your Kubernetes cluster. The operator facilitates the deployment, scaling, and management of Redis clusters and other Redis resources provided by the OpsTree Solutions team.
 
-**Homepage:** <https://github.com/ot-container-kit/redis-operator>
-
-## Maintainers
-
-| Name | Email | Url |
-| ---- | ------ | --- |
-| iamabhishek-dubey |  |  |
-| sandy724 |  |  |
-| shubham-cmyk |  |  |
-
-## Pre-Requisities
+## Pre-requisites
 
 - Helm v3+
 - Kubernetes v1.16+
-- If you plan to use cert-manager integration (certmanager.enabled=true), cert-manager must be pre-installed in your cluster
-
-## Source Code
-
-* <https://github.com/ot-container-kit/redis-operator>
+- If you intend to use the cert-manager, ensure that the cert-manager CRDs are installed before deploying the redis-operator.
 
 ## Installation Steps
 
@@ -30,10 +18,13 @@ This Helm chart deploys the redis-operator into your Kubernetes cluster. The ope
 helm repo add ot-helm https://ot-container-kit.github.io/helm-charts
 ```
 
-### 2. Install Cert-Manager (Optional)
+### 2. Install Cert-Manager CRDs (if using cert-manager)
 
-If you plan to use cert-manager with the redis-operator, you need to install cert-manager before deploying the operator.
-You can follow the [official cert-manager installation guide](https://cert-manager.io/docs/installation/).
+If you plan to use cert-manager with the redis-operator, you need to install the cert-manager CRDs before deploying the operator.
+
+```bash
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.12.4/cert-manager.crds.yaml
+```
 
 ### 3. Install Redis Operator
 
@@ -46,8 +37,6 @@ helm install <redis-operator> ot-helm/redis-operator --version=0.15.5 --appVersi
 > Note: If `certificate.secretName` is not provided, the operator will generate a self-signed certificate and use it for webhook server.
 ---
 > Note : If you want to disable the webhook you have to pass the `--set webhook=false` and `--set certmanager.enabled=false`  while installing the redis-operator.
----
-> Note: If you want to use an existing `ClusterIssuer` to sign the webhook certificate, you can pass `--set issuer.create=false`, `--set issuer.kind=ClusterIssuer` and `--set issuer.name=cluster-issuer-name-here` while installing the operator.
 
 ### 4. Patch the CA Bundle (if using cert-manager)
 
@@ -83,56 +72,41 @@ kubectl create secret tls <webhook-server-cert> --key tls.key --cert tls.crt -n 
 
 > Note: This secret will be used for webhook server certificate so generate it before installing the redis-operator.
 
-## Values
+## Default Values
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| affinity | object | `{}` |  |
-| certificate.name | string | `"serving-cert"` |  |
-| certificate.secretName | string | `"webhook-server-cert"` |  |
-| certmanager.apiVersion | string | `"cert-manager.io/v1"` |  |
-| certmanager.enabled | bool | `false` |  |
-| featureGates.GenerateConfigInInitContainer | bool | `false` |  |
-| issuer.create | bool | `true` |  |
-| issuer.email | string | `"shubham.gupta@opstree.com"` |  |
-| issuer.kind | string | `"Issuer"` |  |
-| issuer.name | string | `"redis-operator-issuer"` |  |
-| issuer.privateKeySecretName | string | `"letsencrypt-prod"` |  |
-| issuer.server | string | `"https://acme-v02.api.letsencrypt.org/directory"` |  |
-| issuer.solver.enabled | bool | `true` |  |
-| issuer.solver.ingressClass | string | `"nginx"` |  |
-| issuer.type | string | `"selfSigned"` |  |
-| manager.config.kubeClientQPS | float | `0` | If value > 0, it will override the default value in the operator |
-| manager.config.kubeClientTimeout | string | `"60s"` |  |
-| nodeSelector | object | `{}` |  |
-| podSecurityContext | object | `{}` |  |
-| priorityClassName | string | `""` |  |
-| rbac.enabled | bool | `true` |  |
-| redisOperator.automountServiceAccountToken | bool | `true` |  |
-| redisOperator.env | list | `[]` |  |
-| redisOperator.extraArgs | list | `[]` |  |
-| redisOperator.imageName | string | `"quay.io/opstree/redis-operator"` |  |
-| redisOperator.imagePullPolicy | string | `"Always"` |  |
-| redisOperator.imagePullSecrets | list | `[]` |  |
-| redisOperator.imageTag | string | `""` |  |
-| redisOperator.metrics.bindAddress | string | `":8080"` |  |
-| redisOperator.metrics.enabled | bool | `true` |  |
-| redisOperator.name | string | `"redis-operator"` |  |
-| redisOperator.podAnnotations | object | `{}` |  |
-| redisOperator.podLabels | object | `{}` |  |
-| redisOperator.pprof.bindAddress | string | `":6060"` |  |
-| redisOperator.pprof.enabled | bool | `false` |  |
-| redisOperator.watchNamespace | string | `""` |  |
-| redisOperator.webhook | bool | `false` |  |
-| replicas | int | `1` |  |
-| resources.limits.cpu | string | `"500m"` |  |
-| resources.limits.memory | string | `"500Mi"` |  |
-| resources.requests.cpu | string | `"500m"` |  |
-| resources.requests.memory | string | `"500Mi"` |  |
-| securityContext | object | `{}` |  |
-| service.name | string | `"webhook-service"` |  |
-| service.namespace | string | `"redis-operator"` |  |
-| serviceAccount.automountServiceAccountToken | bool | `true` |  |
-| serviceAccountName | string | `"redis-operator"` |  |
-| tolerateAllTaints | bool | `false` |  |
-| tolerations | list | `[]` |  |
+| Parameter                           | Description                        | Default                                                      |
+|-------------------------------------|------------------------------------|--------------------------------------------------------------|
+| `redisOperator.name`                | Operator name                      | `redis-operator`                                             |
+| `redisOperator.imageName`           | Image repository                   | `quay.io/opstree/redis-operator`                             |
+| `redisOperator.imageTag`            | Image tag                          |  `{{appVersion}}`                                                        |
+| `redisOperator.imagePullPolicy`     | Image pull policy                  | `Always`                                                     |
+| `redisOperator.podAnnotations`        | Additional pod annotations         | `{}`                                                         |
+| `redisOperator.podLabels`             | Additional Pod labels             | `{}`                                                         |
+| `redisOperator.extraArgs`             | Additional arguments for the operator | `{}`                                                         |
+| `redisOperator.watch_namespace`       | Namespace for the operator to watch  | `""`                                                         |
+| `redisOperator.env`                  | Environment variables for the operator | `{}`                                                         |
+| `redisOperator.webhook`              | Enable webhook                     | `false`                                                     |
+| `resources.limits.cpu`              | CPU limit                          | `500m`                                                      |
+| `resources.limits.memory`           | Memory limit                       | `500Mi`                                                     |
+| `resources.requests.cpu`            | CPU request                        | `500m`                                                      |
+| `resources.requests.memory`         | Memory request                     | `500Mi`                                                     |
+| `replicas`                          | Number of replicas                 | `1`                                                         |
+| `serviceAccountName`                | Service account name               | `redis-operator`                                             |
+| `certificate.name`                  | Certificate name                   | `serving-cert`                                               |
+| `certificate.secretName`            | Certificate secret name            | `webhook-server-cert`                                      |
+| `issuer.type`                      | Issuer type                       | `selfSigned`                                                   |
+| `issuer.name`                       | Issuer name                        | `redis-operator-issuer`                                           |
+| `issuer.email`                      | Issuer email                       | `shubham.gupta@opstree.com`                                  |
+| `issuer.server`                     | Issuer server URL                  | `https://acme-v02.api.letsencrypt.org/directory`            |
+| `issuer.privateKeySecretName`       | Private key secret name            | `letsencrypt-prod`                                           |
+| `certManager.enabled`              | Enable cert-manager                | `false`                                                       |
+
+## Scheduling Parameters
+
+| Parameter               | Description                                | Default  |
+|-------------------------|--------------------------------------------|----------|
+| `priorityClassName`     | Priority class name for the pods           | `""`     |
+| `nodeSelector`          | Labels for pod assignment                  | `{}`     |
+| `tolerateAllTaints`     | Whether to tolerate all node taints         | `false`  |
+| `tolerations`           | Taints to tolerate                         | `[]`     |
+| `affinity`              | Affinity rules for pod assignment          | `{}`     |

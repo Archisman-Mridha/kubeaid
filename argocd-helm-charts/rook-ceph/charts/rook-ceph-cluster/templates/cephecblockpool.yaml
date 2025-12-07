@@ -1,36 +1,36 @@
 {{- $root := . -}}
-{{- range $ecblockpool := .Values.cephECBlockPools }}
+{{- range $ecblockpool := .Values.cephECBlockPools -}}
 ---
-kind: CephBlockPool
 apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
 metadata:
   name: {{ $ecblockpool.name }}
   namespace: {{ $root.Release.Namespace }} # namespace:cluster
 spec:
-  {{- $ecblockpool.spec.dataPool | toYaml | nindent 2 }}
+{{ toYaml $ecblockpool.spec.dataPool | indent 2 }}
 ---
-kind: CephBlockPool
 apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
 metadata:
   name: {{ $ecblockpool.name }}-metadata
   namespace: {{ $root.Release.Namespace }} # namespace:cluster
 spec:
-  {{- $ecblockpool.spec.metadataPool | toYaml | nindent 2 }}
-{{- if $ecblockpool.storageClass.enabled }}
+{{ toYaml $ecblockpool.spec.metadataPool | indent 2 }}
 ---
-kind: StorageClass
+{{- if default false $ecblockpool.storageClass.enabled }}
 apiVersion: storage.k8s.io/v1
+kind: StorageClass
 metadata:
   name: {{ $ecblockpool.storageClass.name }}
-  {{- with $ecblockpool.storageClass.labels }}
+{{- if $ecblockpool.storageClass.labels }}
   labels:
-    {{- . | toYaml | nindent 4 }}
-  {{- end }}
+{{ toYaml $ecblockpool.storageClass.labels | indent 4 }}
+{{- end }}
   annotations:
-    storageclass.kubernetes.io/is-default-class: "{{ if $ecblockpool.storageClass.isDefault }}true{{ else }}false{{ end }}"
-    {{- with $ecblockpool.storageClass.annotations }}
-    {{- . | toYaml | nindent 4 }}
-    {{- end }}
+    storageclass.kubernetes.io/is-default-class: "{{ if default false $ecblockpool.storageClass.isDefault }}true{{ else }}false{{ end }}"
+{{- if $ecblockpool.storageClass.annotations }}
+{{ toYaml $ecblockpool.storageClass.annotations | indent 4 }}
+{{- end }}
 
 {{- if $root.Values.csiDriverNamePrefix }}
 provisioner: {{ $root.Values.csiDriverNamePrefix }}.rbd.csi.ceph.com
@@ -50,8 +50,6 @@ parameters:
   csi.storage.k8s.io/provisioner-secret-namespace: {{ $root.Release.Namespace }} # namespace:cluster
   csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
   csi.storage.k8s.io/controller-expand-secret-namespace: {{ $root.Release.Namespace }} # namespace:cluster
-  csi.storage.k8s.io/controller-publish-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/controller-publish-secret-namespace: {{ $root.Release.Namespace }} # namespace:cluster
   csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
   csi.storage.k8s.io/node-stage-secret-namespace: {{ $root.Release.Namespace }} # namespace:cluster
   # Specify the filesystem type of the volume. If not specified, csi-provisioner
@@ -65,5 +63,5 @@ parameters:
 #mounter: rbd-nbd
 allowVolumeExpansion: {{ $ecblockpool.storageClass.allowVolumeExpansion }}
 reclaimPolicy: {{ $ecblockpool.storageClass.reclaimPolicy }}
-{{- end }}
-{{- end }}
+{{ end }}
+{{ end }}

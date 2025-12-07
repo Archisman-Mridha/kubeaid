@@ -1,13 +1,12 @@
 {{- if .Values.cleanupController.enabled -}}
-{{- if not .Values.global.templating.debug -}}
-{{- $automountSAToken := .Values.cleanupController.rbac.serviceAccount.automountServiceAccountToken -}}
+{{- if not .Values.templating.debug -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "kyverno.cleanup-controller.name" . }}
   namespace: {{ template "kyverno.namespace" . }}
   {{- if .Values.webhooksCleanup.autoDeleteWebhooks.enabled }}
-  {{- if not .Values.global.templating.enabled }}
+  {{- if not .Values.templating.enabled }}
   finalizers:
   - kyverno.io/policywebhooks
   - kyverno.io/ttlwebhooks
@@ -91,7 +90,6 @@ spec:
         {{- end }}
       {{- end }}
       serviceAccountName: {{ template "kyverno.cleanup-controller.serviceAccountName" . }}
-      automountServiceAccountToken: {{ $automountSAToken }}
       containers:
         - name: controller
           image: {{ include "kyverno.cleanup-controller.image" (dict "globalRegistry" .Values.global.image.registry "image" .Values.cleanupController.image "defaultTag" .Chart.AppVersion) | quote }}
@@ -112,8 +110,9 @@ spec:
             - --caSecretName={{ template "kyverno.cleanup-controller.name" . }}.{{ template "kyverno.namespace" . }}.svc.kyverno-tls-ca
             - --tlsSecretName={{ template "kyverno.cleanup-controller.name" . }}.{{ template "kyverno.namespace" . }}.svc.kyverno-tls-pair
             - --servicePort={{ .Values.cleanupController.service.port }}
-            - --resyncPeriod={{ .Values.cleanupController.resyncPeriod | default .Values.global.resyncPeriod }}
             - --cleanupServerPort={{ .Values.cleanupController.server.port }}
+            - --webhookServerPort={{ .Values.cleanupController.webhookServer.port }}
+            - --resyncPeriod={{ .Values.cleanupController.resyncPeriod | default .Values.global.resyncPeriod }}
             {{- if .Values.webhooksCleanup.autoDeleteWebhooks.enabled }}
             - --autoDeleteWebhooks
             {{- end }}
@@ -197,32 +196,5 @@ spec:
           readinessProbe:
             {{- tpl (toYaml .) $ | nindent 12 }}
           {{- end }}
-          {{- if not $automountSAToken }}
-          volumeMounts:
-            - name: serviceaccount-token
-              mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-              readOnly: true
-          {{- end }}
-      {{- if not $automountSAToken }}
-      volumes:
-        - name: serviceaccount-token
-          projected:
-            defaultMode: 0444
-            sources:
-              - serviceAccountToken:
-                  expirationSeconds: 3607
-                  path: token
-              - configMap:
-                  name: kube-root-ca.crt
-                  items:
-                    - key: ca.crt
-                      path: ca.crt
-              - downwardAPI:
-                  items:
-                    - path: namespace
-                      fieldRef:
-                        apiVersion: v1
-                        fieldPath: metadata.namespace
-      {{- end }}
 {{- end -}}
 {{- end -}}

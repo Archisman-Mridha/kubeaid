@@ -1,5 +1,5 @@
 {{- if .Values.podDisruptionBudget.enabled }}
-apiVersion: policy/v1
+apiVersion: {{ include "k8s-prometheus-adapter.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
   name: {{ template "k8s-prometheus-adapter.fullname" . }}
@@ -11,17 +11,12 @@ metadata:
   labels:
     {{- include "k8s-prometheus-adapter.labels" . | indent 4 }}
 spec:
-  {{- with .Values.podDisruptionBudget }}
-  {{- if .minAvailable }}
-  minAvailable: {{ .minAvailable }}
-  {{- end }}
-  {{- if .maxUnavailable }}
-  maxUnavailable: {{ .maxUnavailable }}
-  {{- end }}
-  {{- if .unhealthyPodEvictionPolicy }}
-  unhealthyPodEvictionPolicy: {{ .unhealthyPodEvictionPolicy }}
-  {{- end }}
-  {{- end }}
+  {{- if .Values.podDisruptionBudget.minAvailable }}
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+  {{- end  }}
+  {{- if .Values.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
+  {{- end  }}
   selector:
     matchLabels:
       {{- include "k8s-prometheus-adapter.selectorLabels" . | indent 6 }}

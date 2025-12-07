@@ -3,12 +3,6 @@ gitea:
     enabled: false
   postgresql:
     enabled: false
-  postgresql-ha:
-    enabled: false
-  valkey-cluster:
-    enabled: false
-  admin:
-    passwordMode: initialOnlyNoReset
   deployment:
     env:
       - name: "GITEA__database__DB_TYPE"

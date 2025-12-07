@@ -1,4 +1,0 @@
-kind: Deployment
-service:
-  ipFamilies: [IPv4]
-  ipFamilyPolicy: SingleStack

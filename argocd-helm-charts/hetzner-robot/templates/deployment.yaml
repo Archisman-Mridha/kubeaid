@@ -25,7 +25,7 @@ spec:
         env:
         - name: FAILOVER_IP
           value: {{ .Values.failoverIP }}
-        - name: SERVER_IP
+        - name: NODE_IP
           valueFrom:
             fieldRef:
               fieldPath: status.hostIP

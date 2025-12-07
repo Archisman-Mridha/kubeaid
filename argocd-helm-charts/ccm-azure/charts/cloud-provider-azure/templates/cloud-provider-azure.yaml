@@ -17,15 +17,13 @@
 {{- else if eq .Capabilities.KubeVersion.Minor "29" -}}
   {{- $_ := set . "cloudProviderAzureVersion" "v1.29.15" }}
 {{- else if eq .Capabilities.KubeVersion.Minor "30" -}}
-  {{- $_ := set . "cloudProviderAzureVersion" "v1.30.15" }}
+  {{- $_ := set . "cloudProviderAzureVersion" "v1.30.12" }}
 {{- else if eq .Capabilities.KubeVersion.Minor "31" -}}
-  {{- $_ := set . "cloudProviderAzureVersion" "v1.31.10" }}
+  {{- $_ := set . "cloudProviderAzureVersion" "v1.31.6" }}
 {{- else if eq .Capabilities.KubeVersion.Minor "32" -}}
-  {{- $_ := set . "cloudProviderAzureVersion" "v1.32.9" }}
+  {{- $_ := set . "cloudProviderAzureVersion" "v1.32.5" }}
 {{- else if eq .Capabilities.KubeVersion.Minor "33" -}}
-  {{- $_ := set . "cloudProviderAzureVersion" "v1.33.4" }}
-{{- else if eq .Capabilities.KubeVersion.Minor "34" -}}
-  {{- $_ := set . "cloudProviderAzureVersion" "v1.34.2" }}
+  {{- $_ := set . "cloudProviderAzureVersion" "v1.33.0" }}
 {{- end -}}
 {{- if .Values.cloudControllerManager.enabled }}
 apiVersion: v1
@@ -180,10 +178,6 @@ spec:
       tier: control-plane
       component: cloud-controller-manager
   replicas: {{ .Values.cloudControllerManager.replicas }}
-  {{- if .Values.cloudControllerManager.updateStrategy }}
-  strategy:
-  {{- toYaml .Values.cloudControllerManager.updateStrategy | nindent 4 }}
-  {{- end }}
   template:
     metadata:
       labels:

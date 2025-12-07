@@ -27,20 +27,12 @@ Create chart name and version as used by the chart label.
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{- define "reloader-match-labels.chart" -}}
-app: {{ template "reloader-fullname" . }}
-release: {{ .Release.Name | quote }}
-{{- end -}}
-
 {{- define "reloader-labels.chart" -}}
-{{ include "reloader-match-labels.chart" . }}
-app.kubernetes.io/name: {{ template "reloader-name" . }}
-app.kubernetes.io/instance: {{ .Release.Name | quote }}
-helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+app: {{ template "reloader-fullname" . }}
 chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+release: {{ .Release.Name | quote }}
 heritage: {{ .Release.Service | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end -}}
 
 {{/*
@@ -53,10 +45,10 @@ podAntiAffinity:
     podAffinityTerm:
       labelSelector:
         matchExpressions:
-        - key: app.kubernetes.io/instance
+        - key: app
           operator: In
           values:
-          - {{ .Release.Name | quote }}
+          - {{ template "reloader-fullname" . }}
       topologyKey: "kubernetes.io/hostname"
 {{- end -}}
 
@@ -77,13 +69,4 @@ Create the annotations to support helm3
 {{- define "reloader-helm3.annotations" -}}
 meta.helm.sh/release-namespace: {{ .Release.Namespace | quote }}
 meta.helm.sh/release-name: {{ .Release.Name | quote }}
-{{- end -}}
-
-{{/*
-Create the namespace selector if it does not watch globally
-*/}}
-{{- define "reloader-namespaceSelector" -}}
-{{- if and .Values.reloader.watchGlobally .Values.reloader.namespaceSelector -}}
-    {{ .Values.reloader.namespaceSelector }}
-{{- end -}}
 {{- end -}}

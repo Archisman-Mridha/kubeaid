@@ -1,24 +1,22 @@
-{{- if ne .Values.prometheus.routePrefix "/" }}
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: grafana
-  namespace: {{ template "prometheus-linuxaid.namespace" . }}
+  name: grafana-{{ .Values.customerid }}
+  namespace: monitoring-{{ .Values.customerid }}
 spec:
   entryPoints:
     - websecure
   routes:
   - kind: Rule
-    match: Host(`{{ .Values.grafana.server }}`) && PathPrefix(`{{ .Values.prometheus.routePrefix }}`)
+    match: Host(`{{ .Values.grafana.server }}`) && PathPrefix(`/{{ .Values.customerid }}`)
     priority: 10
     services:
     - kind: Service
-      name: grafana-service
-      namespace: {{ template "prometheus-linuxaid.namespace" . }}
+      name: grafana-{{ .Values.customerid }}-service
+      namespace: monitoring-{{ .Values.customerid }}
       passHostHeader: true
       port: grafana
       nativeLB: true
     middlewares:
-      - name: grafana-chain
-        namespace: {{ template "prometheus-linuxaid.namespace" . }}
-{{- end }}
+      - name: grafana-chain-{{ .Values.customerid }}
+        namespace: monitoring-{{ .Values.customerid }}

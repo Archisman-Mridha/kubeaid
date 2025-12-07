@@ -22,9 +22,9 @@ global:
 replicaCount: 1
 
 image:
-  repository: registry.suse.com/suse/nginx
+  repository: registry.opensuse.org/isv/suse/edge/metal3/containers/images/ironic
   pullPolicy: IfNotPresent
-  tag: 1.21
+  tag: 26.1.2.4
 
 imagePullSecrets: []
 nameOverride: ""
@@ -42,8 +42,8 @@ serviceAccount:
 podAnnotations: {}
 
 podSecurityContext:
-  runAsUser: 499
-  fsGroup: 486
+  runAsUser: 10475
+  fsGroup: 10475
 
 securityContext:
   allowPrivilegeEscalation: false
@@ -102,16 +102,11 @@ volumes:
   - name: assets
     persistentVolumeClaim:
       claimName: media
-  - name: run
-    emptyDir:
-      sizeLimit: 10Mi
 
 # volume mounts
 volumeMounts:
   - mountPath: /srv/www/htdocs
     name: assets
-  - mountPath: /run
-    name: run
 
 # media volume settings
 mediaVolume:

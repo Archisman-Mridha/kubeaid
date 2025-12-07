@@ -2,9 +2,9 @@
 
 OpenCost and OpenCost UI
 
-![Version: 2.4.1](https://img.shields.io/badge/Version-2.4.1-informational?style=flat-square)
+![Version: 2.1.6](https://img.shields.io/badge/Version-2.1.6-informational?style=flat-square)
 ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
-![AppVersion: 1.118.0](https://img.shields.io/badge/AppVersion-1.118.0-informational?style=flat-square)
+![AppVersion: 1.115.0](https://img.shields.io/badge/AppVersion-1.115.0-informational?style=flat-square)
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/opencost)](https://artifacthub.io/packages/search?repo=opencost)
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/opencost-oci)](https://artifacthub.io/packages/search?repo=opencost-oci)
 
@@ -57,6 +57,7 @@ $ helm install opencost opencost/opencost
 | opencost.customPricing.createConfigmap | bool | `true` | Configures the pricing model provided in the values file. |
 | opencost.customPricing.enabled | bool | `false` | Enables custom pricing configuration |
 | opencost.customPricing.provider | string | `"custom"` | Sets the provider type for the custom pricing file. |
+| opencost.dataRetention.dailyResolutionDays | int | `15` |  |
 | opencost.exporter.apiIngress.annotations | object | `{}` | Annotations for Ingress resource |
 | opencost.exporter.apiIngress.enabled | bool | `false` | Ingress for OpenCost API |
 | opencost.exporter.apiIngress.hosts | list | See [values.yaml](values.yaml) | A list of host rules used to configure the Ingress |
@@ -69,23 +70,21 @@ $ helm install opencost opencost/opencost
 | opencost.exporter.cloudProviderApiKey | string | `""` | The GCP Pricing API requires a key. This is supplied just for evaluation. |
 | opencost.exporter.collectorDataSource.enabled | bool | `false` |  |
 | opencost.exporter.collectorDataSource.networkPort | int | `3001` | The port at which network pods are open to egress |
-| opencost.exporter.collectorDataSource.retention10m | int | `36` | The number of 10m intervals the Collector DataSource should maintain |
-| opencost.exporter.collectorDataSource.retention1d | int | `15` | The number of 1d intervals the Collector DataSource should maintain |
-| opencost.exporter.collectorDataSource.retention1h | int | `49` | The number of 1h intervals the Collector DataSource should maintain |
+| opencost.exporter.collectorDataSource.retentionResolution10m | int | `36` | The number of 10m intervals the Collector DataSource should maintain |
+| opencost.exporter.collectorDataSource.retentionResolution1d | int | `15` | The number of 1d intervals the Collector DataSource should maintain |
+| opencost.exporter.collectorDataSource.retentionResolution1h | int | `49` | The number of 1h intervals the Collector DataSource should maintain |
 | opencost.exporter.collectorDataSource.scrapeInterval | string | `"30s"` | define the interval at which the collector scrapes for data points (10s, 15s, 1m) |
-| opencost.exporter.command | list | `[]` | Optional command to override the default container command |
 | opencost.exporter.csv_path | string | `""` |  |
 | opencost.exporter.defaultClusterId | string | `"default-cluster"` | Default cluster ID to use if cluster_id is not set in Prometheus metrics. |
 | opencost.exporter.env | list | `[]` | List of additional environment variables to set in the container |
 | opencost.exporter.extraArgs | list | `[]` | List of extra arguments for the command, e.g.: log-format=json |
 | opencost.exporter.extraEnv | object | `{}` | Any extra environment variables you would like to pass on to the pod |
 | opencost.exporter.extraVolumeMounts | list | `[]` | A list of volume mounts to be added to the pod |
-| opencost.exporter.image | object | `{"fullImageName":null,"pullPolicy":"IfNotPresent","registry":"ghcr.io","repository":"opencost/opencost","tag":"1.118.0@sha256:c1a08767fe3c3b2964a75885c145bae0cba32225c0b4c1e0382a77566aef93e9"}` | This overrides the above defaultClusterId. Ensure the ConfigMap exists and contains the required CLUSTER_ID key. clusterIdConfigmap: cluster-id-configmap |
 | opencost.exporter.image.fullImageName | string | `nil` | Override the full image name for development purposes |
 | opencost.exporter.image.pullPolicy | string | `"IfNotPresent"` | Exporter container image pull policy |
 | opencost.exporter.image.registry | string | `"ghcr.io"` | Exporter container image registry |
 | opencost.exporter.image.repository | string | `"opencost/opencost"` | Exporter container image name |
-| opencost.exporter.image.tag | string | `"1.118.0@sha256:c1a08767fe3c3b2964a75885c145bae0cba32225c0b4c1e0382a77566aef93e9"` | Exporter container image tag |
+| opencost.exporter.image.tag | string | `"1.115.0@sha256:fb6468a1ef45dbd4a9e521122c8d306f882bb33d1657d28d21aeaef79412e9e1"` | Exporter container image tag |
 | opencost.exporter.livenessProbe.enabled | bool | `true` | Whether probe is enabled |
 | opencost.exporter.livenessProbe.failureThreshold | int | `3` | Number of failures for probe to be considered failed |
 | opencost.exporter.livenessProbe.initialDelaySeconds | int | `10` | Number of seconds before probe is initiated |
@@ -97,7 +96,6 @@ $ helm install opencost opencost/opencost
 | opencost.exporter.persistence.mountPath | string | `"/mnt/export"` | The path that the PV will be mounted to the exporter at |
 | opencost.exporter.persistence.size | string | `""` | Size for persistent volume |
 | opencost.exporter.persistence.storageClass | string | `""` | Storage class for persistent volume |
-| opencost.exporter.prometheusDataSource.queryResolutionSeconds | int | `300` |  |
 | opencost.exporter.readinessProbe.enabled | bool | `true` | Whether probe is enabled |
 | opencost.exporter.readinessProbe.failureThreshold | int | `3` | Number of failures for probe to be considered failed |
 | opencost.exporter.readinessProbe.initialDelaySeconds | int | `10` | Number of seconds before probe is initiated |
@@ -113,14 +111,6 @@ $ helm install opencost opencost/opencost
 | opencost.exporter.startupProbe.path | string | `"/healthz"` | Probe path |
 | opencost.exporter.startupProbe.periodSeconds | int | `5` | Probe frequency in seconds |
 | opencost.extraContainers | list | `[]` | extra sidecars to add to the pod.  Useful for things like oauth-proxy for the UI |
-| opencost.mcp | object | `{"enabled":true,"ingress":{"annotations":{},"enabled":false,"hosts":[{"host":"example.local","paths":[{"path":"/","pathType":"Prefix"}]}],"ingressClassName":"","tls":[]},"port":8081}` | MCP (Model Context Protocol) Server Configuration The MCP server provides AI agents with access to cost allocation and asset data |
-| opencost.mcp.enabled | bool | `true` | Enable MCP server for AI agent integration (default: true) Set to false to disable MCP server completely |
-| opencost.mcp.ingress.annotations | object | `{}` | Annotations for Ingress resource |
-| opencost.mcp.ingress.enabled | bool | `false` | Ingress for MCP server |
-| opencost.mcp.ingress.hosts | list | See [values.yaml](values.yaml) | A list of host rules used to configure the Ingress |
-| opencost.mcp.ingress.ingressClassName | string | `""` | Ingress controller which implements the resource |
-| opencost.mcp.ingress.tls | list | `[]` | Ingress TLS configuration |
-| opencost.mcp.port | int | `8081` | HTTP port for MCP server (default: 8081) Change this if port 8081 conflicts with other services |
 | opencost.metrics.config.configmapName | string | `"custom-metrics"` | Customize the configmap name used for metrics |
 | opencost.metrics.config.disabledMetrics | list | `[]` | List of metrics to be disabled |
 | opencost.metrics.config.enabled | bool | `false` | Enables creating the metrics.json configuration as a ConfigMap |
@@ -154,10 +144,8 @@ $ helm install opencost opencost/opencost
 | opencost.prometheus.existingSecretName | string | `nil` | Existing secret name that contains credentials for Prometheus |
 | opencost.prometheus.external.enabled | bool | `false` | Use external Prometheus (eg. Grafana Cloud) |
 | opencost.prometheus.external.url | string | `"https://prometheus.example.com/prometheus"` | External Prometheus url |
-| opencost.prometheus.insecureSkipVerify | bool | `false` | Whether to disable SSL certificate verification |
 | opencost.prometheus.internal.enabled | bool | `true` | Use in-cluster Prometheus |
 | opencost.prometheus.internal.namespaceName | string | `"prometheus-system"` | Namespace of in-cluster Prometheus |
-| opencost.prometheus.internal.path | string | `""` | Path to access the Prometheus API, this is neccesary if the Prometheus server is behind a reverse proxy(mimir) or has a different path. |
 | opencost.prometheus.internal.port | int | `80` | Service port of in-cluster Prometheus |
 | opencost.prometheus.internal.scheme | string | `"http"` | Scheme to use for in-cluster Prometheus |
 | opencost.prometheus.internal.serviceName | string | `"prometheus-server"` | Service name of in-cluster Prometheus |
@@ -177,8 +165,6 @@ $ helm install opencost opencost/opencost
 | opencost.prometheus.thanos.queryOffset | string | `""` |  |
 | opencost.prometheus.username | string | `""` | Prometheus Basic auth username |
 | opencost.prometheus.username_key | string | `"DB_BASIC_AUTH_USERNAME"` | Key in the secret that references the username |
-| opencost.retention1d | int | `15` |  |
-| opencost.retention1h | int | `49` |  |
 | opencost.sigV4Proxy.extraEnv | string | `nil` |  |
 | opencost.sigV4Proxy.host | string | `"aps-workspaces.us-west-2.amazonaws.com"` |  |
 | opencost.sigV4Proxy.image | string | `"public.ecr.aws/aws-observability/aws-sigv4-proxy:latest"` |  |
@@ -223,22 +209,9 @@ $ helm install opencost opencost/opencost
 | opencost.ui.route.targetPort | string | `"http-ui"` | Redirect ingress to an extraPort defined on the service such as oauth-proxy |
 | opencost.ui.route.tls | list | `[]` | Ingress TLS configuration |
 | opencost.ui.securityContext | object | `{}` | The security options the container should be run with |
-| opencost.ui.uiPath | string | `"/"` |  |
 | opencost.ui.uiPort | int | `9090` |  |
 | opencost.ui.useDefaultFqdn | bool | `false` |  |
 | opencost.ui.useIPv6 | bool | `true` |  |
-| opencost.updateCaTrust.caCertsSecret | string | `"ca-certs-secret"` |  |
-| opencost.updateCaTrust.enabled | bool | `false` |  |
-| opencost.updateCaTrust.resources | object | `{}` |  |
-| opencost.updateCaTrust.securityContext.allowPrivilegeEscalation | bool | `false` |  |
-| opencost.updateCaTrust.securityContext.readOnlyRootFilesystem | bool | `true` |  |
-| opencost.updateCaTrust.securityContext.runAsGroup | int | `0` |  |
-| opencost.updateCaTrust.securityContext.runAsNonRoot | bool | `false` |  |
-| opencost.updateCaTrust.securityContext.runAsUser | int | `0` |  |
-| opencost.updateCaTrust.securityContext.seccompProfile.type | string | `"RuntimeDefault"` |  |
-| pdb.enabled | bool | `false` |  |
-| pdb.maxUnavailable | string | `nil` | Maximum number of pods that can be unavailable after the eviction |
-| pdb.minAvailable | string | `nil` | Minimum number of pods that must be available after the eviction |
 | plugins.configs | string | `nil` |  |
 | plugins.enabled | bool | `false` |  |
 | plugins.folder | string | `"/opt/opencost/plugin"` |  |

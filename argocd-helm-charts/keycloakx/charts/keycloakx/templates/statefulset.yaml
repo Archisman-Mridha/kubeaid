@@ -97,7 +97,7 @@ spec:
             - name: KC_CACHE
               value: "ispn"
             - name: KC_CACHE_STACK
-              value: "jdbc-ping"
+              value: "kubernetes"
             {{- end }}
             {{- if .Values.proxy.enabled }}
             - name: KC_PROXY_HEADERS
@@ -233,7 +233,3 @@ spec:
         {{- with .Values.extraVolumes }}
         {{- tpl . $ | nindent 8 }}
         {{- end }}
-  {{- with .Values.volumeClaimTemplates }}
-  volumeClaimTemplates:
-    {{- tpl . $ | nindent 4 }}
-  {{- end }}

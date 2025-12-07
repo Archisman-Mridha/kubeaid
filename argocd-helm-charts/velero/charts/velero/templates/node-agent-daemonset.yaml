@@ -197,10 +197,6 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.nodeAgent.resizePolicy }}
-          resizePolicy:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
       {{- with .Values.nodeAgent.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
